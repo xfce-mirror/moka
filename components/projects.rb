@@ -88,6 +88,15 @@ module Sinatra
 
           erb :project_new_release
         end
+
+        app.get '/project/:name/new-release' do
+          @project = Project.find_by_name(params[:name])
+          erb :project_new_branch
+        end
+
+        app.post '/project/:name/new-release' do
+          redirect "/project/#{params[:name]}/branch/#{params[:branch]}/new-release"
+        end
       end
     end
   end
