@@ -3,14 +3,14 @@ require 'singleton'
 
 class Archive
 
-  attr_accessor :root_dir
-  attr_accessor :excluded_classifications
-
   include Singleton
 
-  def initialize
-    @root_dir = File.dirname(__FILE__)
-    @classifications_exclude = []
+  def root_dir
+    Configuration.get.archive_dir
+  end
+
+  def excluded_classifications
+    Configuration.get.excluded_classifications
   end
 
   def collection_dir(collection)
@@ -118,10 +118,44 @@ class Archive
 
     File.move(source_file, target_file)
 
-    begin
-      Dir.rmdir(dir) 
-    rescue SystemCallError
+    project_branch_update(branch)
+  end
+
+  def project_branch_release_from_tarball(branch, tarball)
+    version = project_tarball_version(branch.project, tarball)
+    Project::Release.new(branch.project, branch, version)
+  end
+  
+  def project_branch_update(branch)
+    dirname = project_branch_dir(branch.project, branch)
+
+    if File.directory?(dirname)
+      dir = Dir.new(dirname)
+
+      tarballs = dir.entries.select do |entry|
+        entry =~ project_tarball_pattern(branch.project)
+      end
+
+      open(File.join(dirname, "MD5SUMS"), "w+") do |checksum_file|
+        for tarball in tarballs
+          open(File.join(dirname, tarball)) do |tarball_file|
+            checksum = Digest::MD5.hexdigest(tarball_file.read)
+            checksum_file.puts("#{checksum} #{tarball}")
+          end
+        end
+      end
+
+      open(File.join(dirname, "SHA1SUMS"), "w+") do |checksum_file|
+        for tarball in tarballs
+          open(File.join(dirname, tarball)) do |tarball_file|
+            checksum = Digest::SHA1.hexdigest(tarball_file.read)
+            checksum_file.puts("#{checksum} #{tarball}")
+          end
+        end
+      end
     end
+
+    begin Dir.rmdir(dir) rescue SystemCallError end
   end
 
   def project_tarball_pattern(project)
@@ -149,9 +183,10 @@ class Archive
     parent = path.parent
 
     File.makedirs(parent) unless File.directory?(parent)
-
     File.delete(target_file) if File.file?(target_file)
     File.move(source_file, target_file)
+
+    project_branch_update(release.branch)
   end
 
   def project_release_delete(release)
@@ -159,13 +194,27 @@ class Archive
 
     File.delete(filename) if File.file?(filename)
 
-    path = Pathname.new(filename)
-    parent = path.parent
+    project_branch_update(release.branch)
+  end
 
-    begin
-      Dir.rmdir(parent) if File.directory?(parent)
-    rescue SystemCallError
+  def project_release_checksum(release, type)
+    result = nil
+
+    tarball_basename = project_release_tarball_basename(release)
+    branch_dir = project_branch_dir(release.project, release.branch)
+    basename = if type == Digest::MD5 then 'MD5SUMS' else 'SHA1SUMS' end
+
+    open(File.join(branch_dir, basename)) do |checksum_file|
+      for line in checksum_file.readlines
+        checksum, tarball = line.split(' ')
+        if tarball == tarball_basename
+          result = checksum
+          break
+        end
+      end
     end
+
+    result
   end
 
   def project_releases(project)

@@ -23,6 +23,17 @@ class Project
     def add_tarball(file, basename)
       Archive.instance.project_branch_add_tarball(self, file, basename)
     end
+
+    def release_from_tarball(tarball)
+      Archive.instance.project_branch_release_from_tarball(self, tarball)
+    end
+
+    def has_release?(release)
+      result = project.releases.find do |prelease|
+        prelease.branch == self and prelease == release
+      end
+      not result.nil?
+    end
   
   end
 
@@ -45,6 +56,10 @@ class Project
         and other.version == version
     end
 
+    def checksum(type)
+      Archive.instance.project_release_checksum(self, type)
+    end
+
     def tarball_basename
       Archive.instance.project_release_tarball_basename(self)
     end
@@ -64,13 +79,13 @@ class Project
   attr :mailinglists
   attr_accessor :classification
 
-  def initialize(name, maintainer_names, mailinglist_names)
+  def initialize(name, maintainer_names, mailinglist_emails)
     @name = name
     @maintainers = maintainer_names.collect do |name|
       Maintainer.find_by_username(name)
     end
-    @mailinglists = mailinglist_names.collect do |name|
-      Mailinglist.find_by_name(name)
+    @mailinglists = mailinglist_emails.collect do |email|
+      Mailinglist.find_by_email(email)
     end
     @classification = Classification.find_by_project(self)
   end

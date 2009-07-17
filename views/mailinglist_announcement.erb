@@ -1,0 +1,14 @@
+<%= greeting %>
+
+<%= release.project.name %> <%= release.version %> is now available for download as
+
+  <%= release.tarball_basename %>
+
+  SHA1 checksum: <%= release.checksum(Digest::SHA1) %>
+   MD5 checksum: <%= release.checksum(Digest::MD5) %>
+
+from the following mirrors:
+<% for mirror in Mirror.find_all %>
+  <%= mirror.download_url(release) %>
+<% end %>
+<%= message %>

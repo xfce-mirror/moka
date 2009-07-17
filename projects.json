@@ -3,12 +3,12 @@
     "json_class"   : "Project",
     "name"         : "thunar",
     "maintainers"  : [ "jannis" ],
-    "mailinglists" : [ "xfce", "thunar-dev" ]
+    "mailinglists" : [ "jannis@xfce.org" ]
   },
   {
     "json_class"   : "Project",
     "name"         : "tumbler",
     "maintainers"  : [ "jannis" ],
-    "mailinglists" : [ "xfce" ]
+    "mailinglists" : [ ]
   }
 ]
