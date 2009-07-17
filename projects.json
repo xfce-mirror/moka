@@ -1,12 +1,14 @@
 [
   {
-    "json_class"  : "Project",
-    "name"        : "thunar",
-    "maintainers" : [ "jannis" ]
+    "json_class"   : "Project",
+    "name"         : "thunar",
+    "maintainers"  : [ "jannis" ],
+    "mailinglists" : [ "xfce", "thunar-dev" ]
   },
   {
-    "json_class"  : "Project",
-    "name"        : "tumbler",
-    "maintainers" : [ "jannis" ]
+    "json_class"   : "Project",
+    "name"         : "tumbler",
+    "maintainers"  : [ "jannis" ],
+    "mailinglists" : [ "xfce" ]
   }
 ]

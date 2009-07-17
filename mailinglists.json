@@ -1,0 +1,14 @@
+[
+  {
+    "json_class" : "Mailinglist",
+    "name"       : "xfce",
+    "email"      : "xfce@xfce.org",
+    "website"    : "http://foo-projects.org/mailman/listinfo/xfce"
+  },
+  { 
+    "json_class" : "Mailinglist",
+    "name"       : "thunar-dev",
+    "email"      : "thunar-dev@xfce.org",
+    "website"    : "http://foo-projects.org/mailman/listinfo/thunar-dev"
+  }
+]

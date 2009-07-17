@@ -10,6 +10,10 @@
       <p class="error"><span class="placeholder">&nbsp;</span> <%= env[:error][:checksum] %></p>
     <% end %>
     <p><label for="message">Message:</label> <textarea class="message" id="message" name="message" style="height:20em"></textarea></p>
+    <p><span class="placeholder">&nbsp;</span> <input type="checkbox" id="identica" name="identica" value="identica" checked="checked"/> Announce on <a href="http://identi.ca/xfce">identi.ca/xfce</a></p>
+    <% for list in Mailinglist.find_all %>
+      <p><span class="placeholder">&nbsp;</span> <input type="checkbox" name="mailinglists[<%= list.name %>]" value="send" <%= 'checked="checked"' if @project.mailinglists.include?(list) %>/> Announce on <a href="<%= list.website %>"><%= list.email %></a></p>
+    <% end %>
     <p><span class="placeholder">&nbsp;</span> <input type="submit" value="Release and Celebrate!"/></p>
   </fieldset>
 </form>

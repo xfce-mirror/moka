@@ -61,12 +61,16 @@ class Project
 
   attr :name
   attr :maintainers
+  attr :mailinglists
   attr_accessor :classification
 
-  def initialize(name, maintainer_names)
+  def initialize(name, maintainer_names, mailinglist_names)
     @name = name
     @maintainers = maintainer_names.collect do |name|
       Maintainer.find_by_username(name)
+    end
+    @mailinglists = mailinglist_names.collect do |name|
+      Mailinglist.find_by_name(name)
     end
     @classification = Classification.find_by_project(self)
   end
@@ -80,7 +84,7 @@ class Project
   end
 
   def self.json_create(o)
-    new(o['name'], o['maintainers'])
+    new(o['name'], o['maintainers'], o['mailinglists'])
   end
 
   def ==(other)
