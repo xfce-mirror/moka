@@ -30,18 +30,13 @@
     <% end %>
     <tr>
       <th><%= "#{branch.name} Branch" if @project.releases(branch).empty? %></th>
-      <th>?</th>
+      <th> </th>
       <td>
         <a href="/project/<%= @project.name %>/branch/<%= branch.name %>/new-release">Release new version</a>
       </td>
     </tr>
   <% end %>
-  <tr>
-    <th>?</th>
-    <th>?</th>
-    <td>
-      <a href="/project/<%= @project.name %>/new-release">Release new version</a>
-    </td>
-  </tr>
 </table>
+<p><a href="/project/<%= @project.name %>/new-release">Release new version</a>
+</p>
 <%= footer %>

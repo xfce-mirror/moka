@@ -159,7 +159,7 @@ class Archive
   end
 
   def project_tarball_pattern(project)
-    /(#{project.name})-([0-9.]+).tar.bz2/
+    /^(#{project.name})-([0-9.]+).tar.bz2$/
   end
 
   def project_tarball_version(project, tarball)

@@ -120,6 +120,10 @@ class Project
     Archive.instance.project_change_classification(self, classification)
   end
 
+  def tarball_pattern
+    Archive.instance.project_tarball_pattern(self)
+  end
+
   def self.find_all
     load_projects_on_demand
     @projects

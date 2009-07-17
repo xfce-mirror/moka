@@ -30,19 +30,28 @@ module Sinatra
           @branch = Project::Branch.new(@project, params[:branch])
           @release = Project::Release.new(@project, @branch, params[:version])
 
-          if params[:tarball].nil?
-            env[:error][:tarball] = 'No file specified.'
-          else
+          error_set(:tarball, 'No file specified.') if params[:tarball].nil?
+            
+          unless error_set?
             if params[:tarball][:filename] != @release.tarball_basename
-              env[:error][:tarball] = "Wrong filename. <tt>#{@release.tarball_basename}</tt> required."
-            else
-              tempfile_checksum = Digest::SHA1.hexdigest(params[:tarball][:tempfile].read())
-              if params[:checksum] != tempfile_checksum
-                env[:error][:checksum] = 'Uploaded file corrupted. Please verify the checksum is correct and try again.'
-              else
-                @release.add_tarball(params[:tarball][:tempfile])
-                redirect "/project/#{params[:name]}"
-              end
+              error_set(:tarball, "Wrong filename. <tt>#{@release.tarball_basename}</tt> required.")
+            end
+          end
+
+          unless error_set?
+            checksum = Digest::SHA1.hexdigest(params[:tarball][:tempfile].read())
+            if params[:checksum] != checksum
+              error_set(:checksum, 'Uploaded file corrupted. ' \
+                        'Please verify the checksum is correct and try again.')
+            end
+          end
+
+          unless error_set?
+            begin
+              @release.add_tarball(params[:tarball][:tempfile])
+              redirect "/project/#{params[:name]}"
+            rescue Exception => error
+              error_set(:tarball, "Failed to upload tarball: #{error.message}")
             end
           end
 
@@ -74,9 +83,11 @@ module Sinatra
           @project = Project.find_by_name(params[:name])
           @branch = Project::Branch.new(@project, params[:branch])
 
+          error_set(:tarball, 'No file specified.') if params[:tarball].nil?
+
           unless error_set?
-            if params[:tarball].nil?
-              error_set(:tarball, 'No file specified.')
+            unless params[:tarball][:filename] =~ @project.tarball_pattern
+              error_set(:tarball, "Tarball has to match the pattern <tt>#{@project.tarball_pattern.source}</tt>.")
             end
           end
 
