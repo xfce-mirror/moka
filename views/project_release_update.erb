@@ -1,0 +1,16 @@
+<%= header :title => "Update Version #{@release.version} of Project #{@project.name}" %>
+<form method="post" enctype="multipart/form-data">
+  <fieldset>
+    <p><span class="placeholder">Filename:</span> <tt><%= @release.tarball_basename %></tt></p>
+    <p><label for="tarball">Tarball:</label> <input type="file" id="tarball" name="tarball"/></p>
+    <% if env[:error][:tarball] %>
+      <p class="error"><span class="placeholder">&nbsp;</span> <%= env[:error][:tarball] %></p>
+    <% end %>
+    <p><label for="checksum">Checksum (SHA1):</label> <input type="text" id="checksum" name="checksum" value="<%= params[:checksum] %>"/></p>
+    <% if env[:error][:checksum] %>
+      <p class="error"><span class="placeholder">&nbsp;</span> <%= env[:error][:checksum] %></p>
+    <% end %>
+    <p><span class="placeholder">&nbsp;</span> <input type="submit" value="Replace current tarball"/></p>
+  </fieldset>
+</form>
+<%= footer %>

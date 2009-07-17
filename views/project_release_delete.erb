@@ -1,0 +1,11 @@
+<%= header :title => "Delete Version #{@release.version} of Project #{@project.name}" %>
+<form method="post">
+  <fieldset>
+    <p>Are you sure you want to delete this version?</p>
+    <p>
+      <input type="button" value="No, please take me back" onclick="history.back()"/> 
+      <input type="submit" value="Yes, who cares about <%= @project.name %> <%= @release.version %> anyway?"/>
+    </p>
+  </fieldset>
+</form>
+<%= footer %>

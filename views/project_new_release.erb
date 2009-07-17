@@ -1,0 +1,16 @@
+<%= header :title => "New Release in the #{@branch} Branch of #{@project.name}" %>
+<form method="post" enctype="multipart/form-data">
+  <fieldset>
+    <p><label for="tarball">Tarball:</label> <input type="file" id="tarball" name="tarball" size="30"/></p>
+    <% if env[:error][:tarball] %>
+      <p class="error"><span class="placeholder">&nbsp;</span> <%= env[:error][:tarball] %></p>
+    <% end %>
+    <p><label for="checksum">Checksum (SHA1):</label> <input type="text" id="checksum" name="checksum" value="<%= params[:checksum] %>"/></p>
+    <% if env[:error][:checksum] %>
+      <p class="error"><span class="placeholder">&nbsp;</span> <%= env[:error][:checksum] %></p>
+    <% end %>
+    <p><label for="message">Message:</label> <textarea class="message" id="message" name="message" style="height:20em"></textarea></p>
+    <p><span class="placeholder">&nbsp;</span> <input type="submit" value="Release and Celebrate!"/></p>
+  </fieldset>
+</form>
+<%= footer %>

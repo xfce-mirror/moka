@@ -1,0 +1,13 @@
+<%= header :title => 'Manage Releases' %>
+<h2>Projects</h2>
+<table cellspacing="0" cellpadding="0">
+  <% for project in Project.find_all_by_maintainer(env['warden'].user) %>
+    <tr>
+      <th><a href="/project/<%= project.name %>"><%= project.name %></a></th>
+      <td>
+        <a href="/project/<%= project.name %>/new-release">Release new version</a>
+      </td>
+    </tr>
+  <% end %>
+</table>
+<%= footer %>

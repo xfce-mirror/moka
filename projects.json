@@ -1,0 +1,12 @@
+[
+  {
+    "json_class"  : "Project",
+    "name"        : "thunar",
+    "maintainers" : [ "jannis" ]
+  },
+  {
+    "json_class"  : "Project",
+    "name"        : "tumbler",
+    "maintainers" : [ "jannis" ]
+  }
+]

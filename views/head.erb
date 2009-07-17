@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Xfce Release Manager<%= if params.has_key?(:title) then " | #{params[:title]}" end %></title>
+    <link rel="stylesheet" href="/stylesheet.css" media="all" type="text/css"/>
+  </head>
+  <body>
+    <h1><%= if params.has_key?(:title) then params[:title] else 'Xfce Release Manager' end %></h1>
+    <p id="main-toolbar">
+      <% if env['warden'].authenticated? %>
+        <a href="/">Manage Releases</a>
+      <% else %>
+        <a href="/login">Manage Releases</a>
+      <% end %>
+      <a href="/feed">News Feed</a>
+      <a href="http://identi.ca/xfce">identi.ca Channel</a>
+      <% if env['warden'].authenticated? %>
+        <a href="/logout">Logout</a>
+      <% end %>
+    </p>

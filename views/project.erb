@@ -1,0 +1,47 @@
+<%= header :title => "Manage Project #{@project.name}" %>
+<h2>Classification</h2>
+<form method="post" action="/project/<%= @project.name %>/classify">
+  <p>
+    <select name="classification">
+      <% for classification in Classification.find_all %>
+        <% if @project.classification.name == classification.name %>
+          <option name="<%= classification.name %>" selected="selected"><%= classification.name %></option>
+        <% else %>
+          <option name="<%= classification.name %>"><%= classification.name %></option>
+        <% end %>
+      <% end %>
+    </select>
+    <input type="submit" value="Change"/>
+  </p>
+</form>
+<h2>Releases</h2>
+<table cellspacing="0" cellpadding="0">
+  <% for branch in @project.branches %>
+    <% releases = @project.releases(branch) %>
+    <% for release in releases %>
+      <tr>
+        <th><%= "#{branch.name} Branch" if release == releases.first %></th>
+        <th><%= release.version %></th>
+        <td>
+          <a href="/project/<%= @project.name %>/branch/<%= branch.name %>/release/<%= release.version %>/update">Update</a>
+          <a href="/project/<%= @project.name %>/branch/<%= branch.name %>/release/<%= release.version %>/delete">Delete</a>
+        </td>
+      </tr>
+    <% end %>
+    <tr>
+      <th><%= "#{branch.name} Branch" if @project.releases(branch).empty? %></th>
+      <th>?</th>
+      <td>
+        <a href="/project/<%= @project.name %>/branch/<%= branch.name %>/new-release">Release new version</a>
+      </td>
+    </tr>
+  <% end %>
+  <tr>
+    <th>?</th>
+    <th>?</th>
+    <td>
+      <a href="/project/<%= @project.name %>/new-release">Release new version</a>
+    </td>
+  </tr>
+</table>
+<%= footer %>

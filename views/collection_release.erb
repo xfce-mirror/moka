@@ -1,0 +1,25 @@
+<%= header :title => "Manage Release #{@release.full_version} of Collection #{@collection.display_name}" %>
+<h2>Projects to Include in the Release</h2>
+<form method="post">
+  <table cellspacing="0" cellpadding="0">
+    <% for project in Project.find_all %>
+      <tr>
+        <th><%= project.name %></th>
+        <td>
+          Included version:&nbsp;
+          <select name="<%= project.name %>[version]">
+            <!--<% included_version = @collection.included_project_version(@release, project) %>-->
+            <option name="nil" value="nil" <%= 'selected="selected"' if included_version.nil? %>>None ------------</option>
+            <% for branch in project.branches %>
+              <% for release in project.releases(branch) %>
+                <option value="<%= branch %>:<%= release.full_version %>" <%= 'selected="selected"' if release.full_version == included_version %>><%= release.full_version %></option>
+              <% end %>
+            <% end %>
+          </select>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+  <p><input type="submit" value="Save"/></p>
+</form>
+<%= footer %>
