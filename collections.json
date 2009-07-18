@@ -1,0 +1,8 @@
+[
+  { 
+    "json_class"   : "Collection",
+    "name"         : "xfce",
+    "display_name" : "Xfce",
+    "maintainers"  : [ "jannis" ]
+  }
+]

@@ -20,21 +20,35 @@ class Collection
         and other.version == version
     end
 
+    def add_project_release(release)
+      Archive.instance.collection_release_add_project_release(self, release)
+    end
+    
+    def remove_project_release(release)
+      Archive.instance.collection_release_remove_project_release(self, release)
+    end
+
+    def included_project_release(project)
+      project.releases.find do |release| 
+        Archive.instance.collection_release_project_release_included?(self, release)
+      end
+    end
+
+    def delete
+      Archive.instance.collection_release_delete(self)
+    end
+
   end
 
   attr :name
   attr :display_name
   attr :maintainers
-  attr :projects
 
-  def initialize(name, display_name, maintainer_names, project_names)
+  def initialize(name, display_name, maintainer_names)
     @name = name
     @display_name = display_name
     @maintainers = maintainer_names.collect do |name|
       Maintainer.find_by_username(name)
-    end
-    @projects = project_names.collect do |name|
-      Project.find_by_name(name)
     end
   end
 
@@ -44,59 +58,15 @@ class Collection
       'name' => name,
       'display_name' => display_name,
       'maintainers' => maintainers,
-      'projects' => projects
     }.to_json(*a)
   end
 
   def self.json_create(o)
-    new(o['name'], o['display_name'], o['maintainers'], o['projects'])
+    new(o['name'], o['display_name'], o['maintainers'])
   end
 
   def releases
     Archive.instance.collection_releases(self)
-  end
-
-  def remove_project(release, project)
-    source_dir = source_dir(release)
-    pattern = project.tarball_pattern
-
-    if File.directory?(source_dir)
-      dir = Dir.new(source_dir)
-      for entry in dir.entries
-        next unless entry =~ pattern
-        File.delete(File.join(source_dir, entry))
-      end
-    end
-  end
-
-  def add_project(release, project, branch, project_release)
-    source_dir = source_dir(release)
-    
-    File.makedirs(source_dir) unless File.directory?(source_dir)
-
-    target_filename = project.tarball_filename(project_release, branch)
-    source_filename = File.join(source_dir, project.tarball_basename(project_release))
-
-    puts "#{source_filename} -> #{target_filename}"
-
-    File.link(target_filename, source_filename)
-  end
-
-  def included_project_version(release, project)
-    if File.directory?(source_dir(release))
-      pattern = project.tarball_pattern
-      dir = Dir.new(source_dir(release))
-
-      for entry in dir.entries
-        next unless entry =~ pattern
-        return entry.gsub(pattern, '\2')
-      end
-    end
-    nil
-  end
-
-  def source_dir(release)
-    Archive.instance.collection_source_dir(self, release)
   end
 
   def self.find_all

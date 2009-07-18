@@ -1,30 +1,17 @@
-<%= header :title => "New Release in the #{@branch.name} Branch of #{@project.name}" %>
-<form method="post" enctype="multipart/form-data">
+<%= header :title => "Select Branch for New Release of #{@project.name}" %>
+<form method="post">
   <fieldset>
-    <p><label for="tarball">Tarball:</label> <input type="file" id="tarball" name="tarball" size="30"/></p>
-    <% if error(:tarball) %>
-      <p class="error"><span class="placeholder">&nbsp;</span> <%= error(:tarball) %></p>
-    <% end %>
-    <p><label for="checksum">Checksum (SHA1):</label> <input type="text" id="checksum" name="checksum" value="<%= params[:checksum] %>"/></p>
-    <% if error(:checksum) %>
-      <p class="error"><span class="placeholder">&nbsp;</span> <%= error(:checksum) %></p>
-    <% end %>
     <p>
-      <label for="greeting">Greeting:</label>
-      <select id="greeting" name="greeting">
-        <option value="Hey,">Hey</option>
-        <option value="Hey guys,">Hey guys</option>
-        <option value="Hey there,">Hey there</option>
-        <option value="Hi,">Hi</option>
-        <option value="Arrr!!!">Arrr!!!</option>
+      <label for="branch">Branch:</label> 
+      <select name="branch" id="branch">
+        <option value="nil">Custom</option>
+        <% for branch in @project.branches %>
+          <option value="<%= branch.name %>"><%= branch.name %></option>
+        <% end %>
       </select>
     </p>
-    <p><label for="message">Message:</label> <textarea class="message" id="message" name="message" style="height:20em"></textarea></p>
-    <p><span class="placeholder">&nbsp;</span> <input type="checkbox" id="identica" name="identica" value="announce" <%= 'checked="checked"' if params[:identica] %>/> Announce on <a href="http://identi.ca/xfce">identi.ca/xfce</a></p>
-    <% for list in Mailinglist.find_all %>
-      <p><span class="placeholder">&nbsp;</span> <input type="checkbox" name="mailinglists[<%= list.email %>]" value="announce" <%= 'checked="checked"' if @project.mailinglists.include?(list) %>/> Announce on <a href="<%= list.website %>"><%= list.email %></a></p>
-    <% end %>
-    <p><span class="placeholder">&nbsp;</span> <input type="submit" value="Release and Celebrate!"/></p>
+    <p><label for="custom">Custom:</label> <input type="text" id="custom" name="custom" style="width:4em"/></p>
+    <p><span class="placeholder">&nbsp;</span> <input type="submit" value="Release to This Branch"/></p>
   </fieldset>
 </form>
 <%= footer %>

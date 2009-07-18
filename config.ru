@@ -8,4 +8,4 @@ disable :run
 enable :static, :session, :methodoverride, :reload
 set :environment, :development
 
-run Moka
+run Moka::Application

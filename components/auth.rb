@@ -1,4 +1,4 @@
-module Sinatra
+module Moka
   module Component
     module Auth
       def initialize_authentication

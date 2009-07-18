@@ -1,4 +1,4 @@
-module Sinatra
+module Moka
   module Component
     module Projects
       def self.registered(app)
@@ -76,7 +76,7 @@ module Sinatra
         app.get '/project/:name/branch/:branch/new-release' do
           @project = Project.find_by_name(params[:name])
           @branch = Project::Branch.new(@project, params[:branch])
-          erb :project_new_release
+          erb :project_branch_new_release
         end
 
         app.post '/project/:name/branch/:branch/new-release' do
@@ -110,7 +110,7 @@ module Sinatra
 
           unless error_set?
             begin
-              #@branch.add_tarball(params[:tarball][:tempfile], params[:tarball][:filename])
+              @branch.add_tarball(params[:tarball][:tempfile], params[:tarball][:filename])
             rescue Exception => error
               error_set(:tarball, "Failed to upload the tarball: #{error.message}.")
             end
@@ -129,19 +129,20 @@ module Sinatra
               mailinglist.announce_release(env['warden'].user, @release, params[:greeting], params[:message])
             end
             
-           # redirect "/project/#{@project.name}"
+            redirect "/project/#{@project.name}"
           end
 
-          erb :project_new_release
+          erb :project_branch_new_release
         end
 
         app.get '/project/:name/new-release' do
           @project = Project.find_by_name(params[:name])
-          erb :project_new_branch
+          erb :project_new_release
         end
 
         app.post '/project/:name/new-release' do
-          redirect "/project/#{params[:name]}/branch/#{params[:branch]}/new-release"
+          branch = if params[:branch] == 'nil' then params[:custom] else params[:branch] end
+          redirect "/project/#{params[:name]}/branch/#{branch}/new-release"
         end
       end
     end

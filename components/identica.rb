@@ -1,7 +1,7 @@
 require 'net/http'
 require 'net/https'
 
-module Sinatra
+module Moka
   module Component
     module Identica
       def initialize_identica

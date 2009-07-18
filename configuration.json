@@ -6,5 +6,5 @@
   },
   "moka_url" : "http://release.xfce.org",
   "archive_dir" : "/var/www/release.xfce.org/archive",
-  "excluded_classifications" : [ "xfce-releases" ]
+  "excluded_classifications" : [ ]
 }

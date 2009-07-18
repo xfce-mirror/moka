@@ -17,12 +17,16 @@ class Archive
     File.join(root_dir, collection.name)
   end
 
-  def collection_source_dir(collection, release)
-    File.join(collection_dir(collection), release.version, 'src')
+  def collection_release_dir(release)
+    File.join(collection_dir(release.collection), release.version)
   end
 
-  def collection_installer_dir(collection, release)
-    File.join(collection_dir(collection), release.version, 'installers')
+  def collection_source_dir(release)
+    File.join(collection_release_dir(release), 'src')
+  end
+
+  def collection_installer_dir(release)
+    File.join(collection_release_dir(release), 'installers')
   end
 
   def collection_releases(collection)
@@ -44,8 +48,49 @@ class Archive
     releases
   end
 
+  def collection_release_add_project_release(release, project_release)
+    source_dir = collection_source_dir(release)
+
+    File.makedirs(source_dir) unless File.directory?(source_dir)
+
+    link_target = project_release_tarball_filename(project_release)
+    link_filename = File.join(source_dir, File.basename(link_target))
+
+    File.link(link_target, link_filename)
+  end
+
+  def collection_release_remove_project_release(release, project_release)
+    source_dir = collection_source_dir(release)
+    tarball_basename = project_release_tarball_basename(project_release)
+
+    filename = File.join(source_dir, tarball_basename)
+    File.delete(filename) if File.file?(filename)
+  end
+
+  def collection_release_project_release_included?(release, project_release)
+    source_dir = collection_source_dir(release)
+
+    if File.directory?(source_dir)
+      dir = Dir.new(source_dir)
+
+      tarball = dir.entries.find do |entry|
+        entry == project_release_tarball_basename(project_release)
+      end
+
+      return !tarball.nil?
+    end
+
+    false
+  end
+
+  def collection_release_delete(release)
+    if File.directory?(collection_release_dir(release))
+      FileUtils.rm_rf(collection_release_dir(release))
+    end
+  end
+
   def classification_dir(classification)
-    File.join(root_dir, classification.name)
+    File.join(root_dir, 'src', classification.name)
   end
 
   def classifications
@@ -53,17 +98,17 @@ class Archive
 
     @classifications = []
 
-    if File.directory?(root_dir)
-      dir = Dir.new(root_dir)
+    if File.directory?(File.join(root_dir, 'src'))
+      dir = Dir.new(File.join(root_dir, 'src'))
 
       names = dir.entries.select do |entry|
         entry != '.' and entry != '..' \
           and not excluded_classifications.include?(entry) \
-          and File.directory?(File.join(root_dir, entry))
+          and File.directory?(File.join(root_dir, 'src', entry))
       end
 
       @classifications += names.collect do |name|
-        Classification.new(name, File.join(root_dir, name))
+        Classification.new(name, File.join(root_dir, 'src', name))
       end
 
       @classifications.each do |classification|

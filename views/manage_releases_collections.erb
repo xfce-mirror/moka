@@ -4,19 +4,19 @@
     <% for release in collection.releases %>
       <tr>
         <th>
-          <% if collection.releases.first.version == release.version %>
+          <% if release == collection.releases.first %>
             <%= collection.display_name %>
           <% end %>
         </th>
         <th><a href="/collection/<%= collection.name %>/release/<%= release.version %>"><%= release.version %></a></th>
         <td>
-          <a class="inactive">Delete</a>
+          <a href="/collection/<%= collection.name %>/release/<%= release.version %>/delete">Delete</a>
         </td>
       </tr>
     <% end %>
     <tr>
       <th> </th>
-      <th>?</th>
+      <th> </th>
       <td>
         <a href="/collection/<%= collection.name %>/new-release">Release new version</a>
       </td>

@@ -1,4 +1,4 @@
-<%= header :title => "Manage Release #{@release.full_version} of Collection #{@collection.display_name}" %>
+<%= header :title => "Manage Release #{@release.version} of Collection #{@collection.display_name}" %>
 <h2>Projects to Include in the Release</h2>
 <form method="post">
   <table cellspacing="0" cellpadding="0">
@@ -6,14 +6,12 @@
       <tr>
         <th><%= project.name %></th>
         <td>
-          Included version:&nbsp;
-          <select name="<%= project.name %>[version]">
-            <!--<% included_version = @collection.included_project_version(@release, project) %>-->
-            <option name="nil" value="nil" <%= 'selected="selected"' if included_version.nil? %>>None ------------</option>
-            <% for branch in project.branches %>
-              <% for release in project.releases(branch) %>
-                <option value="<%= branch %>:<%= release.full_version %>" <%= 'selected="selected"' if release.full_version == included_version %>><%= release.full_version %></option>
-              <% end %>
+          Included version: 
+          <select name="version[<%= project.name %>]">
+            <% included_release = @release.included_project_release(project) %>
+            <option name="nil" value="nil" <%= 'selected="selected"' if included_release.nil? %>>None</option>
+            <% for release in project.releases %>
+              <option value="<%= release.branch.name %>:<%= release.version %>" <%= 'selected="selected"' if release == included_release %>><%= release.version %></option>
             <% end %>
           </select>
         </td>

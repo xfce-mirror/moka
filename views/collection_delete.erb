@@ -1,5 +1,10 @@
-<% @title = "Delete Release #{params[:release]} of Collection #{@collection.display_name}" %>
-<h2>Do You Really Want to Delete This Release?</h2>
+<%= header :title => "Delete Release #{params[:release]} of Collection #{@collection.display_name}" %>
+<h2>Do you really want to delete this release?</h2>
 <form method="post">
-  <p><a class="button" href="javascript:history.back()">No, I came here by mistake!</a> <input type="submit" value="Yes, please delete!"/></p>
+  <fieldset>
+    <p>
+    <input type="button" onclick="history.back()" value="No, I came here by mistake!"/>
+    <input type="submit" value="Yes, please delete!"/>
+    </p>
 </form>
+<%= footer %>

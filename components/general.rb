@@ -1,4 +1,4 @@
-module Sinatra
+module Moka
   module Component
     module General
       def self.registered(app)

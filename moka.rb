@@ -3,6 +3,7 @@ require 'sass'
 require 'warden'
 require 'lib/archive'
 require 'lib/classification'
+require 'lib/collection'
 require 'lib/configuration'
 require 'lib/maintainer'
 require 'lib/mailinglist'
@@ -12,17 +13,19 @@ require 'components/auth'
 require 'components/general'
 require 'components/identica'
 require 'components/projects'
+require 'components/collections'
 
-class Moka < Sinatra::Base
+class Moka::Application < Sinatra::Base
 
-  helpers Sinatra::Component::General::Helpers
-  helpers Sinatra::Component::Auth::Helpers
-  helpers Sinatra::Component::Identica::Helpers
+  helpers Moka::Component::General::Helpers
+  helpers Moka::Component::Auth::Helpers
+  helpers Moka::Component::Identica::Helpers
 
-  register Sinatra::Component::General
-  register Sinatra::Component::Auth
-  register Sinatra::Component::Identica
-  register Sinatra::Component::Projects
+  register Moka::Component::General
+  register Moka::Component::Auth
+  register Moka::Component::Identica
+  register Moka::Component::Projects
+  register Moka::Component::Collections
 
   initialize_authentication
   initialize_identica
