@@ -1,17 +1,17 @@
-<%= header :title => "Select Branch for New Release of #{@project.name}" %>
+<%= header :title => "Select branch for new release of #{@project.name}" %>
 <form method="post">
   <fieldset>
     <p>
       <label for="branch">Branch:</label> 
       <select name="branch" id="branch">
-        <option value="nil">Custom</option>
+        <option value="nil">New</option>
         <% for branch in @project.branches %>
           <option value="<%= branch.name %>"><%= branch.name %></option>
         <% end %>
       </select>
     </p>
-    <p><label for="custom">Custom:</label> <input type="text" id="custom" name="custom" style="width:4em"/></p>
-    <p><span class="placeholder">&nbsp;</span> <input type="submit" value="Release to This Branch"/></p>
+    <p><label for="custom">New branch name:</label> <input type="text" id="custom" name="custom" style="width:4em"/></p>
+    <p><span class="placeholder">&nbsp;</span> <input type="submit" value="Release in this branch"/></p>
   </fieldset>
 </form>
 <%= footer %>

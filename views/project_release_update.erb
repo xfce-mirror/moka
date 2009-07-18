@@ -1,4 +1,4 @@
-<%= header :title => "Update Version #{@release.version} of Project #{@project.name}" %>
+<%= header :title => "Update #{@project.name} #{@release.version}" %>
 <form method="post" enctype="multipart/form-data">
   <fieldset>
     <p><span class="placeholder">Filename:</span> <tt><%= @release.tarball_basename %></tt></p>

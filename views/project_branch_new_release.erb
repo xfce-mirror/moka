@@ -1,4 +1,4 @@
-<%= header :title => "New Release in the #{@branch.name} Branch of #{@project.name}" %>
+<%= header :title => "Release new version of #{@project.name} #{@branch.name}" %>
 <form method="post" enctype="multipart/form-data">
   <fieldset>
     <p><label for="tarball">Tarball:</label> <input type="file" id="tarball" name="tarball" size="30"/></p>
@@ -24,7 +24,7 @@
     <% for list in Mailinglist.find_all %>
       <p><span class="placeholder">&nbsp;</span> <input type="checkbox" name="mailinglists[<%= list.email %>]" value="announce" <%= 'checked="checked"' if @project.mailinglists.include?(list) %>/> Announce on <a href="<%= list.website %>"><%= list.email %></a></p>
     <% end %>
-    <p><span class="placeholder">&nbsp;</span> <input type="submit" value="Release and Celebrate!"/></p>
+    <p><span class="placeholder">&nbsp;</span> <input type="submit" value="Release and celebrate!"/></p>
   </fieldset>
 </form>
 <%= footer %>
