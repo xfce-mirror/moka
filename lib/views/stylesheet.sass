@@ -38,6 +38,7 @@ a
     top: 2em
     left: -2em
     right: -2em
+    bottom: 3em
   line-height: 2em
   padding-left: 1em
 
@@ -55,11 +56,12 @@ a
 
 h2
   margin:
-    top: 2em
+    top: 1.5em
 
   border-bottom: thin dotted rgb(0,50,150)
 
 table
+  border: 0em
 
   th
     text-align: left
@@ -78,21 +80,38 @@ table
     a.inactive
       color: rgb(100, 150, 250)
 
+form
+  p
+    padding: 0.25em
+
 fieldset
   border: 0em
+  padding-bottom: 0em
+
+  p 
+    padding: 0em
 
   label, span.placeholder
     display: block
     float: left
-    min-width: 30%
+    min-width: 25%
     text-align: right
-    padding-right: 1em
+    padding-right: 0.5em
+    line-height: 1.65em
+
+  label.inline
+    display: inline-block
+    float: none
+    min-width: 0%
 
   span.placeholder
     height: 2em
 
   textarea
     width: 60%
+
+  span.error, span.info
+    padding-left: 1em
 
 .error
   color: red

@@ -1,32 +1,43 @@
 module Moka
-  module Component
+  module Controllers
     module Projects
+      include Moka::Models
+
       def self.registered(app)
         app.get '/project/:name' do
-          requires_authentication
-
           @project = Project.find_by_name(params[:name])
-          erb :project
+
+          authentication_required(@project)
+
+          view :project
         end
         
         app.post '/project/:name/classify' do
-          project = Project.find_by_name(params[:name])
-          classification = Classification.find_by_name(params[:classification])
+          @project = Project.find_by_name(params[:name])
+          
+          authentication_required(@project)
 
-          project.classify_as(classification)
+          classification = Classification.find_by_name(params[:classification])
+          @project.classify_as(classification)
 
           redirect "/project/#{params[:name]}"
         end
 
         app.get '/project/:name/branch/:branch/release/:version/update' do
           @project = Project.find_by_name(params[:name])
+          
+          authentication_required(@project)
+
           @branch = Project::Branch.new(@project, params[:branch])
           @release = Project::Release.new(@project, @branch, params[:version])
-          erb :project_release_update
+          view :project_release_update
         end
 
         app.post '/project/:name/branch/:branch/release/:version/update' do
           @project = Project.find_by_name(params[:name])
+          
+          authentication_required(@project)
+
           @branch = Project::Branch.new(@project, params[:branch])
           @release = Project::Release.new(@project, @branch, params[:version])
 
@@ -55,18 +66,24 @@ module Moka
             end
           end
 
-          erb :project_release_update
+          view :project_release_update
         end
 
         app.get '/project/:name/branch/:branch/release/:version/delete' do
           @project = Project.find_by_name(params[:name])
+          
+          authentication_required(@project)
+
           @branch = Project::Branch.new(@project, params[:branch])
           @release = Project::Release.new(@project, @branch, params[:version])
-          erb :project_release_delete
+          view :project_release_delete
         end
 
         app.post '/project/:name/branch/:branch/release/:version/delete' do
           @project = Project.find_by_name(params[:name])
+
+          authentication_required(@project)
+
           @branch = Project::Branch.new(@project, params[:branch])
           @release = Project::Release.new(@project, @branch, params[:version])
           @release.delete
@@ -75,12 +92,18 @@ module Moka
 
         app.get '/project/:name/branch/:branch/new-release' do
           @project = Project.find_by_name(params[:name])
+
+          authentication_required(@project)
+
           @branch = Project::Branch.new(@project, params[:branch])
-          erb :project_branch_new_release
+          view :project_branch_new_release
         end
 
         app.post '/project/:name/branch/:branch/new-release' do
           @project = Project.find_by_name(params[:name])
+          
+          authentication_required(@project)
+
           @branch = Project::Branch.new(@project, params[:branch])
 
           error_set(:tarball, 'No file specified.') if params[:tarball].nil?
@@ -117,30 +140,43 @@ module Moka
           end
 
           unless error_set?
-            unless params[:identica].nil?
-              identica_announce_release(@release, "https://release.xfce.org/feed/project/#{@project.name}")
+            if env['identica'] and params[:identica]
+              url = URI.join(Configuration.get(:moka_url), 'feed', 'project', @project.name).to_s
+
+              if env['identica'].group.nil?
+                status = "#{@project.name} #{@release.version} released: #{url}"
+              else
+                status = "#{@project.name} #{@release.version} released: #{url} !#{env['identica'].group}"
+              end
+
+              env['identica'].post(status)
             end
             
-            mailinglists = params[:mailinglists].keys.collect do |email|
-              Mailinglist.find_by_email(email)
-            end
-
-            for mailinglist in mailinglists
-              mailinglist.announce_release(env['warden'].user, @release, params[:greeting], params[:message])
+            if env['mailinglists'] and params[:mailinglists]
+              env['mailinglists'].announce_release(@release, params[:message],
+                                                   authentication_user, 
+                                                   params[:mailinglists].keys)
             end
             
             redirect "/project/#{@project.name}"
           end
 
-          erb :project_branch_new_release
+          view :project_branch_new_release
         end
 
         app.get '/project/:name/new-release' do
           @project = Project.find_by_name(params[:name])
-          erb :project_new_release
+          
+          authentication_required(@project)
+
+          view :project_new_release
         end
 
         app.post '/project/:name/new-release' do
+          @project = Project.find_by_name(params[:name])
+          
+          authentication_required(@project)
+
           branch = if params[:branch] == 'nil' then params[:custom] else params[:branch] end
           redirect "/project/#{params[:name]}/branch/#{branch}/new-release"
         end

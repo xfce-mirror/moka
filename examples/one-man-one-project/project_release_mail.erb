@@ -1,5 +1,3 @@
-<%= greeting %>
-
 <%= release.project.name %> <%= release.version %> is now available for download as
 
   <%= release.tarball_basename %>
@@ -8,7 +6,7 @@
    MD5 checksum: <%= release.checksum(Digest::MD5) %>
 
 from the following mirrors:
-<% for mirror in Mirror.find_all %>
-  <%= mirror.download_url(release) %>
+
+<% for mirror in Moka::Models::Mirror.find_all %>  <%= mirror.download_url(release) %>
 <% end %>
 <%= message %>

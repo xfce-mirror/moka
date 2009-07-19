@@ -1,13 +1,17 @@
 module Moka
-  module Component
+  module Helpers
     module General
       def self.registered(app)
         app.before do 
           env[:error] = {}
         end
+      
+        app.helpers Helpers
       end
 
       module Helpers
+        include Moka::Models
+
         def header(args={})
           custom_binding = binding.clone
           eval 'params = ' + args.inspect, custom_binding
@@ -19,10 +23,16 @@ module Moka
         end
   
         def import(template, custom_binding=nil)
-          erb = File.open("views/#{template}.erb") do |file|
+          directory = File.expand_path(File.dirname(__FILE__))
+          filename = File.join(directory, '..', 'views', "#{template}.erb")
+          erb = open(filename) do |file|
             ERB.new(file.read)
           end
           erb.result(if custom_binding.nil? then binding else custom_binding end)
+        end
+
+        def view(*args)
+          import(*args)
         end
 
         def error_set(key, value)
@@ -33,8 +43,12 @@ module Moka
           env[:error][key]
         end
 
-        def error_set?
-          not env[:error].empty?
+        def error_set?(key = nil)
+          if key.nil?
+            not env[:error].empty?
+          else
+            env[:error].has_key?(key)
+          end
         end
       end
     end

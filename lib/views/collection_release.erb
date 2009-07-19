@@ -1,12 +1,12 @@
 <%= header :title => "Update #{@collection.display_name} #{@release.version}" %>
-<h2>Projects to Include in the Release</h2>
+<h2>Projects to include in the release</h2>
 <form method="post">
   <table cellspacing="0" cellpadding="0">
     <% for project in Project.find_all %>
       <tr>
         <th><%= project.name %></th>
         <td>
-          Included version: 
+          <label class="inline">Included version:</label>
           <select name="version[<%= project.name %>]">
             <% included_release = @release.included_project_release(project) %>
             <option name="nil" value="nil" <%= 'selected="selected"' if included_release.nil? %>>None</option>
