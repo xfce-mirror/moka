@@ -25,6 +25,7 @@ require File.join(directory, 'controllers', 'authentication')
 require File.join(directory, 'controllers', 'collections')
 require File.join(directory, 'controllers', 'projects')
 
+require File.join(directory, 'middleware', 'feeds')
 require File.join(directory, 'middleware', 'identica')
 require File.join(directory, 'middleware', 'mailinglists')
 

@@ -100,8 +100,12 @@ module Moka
               @release.add_project_release(project_release)
             end
 
+            if env['feeds']
+              env['feeds'].announce_release(@release, params[:message], authentication_user)
+            end
+            
             if env['identica'] and params[:identica]
-              url = URI.join(Configuration.get(:moka_url), 'feed', 'collection', @collection.name).to_s
+	      url = env['feeds'].get_collection_feed_url(@collection)
 
               if env['identica'].group.nil?
                 status = "#{@collection.display_name} #{@release.version} released: #{url}"
@@ -117,7 +121,7 @@ module Moka
                                                    authentication_user, 
                                                    params[:mailinglists].keys)
             end
-            
+
             redirect '/'
           end
 

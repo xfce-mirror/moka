@@ -77,12 +77,14 @@ module Moka
       end
     
       attr :name
+      attr :website
       attr :maintainers
       attr :mailinglists
       attr_accessor :classification
     
-      def initialize(name, maintainer_names, mailinglists)
+      def initialize(name, website, maintainer_names, mailinglists)
         @name = name
+        @website = website
         @maintainers = maintainer_names.collect do |name|
           Maintainer.find_by_username(name)
         end
@@ -94,13 +96,14 @@ module Moka
         {
           'json_class' => self.class.name,
           'name' => name,
+          'website' => website,
           'maintainers' => maintainers,
           'mailinglists' => mailinglists,
         }.to_json(*a)
       end
     
       def self.json_create(o)
-        new(o['name'], o['maintainers'], o['mailinglists'])
+        new(o['name'], o['website'], o['maintainers'], o['mailinglists'])
       end
     
       def ==(other)

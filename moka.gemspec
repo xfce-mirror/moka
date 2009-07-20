@@ -13,17 +13,19 @@ Gem::Specification.new do |s|
      "COPYING",
      "Rakefile",
      "VERSION.yml",
+     "examples/one-man-one-project/config.ru",
+     "examples/one-man-one-project/project_release_mail.erb",
      "lib/controllers/authentication.rb",
      "lib/controllers/collections.rb",
      "lib/controllers/projects.rb",
      "lib/helpers/general.rb",
+     "lib/middleware/feeds.rb",
      "lib/middleware/identica.rb",
      "lib/middleware/mailinglists.rb",
      "lib/models/archive.rb",
      "lib/models/classification.rb",
      "lib/models/collection.rb",
      "lib/models/configuration.rb",
-     "lib/models/mailinglist.rb",
      "lib/models/maintainer.rb",
      "lib/models/mirror.rb",
      "lib/models/project.rb",
@@ -61,16 +63,19 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<sinatra>, ["= 0.9.2"])
       s.add_runtime_dependency(%q<warden>, ["= 0.2.3"])
       s.add_runtime_dependency(%q<haml>, ["= 2.2.1"])
+      s.add_runtime_dependency(%q<ratom>, ["= 0.6.2"])
     else
       s.add_dependency(%q<pony>, ["= 0.3"])
       s.add_dependency(%q<sinatra>, ["= 0.9.2"])
       s.add_dependency(%q<warden>, ["= 0.2.3"])
       s.add_dependency(%q<haml>, ["= 2.2.1"])
+      s.add_dependency(%q<ratom>, ["= 0.6.2"])
     end
   else
     s.add_dependency(%q<pony>, ["= 0.3"])
     s.add_dependency(%q<sinatra>, ["= 0.9.2"])
     s.add_dependency(%q<warden>, ["= 0.2.3"])
     s.add_dependency(%q<haml>, ["= 2.2.1"])
+    s.add_dependency(%q<ratom>, ["= 0.6.2"])
   end
 end

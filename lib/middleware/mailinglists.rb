@@ -10,7 +10,13 @@ module Moka
 
       def initialize(app)
         @app = app
+	@app.helpers Helpers
         yield self if block_given?
+      end
+
+      # From http://blog.macromates.com/2006/wrapping-text-with-regular-expressions/
+      def wrap_text(txt, col = 72)
+        txt.gsub(/(.{1,#{col}})( +|$)\n?|(.{#{col}})/, "\\1\\3\n")
       end
 
       def project_subject(&block)
@@ -39,13 +45,15 @@ module Moka
 
       def announce_release(release, message, sender, recipients)
         return unless supports_release?(release)
+	
+	wrapped_msg = wrap_text(message)
 
         if release.is_a? Moka::Models::Collection::Release
-          subject = @collection_subject_fn.call(release, message, sender)
-          body = @collection_body_fn.call(release, message, sender)
+          subject = @collection_subject_fn.call(release, wrapped_msg, sender)
+          body = @collection_body_fn.call(release, wrapped_msg, sender)
         else 
-          subject = @project_subject_fn.call(release, message, sender)
-          body = @project_body_fn.call(release, message, sender)
+          subject = @project_subject_fn.call(release, wrapped_msg, sender)
+          body = @project_body_fn.call(release, wrapped_msg, sender)
         end
 
         recipients = [ recipients ] unless recipients.is_a? Array

@@ -140,8 +140,12 @@ module Moka
           end
 
           unless error_set?
+            if env['feeds']
+              env['feeds'].announce_release(@release, params[:message], authentication_user)
+            end
+
             if env['identica'] and params[:identica]
-              url = URI.join(Configuration.get(:moka_url), 'feed', 'project', @project.name).to_s
+              url = env['feeds'].get_project_feed_url(@project)      
 
               if env['identica'].group.nil?
                 status = "#{@project.name} #{@release.version} released: #{url}"
