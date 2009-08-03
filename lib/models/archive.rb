@@ -94,7 +94,7 @@ module Moka
           dir = Dir.new(source_dir)
     
           tarball = dir.entries.find do |entry|
-            entry == project_release_tarball_basename(project_release)
+            entry =~ project_release_tarball_pattern(project_release)
           end
     
           return !tarball.nil?
@@ -113,22 +113,6 @@ module Moka
         if File.directory?(collection_source_dir(release))
           source_dir = collection_source_dir(release)
 
-          open(File.join(source_dir, "MD5SUMS"), "w+") do |checksum_file|
-            for project_release in release.project_releases
-              checksum = project_release.checksum(Digest::MD5)
-              tarball = project_release.tarball_basename
-              checksum_file.puts("#{checksum} #{tarball}")
-            end
-          end
-    
-          open(File.join(source_dir, "SHA1SUMS"), "w+") do |checksum_file|
-            for project_release in release.project_releases
-              checksum = project_release.checksum(Digest::SHA1)
-              tarball = project_release.tarball_basename
-              checksum_file.puts("#{checksum} #{tarball}")
-            end
-          end
-
           release_dir = collection_release_dir(release)
 
           source_dir = collection_source_dir(release).gsub(release_dir + '/', '')
@@ -138,7 +122,7 @@ module Moka
           File.makedirs(target_dir) unless File.directory?(target_dir)
           File.delete(fat_tarball) if File.file?(fat_tarball)
 
-          system("cd #{release_dir} && tar cjf #{fat_tarball} #{source_dir}")
+          system("cd #{release_dir} && flock --timeout=5 #{fat_tarball} tar cjf #{fat_tarball} #{source_dir}")
         end
       end
     
@@ -190,17 +174,20 @@ module Moka
       def project_branches(project)
         branches = []
     
-        if File.directory?(project_dir(project))
-          dir = Dir.new(project_dir(project))
+        begin
+          if File.directory?(project_dir(project))
+            dir = Dir.new(project_dir(project))
     
-          names = dir.entries.select do |entry|
-            entry != '.' and entry != '..' \
-              and File.directory?(File.join(project_dir(project), entry))
-          end
+            names = dir.entries.select do |entry|
+              entry != '.' and entry != '..' \
+                and File.directory?(File.join(project_dir(project), entry))
+            end
     
-          branches += names.collect do |name|
-            Project::Branch.new(project, name)
+            branches += names.collect do |name|
+              Project::Branch.new(project, name)
+            end
           end
+        rescue NoMethodError
         end
     
         branches
@@ -214,50 +201,68 @@ module Moka
         source_file = file.path
         target_file = File.join(dir, basename)
     
-        File.move(source_file, target_file)
+        if File.file?(target_file)
+          begin
+            lockfile = File.new(target_file)
+            file.flock(File::LOCK_EX)
+
+            File.move(source_file, target_file)
+            File.chmod(0664, target_file)
+          ensure
+            lockfile.flock(File::LOCK_UN)
+          end
+        else
+          File.move(source_file, target_file)
+          File.chmod(0664, target_file)
+        end
+
+        open("#{target_file}.md5", File::CREAT|File::TRUNC|File::RDWR) do |file|
+          begin
+            file.flock(File::LOCK_EX)
+            file.puts "#{Digest::MD5.file(target_file)}  #{basename}"
+          ensure
+            file.flock(File::LOCK_UN)
+          end
+        end
     
+        open("#{target_file}.sha1", File::CREAT|File::TRUNC|File::RDWR) do |file|
+          begin
+            file.flock(File::LOCK_EX)
+            file.puts "#{Digest::SHA1.file(target_file)}  #{basename}"
+          ensure
+            file.flock(File::LOCK_UN)
+          end
+        end
+
         project_branch_update(branch)
       end
     
-      def project_branch_release_from_tarball(branch, tarball)
-        version = project_tarball_version(branch.project, tarball)
+      def project_release_from_tarball(project, tarball)
+        branch = project_tarball_branch(project, tarball)
+        version = project_tarball_version(project, tarball)
         Project::Release.new(branch.project, branch, version)
       end
       
       def project_branch_update(branch)
         dirname = project_branch_dir(branch.project, branch)
-    
-        if File.directory?(dirname)
-          dir = Dir.new(dirname)
-    
-          tarballs = dir.entries.select do |entry|
-            entry =~ project_tarball_pattern(branch.project)
-          end
-    
-          open(File.join(dirname, "MD5SUMS"), "w+") do |checksum_file|
-            for tarball in tarballs
-              open(File.join(dirname, tarball)) do |tarball_file|
-                checksum = Digest::MD5.hexdigest(tarball_file.read)
-                checksum_file.puts("#{checksum} #{tarball}")
-              end
-            end
-          end
-    
-          open(File.join(dirname, "SHA1SUMS"), "w+") do |checksum_file|
-            for tarball in tarballs
-              open(File.join(dirname, tarball)) do |tarball_file|
-                checksum = Digest::SHA1.hexdigest(tarball_file.read)
-                checksum_file.puts("#{checksum} #{tarball}")
-              end
-            end
-          end
-        end
-    
-        begin Dir.rmdir(dir) rescue SystemCallError end
+        begin Dir.rmdir(dirname) rescue SystemCallError end
       end
     
       def project_tarball_pattern(project)
-        /^(#{project.name})-([0-9.]+).tar.bz2$/
+        /^(#{project.name})-([0-9\.]+[a-zA-Z0-9\-_]+)\.tar\.(bz2|gz)$/i
+      end
+
+      def project_tarball_upload_pattern(project)
+        /^(#{project.name})-([0-9]\.[0-9])\.([0-9]\.){1,2}tar\.bz2$/i
+      end
+
+      def project_release_tarball_pattern(release)
+        /^(#{release.project.name})-(#{release.version})\.tar\.(bz2|gz)$/i
+      end
+
+      def project_tarball_branch(project, tarball)
+        version = tarball.gsub(project_tarball_upload_pattern(project), '\2')
+        Project::Branch.new(project, version)
       end
     
       def project_tarball_version(project, tarball)
@@ -265,6 +270,18 @@ module Moka
       end
     
       def project_release_tarball_basename(release)
+        source_dir = project_branch_dir(release.project, release.branch)
+
+        if File.directory?(source_dir)
+          dir = Dir.new(source_dir)
+
+          tarball = dir.entries.find do |entry|
+            entry =~ project_release_tarball_pattern(release)
+          end
+
+          return tarball unless tarball.nil?
+        end
+
         "#{release.project.name}-#{release.version}.tar.bz2"
       end
     
@@ -273,25 +290,23 @@ module Moka
                   project_release_tarball_basename(release))
       end
     
-      def project_release_add_tarball(release, file)
-        source_file = file.path
-        target_file = project_release_tarball_filename(release)
-    
-        path = Pathname.new(target_file)
-        parent = path.parent
-    
-        File.makedirs(parent) unless File.directory?(parent)
-        File.delete(target_file) if File.file?(target_file)
-        File.move(source_file, target_file)
-    
-        project_branch_update(release.branch)
-      end
-    
       def project_release_delete(release)
         filename = project_release_tarball_filename(release)
-    
+
         File.delete(filename) if File.file?(filename)
     
+        dirname = project_branch_dir(release.project, release.branch)
+        basename = File.basename(filename)
+
+        checksum_files = [
+          File.join(dirname, "#{basename}.md5"),
+          File.join(dirname, "#{basename}.sha1")
+        ]
+        
+        for file in checksum_files
+          File.delete(file) if File.file?(file)
+        end
+
         project_branch_update(release.branch)
       end
     
@@ -300,15 +315,24 @@ module Moka
     
         tarball_basename = project_release_tarball_basename(release)
         branch_dir = project_branch_dir(release.project, release.branch)
-        basename = if type == Digest::MD5 then 'MD5SUMS' else 'SHA1SUMS' end
+        basename = if type == Digest::MD5 then 
+          "#{tarball_basename}.md5" 
+        else 
+          "#{tarball_basename}.sha1"
+        end
     
         open(File.join(branch_dir, basename)) do |checksum_file|
-          for line in checksum_file.readlines
-            checksum, tarball = line.split(' ')
-            if tarball == tarball_basename
-              result = checksum
-              break
+          begin
+            checksum_file.flock(File::LOCK_SH)
+            for line in checksum_file.readlines
+              checksum, tarball = line.split(' ')
+              if tarball == tarball_basename
+                result = checksum
+                break
+              end
             end
+          ensure
+            checksum_file.flock(File::LOCK_UN)
           end
         end
     

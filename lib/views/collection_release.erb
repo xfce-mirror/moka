@@ -2,7 +2,7 @@
 <h2>Projects to include in the release</h2>
 <form method="post">
   <table cellspacing="0" cellpadding="0">
-    <% for project in Project.find_all %>
+    <% for project in Project.find_all.sort %>
       <tr>
         <th><%= project.name %></th>
         <td>

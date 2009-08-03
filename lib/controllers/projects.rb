@@ -11,11 +11,23 @@ module Moka
 
           view :project
         end
+
+        app.post '/project/:name/information' do
+          @project = Project.find_by_name(params[:name])
+          
+          authentication_required(@project)
+
+          @project.website = params[:website]
+          @project.description = params[:description]
+          @project.save
+
+          redirect "/project/#{params[:name]}"
+        end
         
         app.post '/project/:name/classify' do
           @project = Project.find_by_name(params[:name])
           
-          authentication_required(@project)
+          authentication_required
 
           classification = Classification.find_by_name(params[:classification])
           @project.classify_as(classification)
@@ -76,6 +88,7 @@ module Moka
 
           @branch = Project::Branch.new(@project, params[:branch])
           @release = Project::Release.new(@project, @branch, params[:version])
+
           view :project_release_delete
         end
 
@@ -86,31 +99,42 @@ module Moka
 
           @branch = Project::Branch.new(@project, params[:branch])
           @release = Project::Release.new(@project, @branch, params[:version])
+
+          if env['feeds']
+            env['feeds'].delete_release(@release)
+          end
+
           @release.delete
+
           redirect "/project/#{@project.name}"
         end
 
-        app.get '/project/:name/branch/:branch/new-release' do
+        app.get '/project/:name/new-release' do
           @project = Project.find_by_name(params[:name])
 
           authentication_required(@project)
 
-          @branch = Project::Branch.new(@project, params[:branch])
-          view :project_branch_new_release
+          view :project_new_release
         end
 
-        app.post '/project/:name/branch/:branch/new-release' do
+        app.get '/project/:name/new-release/tarball' do
+          @project = Project.find_by_name(params[:name])
+
+          authentication_required(@project)
+
+          view :project_new_release_tarball
+        end
+
+        app.post '/project/:name/new-release/tarball' do
           @project = Project.find_by_name(params[:name])
           
           authentication_required(@project)
 
-          @branch = Project::Branch.new(@project, params[:branch])
-
           error_set(:tarball, 'No file specified.') if params[:tarball].nil?
 
           unless error_set?
-            unless params[:tarball][:filename] =~ @project.tarball_pattern
-              error_set(:tarball, "Tarball has to match the pattern <tt>#{@project.tarball_pattern.source}</tt>.")
+            unless params[:tarball][:filename] =~ @project.tarball_upload_pattern
+              error_set(:tarball, "Tarball has to match the pattern<br/><tt>#{@project.tarball_upload_pattern.source}</tt>.")
             end
           end
 
@@ -122,7 +146,8 @@ module Moka
             end
           end
 
-          @release = @branch.release_from_tarball(params[:tarball][:filename])
+          @release = @project.release_from_tarball(params[:tarball][:filename])
+          @branch = @release.branch
 
           unless error_set?
             if @branch.has_release?(@release)
@@ -140,7 +165,63 @@ module Moka
           end
 
           unless error_set?
-            if env['feeds']
+            redirect "/project/#{params[:name]}/branch/#{@branch.name}/new-release/#{@release.version}/announcement"
+          else
+            view :project_new_release_tarball
+          end
+        end
+
+        app.get '/project/:name/branch/:branch/new-release/:version/announcement' do
+          @project = Project.find_by_name(params[:name])
+          
+          authentication_required(@project)
+
+          @branch = Project::Branch.new(@project, params[:branch])
+          @release = Project::Release.new(@project, @branch, params[:version])
+
+          view :project_branch_new_release_announcement
+        end
+
+        app.post '/project/:name/branch/:branch/new-release/:version/announcement' do
+          @project = Project.find_by_name(params[:name])
+          
+          authentication_required(@project)
+
+          @branch = Project::Branch.new(@project, params[:branch])
+          @release = Project::Release.new(@project, @branch, params[:version])
+
+          if env['identica'] and params[:identica]
+            url = env['feeds'].get_project_feed_url(@project)      
+
+            if env['identica'].group.nil?
+              @announcement_status = "#{@project.name} #{@release.version} released: #{url}"
+            else
+              @announcement_status = "#{@project.name} #{@release.version} released: #{url} !#{env['identica'].group}"
+            end
+          end
+
+          if env['feeds'] and params[:feeds]
+             # TODO
+          end
+
+          if env['mailinglists'] and params[:mailinglists]
+            @announcement_subject = env['mailinglists'].render_subject(@release, params[:message], authentication_user)
+            @announcement_body = env['mailinglists'].render_body(@release, params[:message], authentication_user)
+          end
+
+          view :project_branch_new_release_confirm
+        end
+
+        app.post '/project/:name/branch/:branch/new-release/:version/confirm' do
+          @project = Project.find_by_name(params[:name])
+          
+          authentication_required(@project)
+
+          @branch = Project::Branch.new(@project, params[:branch])
+          @release = Project::Release.new(@project, @branch, params[:version])
+
+          unless error_set?
+            if env['feeds'] and params[:feeds]
               env['feeds'].announce_release(@release, params[:message], authentication_user)
             end
 
@@ -164,26 +245,8 @@ module Moka
             
             redirect "/project/#{@project.name}"
           end
-
-          view :project_branch_new_release
         end
 
-        app.get '/project/:name/new-release' do
-          @project = Project.find_by_name(params[:name])
-          
-          authentication_required(@project)
-
-          view :project_new_release
-        end
-
-        app.post '/project/:name/new-release' do
-          @project = Project.find_by_name(params[:name])
-          
-          authentication_required(@project)
-
-          branch = if params[:branch] == 'nil' then params[:custom] else params[:branch] end
-          redirect "/project/#{params[:name]}/branch/#{branch}/new-release"
-        end
       end
     end
   end

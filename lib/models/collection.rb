@@ -109,7 +109,7 @@ module Moka
     
       def self.find_all_by_maintainer(maintainer)
         find_all.select do |collection|
-          collection.maintainers.include?(maintainer)
+          maintainer.roles.include?('admin') or collection.maintainers.include?(maintainer)
         end
       end
     

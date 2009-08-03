@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jannis Pohlmann"]
-  s.date = %q{2009-07-19}
+  s.date = %q{2009-07-29}
   s.email = %q{jannis@xfce.org}
   s.files = [
     "AUTHORS",
@@ -17,6 +17,7 @@ Gem::Specification.new do |s|
      "examples/one-man-one-project/project_release_mail.erb",
      "lib/controllers/authentication.rb",
      "lib/controllers/collections.rb",
+     "lib/controllers/maintainers.rb",
      "lib/controllers/projects.rb",
      "lib/helpers/general.rb",
      "lib/middleware/feeds.rb",
@@ -31,18 +32,21 @@ Gem::Specification.new do |s|
      "lib/models/project.rb",
      "lib/moka.rb",
      "lib/views/auth_login.erb",
+     "lib/views/collection.erb",
      "lib/views/collection_delete.erb",
      "lib/views/collection_new_release.erb",
      "lib/views/collection_release.erb",
      "lib/views/foot.erb",
      "lib/views/head.erb",
      "lib/views/index.erb",
+     "lib/views/maintainer.erb",
      "lib/views/manage_releases.erb",
-     "lib/views/manage_releases_collections.erb",
      "lib/views/permission_denied.erb",
      "lib/views/project.erb",
-     "lib/views/project_branch_new_release.erb",
+     "lib/views/project_branch_new_release_announcement.erb",
+     "lib/views/project_branch_new_release_confirm.erb",
      "lib/views/project_new_release.erb",
+     "lib/views/project_new_release_tarball.erb",
      "lib/views/project_release_delete.erb",
      "lib/views/project_release_update.erb",
      "lib/views/stylesheet.sass"

@@ -10,13 +10,8 @@ module Moka
 
       def initialize(app)
         @app = app
-	@app.helpers Helpers
+        @app.helpers Helpers
         yield self if block_given?
-      end
-
-      # From http://blog.macromates.com/2006/wrapping-text-with-regular-expressions/
-      def wrap_text(txt, col = 72)
-        txt.gsub(/(.{1,#{col}})( +|$)\n?|(.{#{col}})/, "\\1\\3\n")
       end
 
       def project_subject(&block)
@@ -35,6 +30,26 @@ module Moka
         @collection_body_fn = block if block_given?
       end
 
+      def render_subject(release, message, sender)
+        return '' unless supports_release?(release)
+        
+        if release.is_a? Moka::Models::Collection::Release
+          @collection_subject_fn.call(release, message, sender)
+        else 
+          @project_subject_fn.call(release, message, sender)
+        end
+      end
+
+      def render_body (release, message, sender)
+        return '' unless supports_release?(release)
+
+        if release.is_a? Moka::Models::Collection::Release
+          @collection_body_fn.call(release, message, sender)
+        else
+          @project_body_fn.call(release, message, sender)
+        end
+      end
+
       def supports_release?(release)
         if release.is_a? Moka::Models::Collection::Release
           !@collection_subject_fn.nil? and !@collection_body_fn.nil?
@@ -45,16 +60,9 @@ module Moka
 
       def announce_release(release, message, sender, recipients)
         return unless supports_release?(release)
-	
-	wrapped_msg = wrap_text(message)
 
-        if release.is_a? Moka::Models::Collection::Release
-          subject = @collection_subject_fn.call(release, wrapped_msg, sender)
-          body = @collection_body_fn.call(release, wrapped_msg, sender)
-        else 
-          subject = @project_subject_fn.call(release, wrapped_msg, sender)
-          body = @project_body_fn.call(release, wrapped_msg, sender)
-        end
+        subject = render_subject(release, message, sender)
+        body = render_body(release, message, sender)
 
         recipients = [ recipients ] unless recipients.is_a? Array
           

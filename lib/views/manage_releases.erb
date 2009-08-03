@@ -1,8 +1,18 @@
 <%= header :title => 'Manage releases' %>
-<%= import :manage_releases_collections %>
+<h2>Collections</h2>
+<table cellspacing="0" cellpadding="0">
+  <% for collection in Collection.find_all_by_maintainer(env['warden'].user).sort %>
+    <tr>
+      <th><a href="/collection/<%= collection.name %>"><%= collection.display_name %></a></th>
+      <td>
+        <a href="/collection/<%= collection.name %>/new-release">Release new version</a>
+      </td>
+    </tr>
+  <% end %>
+</table>
 <h2>Projects</h2>
 <table cellspacing="0" cellpadding="0">
-  <% for project in Project.find_all_by_maintainer(env['warden'].user) %>
+  <% for project in Project.find_all_by_maintainer(env['warden'].user).sort %>
     <tr>
       <th><a href="/project/<%= project.name %>"><%= project.name %></a></th>
       <td>

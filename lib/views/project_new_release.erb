@@ -1,17 +1,9 @@
-<%= header :title => "Select branch for the new release of #{@project.name}" %>
-<form method="post">
+<%= header :title => "Release new version of #{@project.name} (1/4)" %>
+<h2>Release information</h2>
+<p><strong>Before releasing, please make sure the <a href="/project/<%= @project.name %>">project information</a> is up to date. Also make sure your <a href="/maintainer/<%= authentication_user.username %>">email address</a> is correct.</strong></p>
+<form method="get" action="/project/<%= @project.name %>/new-release/tarball">
   <fieldset>
-    <p>
-      <label for="branch">Branch:</label> 
-      <select name="branch" id="branch">
-        <option value="nil">New</option>
-        <% for branch in @project.branches %>
-          <option value="<%= branch.name %>"><%= branch.name %></option>
-        <% end %>
-      </select>
-    </p>
-    <p><label for="custom">New branch name:</label> <input type="text" id="custom" name="custom" style="width:4em"/></p>
-    <p><span class="placeholder">&nbsp;</span> <input type="submit" value="Release in this branch"/></p>
+    <p><span class="placeholder">&nbsp;</span> <input type="submit" value="I verified the information is correct"/></p>
   </fieldset>
 </form>
 <%= footer %>

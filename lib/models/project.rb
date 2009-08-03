@@ -17,13 +17,14 @@ module Moka
             and other.name == name \
             and other.project == project
         end
+
+        def <=>(other)
+          return 0 unless other.is_a?(self.class)
+          name <=> other.name
+        end
     
         def add_tarball(file, basename)
           Archive.instance.project_branch_add_tarball(self, file, basename)
-        end
-    
-        def release_from_tarball(tarball)
-          Archive.instance.project_branch_release_from_tarball(self, tarball)
         end
     
         def has_release?(release)
@@ -62,10 +63,6 @@ module Moka
           Archive.instance.project_release_tarball_basename(self)
         end
 
-        def add_tarball(file)
-          Archive.instance.project_release_add_tarball(self, file)
-        end
-    
         def delete
           Archive.instance.project_release_delete(self)
         end
@@ -77,12 +74,13 @@ module Moka
       end
     
       attr :name
-      attr :website
+      attr_accessor :website
+      attr_accessor :description
       attr :maintainers
       attr :mailinglists
       attr_accessor :classification
     
-      def initialize(name, website, maintainer_names, mailinglists)
+      def initialize(name, website, maintainer_names, mailinglists, description = nil)
         @name = name
         @website = website
         @maintainers = maintainer_names.collect do |name|
@@ -90,6 +88,7 @@ module Moka
         end
         @mailinglists = mailinglists
         @classification = Classification.find_by_project(self)
+        @description = if description.nil? then "" else description end
       end
     
       def to_json(*a)
@@ -97,13 +96,14 @@ module Moka
           'json_class' => self.class.name,
           'name' => name,
           'website' => website,
-          'maintainers' => maintainers,
+          'maintainers' => maintainers.select do |m| !m.nil? end.collect do |m| m.username end,
           'mailinglists' => mailinglists,
+          'description' => description
         }.to_json(*a)
       end
     
       def self.json_create(o)
-        new(o['name'], o['website'], o['maintainers'], o['mailinglists'])
+        new(o['name'], o['website'], o['maintainers'], o['mailinglists'], o['description'])
       end
     
       def ==(other)
@@ -129,8 +129,20 @@ module Moka
         Archive.instance.project_change_classification(self, classification)
       end
     
+      def tarball_upload_pattern
+        Archive.instance.project_tarball_upload_pattern(self)
+      end
+
       def tarball_pattern
         Archive.instance.project_tarball_pattern(self)
+      end
+
+      def release_from_tarball(tarball)
+        Archive.instance.project_release_from_tarball(self, tarball)
+      end
+    
+      def save
+        self.class.do_save(self)
       end
     
       def self.find_all
@@ -141,7 +153,7 @@ module Moka
     
       def self.find_all_by_maintainer(maintainer)
         find_all.select do |project|
-          project.maintainers.include?(maintainer)
+          maintainer.roles.include?('admin') or project.maintainers.include?(maintainer)
         end
       end
     
@@ -153,6 +165,20 @@ module Moka
     
       def self.load(&block)
         @load = block if block_given?
+      end
+
+      def self.save(&block)
+        @save = block if block_given?
+      end
+
+      def self.reload_all
+        @projects = nil
+        find_all
+      end
+
+      def self.do_save(project)
+        @save = lambda do end if @save.nil?
+        @save.call(project)
       end
     end
   end

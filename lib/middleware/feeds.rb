@@ -7,14 +7,12 @@ module Moka
   module Middleware
     class Feeds
 
+      attr_accessor :base_url
+
       def initialize(app)
         @app = app
+        @base_url = ''
         yield self if block_given?
-      end
-
-      # From http://blog.macromates.com/2006/wrapping-text-with-regular-expressions/
-      def wrap_text(txt, col = 72)
-        txt.gsub(/(.{1,#{col}})( +|$)\n?|(.{#{col}})/, "\\1\\3\n")
       end
 
       def project_feed_url(&block)
@@ -63,22 +61,27 @@ module Moka
 
       def announce_release(release, message, sender)
         return unless supports_release?(release)
-
-        p 'release supported'
-
         if release.is_a? Moka::Models::Collection::Release
-          announce_collection_release(release, wrap_text(message), sender)
+          announce_collection_release(release, message, sender)
         else
-          announce_project_release(release, wrap_text(message), sender)
+          announce_project_release(release, message, sender)
         end
       end
 
       def announce_collection_release(release, message, sender)
         filename = @collection_feed_filename_fn.call(release.collection)
 
+        feed = nil
+
         if File.exists?(filename)
-          file = File.open(filename)
-          feed = Atom::Feed.load_feed(file)
+          open(filename) do |file|
+            begin
+              file.flock(File::LOCK_SH)
+              feed = Atom::Feed.load_feed(file)
+            ensure
+              file.flock(File::LOCK_UN)
+            end
+          end
         else
           dirname = File.dirname(filename)
           File.makedirs(dirname) unless File.directory?(dirname)
@@ -104,16 +107,29 @@ module Moka
         feed.entries.unshift(entry)
 
         File.open(filename, 'w+') do |file|
-          file.write(feed.to_xml)
+          begin
+            file.flock(File::LOCK_EX)
+            file.write(feed.to_xml)
+          ensure
+            file.flock(File::LOCK_UN)
+          end
         end
       end
 
       def announce_project_release(release, message, sender)
         filename = @project_feed_filename_fn.call(release.project)
 
+        feed = nil
+
         if File.exists?(filename)
-          file = File.open(filename)
-          feed = Atom::Feed.load_feed(file)
+          open(filename) do |file|
+            begin
+              file.flock(File::LOCK_SH)
+              feed = Atom::Feed.load_feed(file)
+            ensure
+              file.flock(File::LOCK_UN)
+            end
+          end
         else
           dirname = File.dirname(filename)
           File.makedirs(dirname) unless File.directory?(dirname)
@@ -138,8 +154,92 @@ module Moka
 
         feed.entries.unshift(entry)
 
-        File.open(filename, 'w+') do |file|
-          file.write(feed.to_xml)
+        open(filename, 'w+') do |file|
+          begin
+            file.flock(File::LOCK_EX)
+            file.write(feed.to_xml)
+          ensure
+            file.flock(File::LOCK_UN)
+          end
+        end
+        File.chmod(0664, filename)
+      end
+
+      def delete_collection_release(release)
+        filename = @project_feed_filename_fn.call(release.project)
+
+        if File.exists?(filename)
+          feed = nil
+
+          open(filename) do |file|
+            begin
+              file.flock(File::LOCK_SH)
+              feed = Atom::Feed.load_feed(file)
+            ensure
+              file.flock(File::LOCK_UN)
+            end
+          end
+
+          if feed
+            for entry in feed.entries 
+              if entry.id == "#{release.collection.name}-#{release.version}"
+                feed.entries.delete(entry)
+              end
+            end
+
+            open(filename, 'w+') do |file|
+              begin
+                file.flock(File::LOCK_EX)
+                file.write(feed.to_xml)
+              ensure
+                file.flock(File::LOCK_UN)
+              end
+            end
+          end
+        end
+      end
+
+      def delete_project_release(release)
+        filename = @project_feed_filename_fn.call(release.project)
+
+        if File.exists?(filename)
+          feed = nil
+
+          open(filename) do |file|
+            begin
+              file.flock(File::LOCK_SH)
+              feed = Atom::Feed.load_feed(file)
+            ensure
+              file.flock(File::LOCK_UN)
+            end
+          end
+
+          if feed
+            for entry in feed.entries 
+              if entry.id == "#{release.project.name}-#{release.version}"
+                feed.entries.delete(entry)
+              end
+            end
+
+            open(filename, 'w+') do |file|
+              begin
+                file.flock(File::LOCK_EX)
+                file.write(feed.to_xml)
+              ensure
+                file.flock(File::LOCK_UN)
+              end
+            end
+          end
+        end
+      end
+
+      def delete_release(release)
+        return unless supports_release?(release)
+
+        if release.is_a? Moka::Models::Collection::Release
+          delete_collection_release(release)
+        else
+          delete_project_release(release)
         end
       end
 

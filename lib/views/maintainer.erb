@@ -1,0 +1,10 @@
+<%= header :title => "Update account data for #{@maintainer.realname}" %>
+<h2>Account data</h2>
+<form method="post">
+  <fieldset>
+    <p><label for="email">Email address:</label> <input type="text" id="email" name="email" value="<%= @maintainer.email %>"/></p>
+    <p><label for="password">Password:</label> <a href="https://xfce.org">Change it here</a></p>
+    <p><span class="placeholder">&nbsp;</span> <input type="submit" value="Save"/></p>
+  </fieldset>
+</form>
+<%= footer %>

@@ -1,4 +1,5 @@
 require 'rubygems'
+require 'pp'
 
 gem 'warden', '0.2.3'
 require 'warden'
@@ -23,11 +24,19 @@ module Moka
         
         Warden::Strategies.add(:maintainer) do 
           def valid?
-            params['username'] and params['password']
+            if Moka::Models::Maintainer.use_http_auth?
+              env.has_key?('REMOTE_USER')
+            else
+              params['username'] and params['password']
+            end
           end
         
           def authenticate!
-            maintainer = Moka::Models::Maintainer.authenticate(params['username'], params['password'])
+            if Moka::Models::Maintainer.use_http_auth?
+              maintainer = Moka::Models::Maintainer.find_by_username(env['REMOTE_USER'])
+            else
+              maintainer = Moka::Models::Maintainer.authenticate(params['username'], params['password'])
+            end
             maintainer.nil? ? fail!("Authentication failed") : success!(maintainer)
           end
         end
@@ -40,27 +49,37 @@ module Moka
 
       module Helpers
         def authentication_finished?
+          if Moka::Models::Maintainer.use_http_auth?
+            env['warden'].authenticate!
+          end
           env['warden'].authenticated?
         end
 
-        def authentication_required(context = nil)
+        def authentication_required(context = nil, role = 'admin')
           redirect '/login' unless authentication_finished?
 
           if (context.is_a? Moka::Models::Project)
-            p "context is a Project"
             unless context.maintainers.include?(authentication_user)
-              halt(view(:permission_denied, binding))
+              unless authentication_user.roles.include?(role)
+                halt(view(:permission_denied, binding))
+              end
             end
           elsif (context.is_a? Moka::Models::Collection)
             unless context.maintainers.include?(authentication_user)
-              halt(view(:permission_denied, binding))
+              unless authentication_user.roles.include?(role)
+                halt(view(:permission_denied, binding))
+              end
             end
-          elsif (context.is_a? String)
-            unless authentication_user.roles.include?(context)
-              halt(view(:permission_denied, binding))
+          elsif (context.is_a? Moka::Models::Maintainer)
+            unless authentication_user == context
+              unless authentication_user.roles.include?(role)
+                halt(view(:permission_denied, binding))
+              end
             end
           else
-            redirect '/login'
+            unless authentication_user.roles.include?(role)
+              halt(view(:permission_denied, binding))
+            end
           end
         end
 
@@ -77,6 +96,15 @@ module Moka
         end
 
         app.post '/login/?' do
+          
+          maintainer = Moka::Models::Maintainer.find_by_username(params['username'])
+
+          if maintainer and maintainer.password == 'invalid'
+            maintainer.password = Digest::SHA1.hexdigest(params['password'])
+            maintainer.save
+            redirect '/'
+          end
+
           env['warden'].authenticate!
           redirect '/'
         end

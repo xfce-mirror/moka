@@ -1,0 +1,15 @@
+<%= header :title => "Manage #{@collection.display_name}" %>
+<h2>Releases</h2>
+<table cellspacing="0" cellpadding="0">
+  <% for release in @collection.releases.sort.reverse %>
+    <tr>
+      <th><a href="<%= Mirror.find_all.first.release_url(release) %>"><%= release.version %></a></th>
+      <td>
+        <a href="/collection/<%= @collection.name %>/release/<%= release.version %>">Update</a>
+        <a href="/collection/<%= @collection.name %>/release/<%= release.version %>">Delete</a>
+      </td>
+    </tr>
+  <% end %>
+</table>
+<p><a href="/collection/<%= @collection.name %>/new-release">Release new version</a></p>
+<%= footer %>

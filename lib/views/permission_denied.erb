@@ -2,11 +2,13 @@
 <p class="error">You're denied access to this page for the following reason:</p>
 <p class="error" style="text-align:center;"><strong>
   <% if context.is_a? Moka::Models::Project %>
-    You are not listed as a maintainer of <%= context.name %>.
+    You are not listed as a maintainer of <%= context.name %> and your role is not <%= role %> either.
   <% elsif context.is_a? Moka::Models::Collection %>
-    You are not listed as a maintainer of <%= context.display_name %>.
-  <% elsif context.is_a? String %>
-    This page requires the <tt><%= context %></tt> role.
+    You are not listed as a maintainer of <%= context.display_name %> and your role is not <%= role %> either.
+  <% elsif context.is_a? Moka::Models::Maintainer %>
+    You are not <%= context.realname %> and your role is not <%= role %> either.
+  <% else %>
+    The <%= role %> role is required for this.
   <% end %>
 </strong></p>
 <p><a href="javascript:history.back()">Bring me back!</a></p>

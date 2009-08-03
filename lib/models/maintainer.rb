@@ -4,16 +4,18 @@ module Moka
   module Models
     class Maintainer
     
-      attr :username
-      attr :realname
-      attr :password
-      attr :email
+      attr_accessor :username
+      attr_accessor :realname
+      attr_accessor :password
+      attr_accessor :email
+      attr_accessor :roles
     
-      def initialize(username, realname, password, email)
+      def initialize(username, realname, password, email, roles)
         @username = username
         @realname = realname
         @password = password
         @email = email
+        @roles = if roles.nil? then [] else roles end
       end
     
       def to_json(*a)
@@ -22,24 +24,33 @@ module Moka
           'username' => username,
           'realname' => realname,
           'password' => password,
-          'email' => email
+          'email' => email,
+          'roles' => roles
         }.to_json(*a)
       end
     
       def self.json_create(o)
-        new(o['username'], o['realname'], o['password'], o['email'])
+        new(o['username'], o['realname'], o['password'], o['email'], o['roles'])
       end
     
       def ==(other)
-        other.is_a?(self.class) \
-          and other.username == username \
-          and other.realname == realname \
-          and other.password == password \
-          and other.email == email
+        other.is_a?(self.class) and other.username == username
       end
 
       def display_email
         "#{realname} <#{email}>"
+      end
+
+      def save
+        self.class.do_save(self)
+      end
+
+      def self.use_http_auth=(value)
+        @use_http_auth = value
+      end
+
+      def self.use_http_auth?
+        !@use_http_auth.nil? and @use_http_auth
       end
     
       def self.find_all
@@ -67,6 +78,19 @@ module Moka
         @load = block if block_given?
       end
 
+      def self.save(&block)
+        @save = block if block_given?
+      end
+
+      def self.reload_all
+        @maintainers = nil
+        find_all
+      end
+
+      def self.do_save(maintainer)
+        @save = lambda do end if @save.nil?
+        @save.call(maintainer)
+      end
     end
   end
 end

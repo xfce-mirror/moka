@@ -4,6 +4,14 @@ module Moka
       include Moka::Models
 
       def self.registered(app)
+        app.get '/collection/:name' do
+          @collection = Collection.find_by_name(params[:name])
+
+          authentication_required(@collection)
+
+          view :collection
+        end
+
         app.get '/collection/:name/release/:release' do
           @collection = Collection.find_by_name(params[:name])
 

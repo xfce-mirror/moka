@@ -18,6 +18,15 @@ module Moka
       def self.json_create(o)
         new(o['url'])
       end
+
+      def release_url(release)
+        if release.is_a?(Collection::Release)
+          dir = Archive.instance.collection_release_dir(release)
+        else
+          dir = Archive.instance.project_branch_dir(release.project, release.branch)
+        end
+        dir.gsub(Archive.instance.root_dir, url)
+      end
     
       def download_url(release)
         if release.is_a?(Collection::Release)
