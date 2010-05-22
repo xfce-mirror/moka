@@ -77,6 +77,14 @@ module Moka
         link_filename = File.join(source_dir, File.basename(link_target))
     
         File.link(link_target, link_filename)
+
+        checksum_files = project_release_checksum_filenames(project_release)
+        for filename in checksum_files
+          link_target = filename
+          link_filename = File.join(source_dir, File.basename(link_target))
+
+          File.link(link_target, link_filename)
+        end
       end
     
       def collection_release_remove_project_release(release, project_release)
@@ -290,21 +298,24 @@ module Moka
         File.join(project_branch_dir(release.project, release.branch), \
                   project_release_tarball_basename(release))
       end
+
+      def project_release_checksum_filenames(release)
+        tarball_basename = project_release_tarball_basename(release)
+        dirname = project_branch_dir(release.project, release.branch)
+
+        filenames = [ 
+          File.join(dirname, "#{tarball_basename}.md5"), 
+          File.join(dirname, "#{tarball_basename}.sha1")
+        ]
+      end
     
       def project_release_delete(release)
         filename = project_release_tarball_filename(release)
 
         File.delete(filename) if File.file?(filename)
-    
-        dirname = project_branch_dir(release.project, release.branch)
-        basename = File.basename(filename)
 
-        checksum_files = [
-          File.join(dirname, "#{basename}.md5"),
-          File.join(dirname, "#{basename}.sha1")
-        ]
-        
-        for file in checksum_files
+        checksum_filenames = project_release_checksum_filenames(release)
+        for file in checksum_filenames 
           File.delete(file) if File.file?(file)
         end
 
