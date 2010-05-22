@@ -6,7 +6,7 @@
       <th><a href="<%= Mirror.find_all.first.release_url(release) %>"><%= release.version %></a></th>
       <td>
         <a href="/collection/<%= @collection.name %>/release/<%= release.version %>">Update</a>
-        <a href="/collection/<%= @collection.name %>/release/<%= release.version %>">Delete</a>
+        <a href="/collection/<%= @collection.name %>/release/<%= release.version %>/delete">Delete</a>
       </td>
     </tr>
   <% end %>
