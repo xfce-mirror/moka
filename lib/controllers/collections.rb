@@ -113,7 +113,7 @@ module Moka
             end
             
             if env['identica'] and params[:identica]
-	      url = env['feeds'].get_collection_feed_url(@collection)
+	            url = env['feeds'].get_collection_feed_url(@collection)
 
               if env['identica'].group.nil?
                 status = "#{@collection.display_name} #{@release.version} released: #{url}"
@@ -131,6 +131,8 @@ module Moka
             end
 
             redirect '/'
+
+            @release.update
           end
 
           view :collection_new_release
