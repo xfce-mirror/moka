@@ -253,7 +253,8 @@ module Moka
       end
 
       def project_tarball_upload_pattern(project)
-        /^(#{project.name})-([0-9]\.[0-9])\.([0-9]\.){1,2}tar\.bz2$/i
+        # /^(#{project.name})-([0-9]\.[0-9])\.([0-9]\.){1,2}tar\.bz2$/i
+        /^(#{project.name})-([0-9]\.[0-9]+)\.([0-9]+\.){1,2}tar\.bz2$/i
       end
 
       def project_release_tarball_pattern(release)
