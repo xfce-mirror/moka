@@ -76,6 +76,7 @@ module Moka
         link_target = project_release_tarball_filename(project_release)
         link_filename = File.join(source_dir, File.basename(link_target))
     
+        File.delete(link_filename) if File.file?(link_filename)
         File.link(link_target, link_filename)
 
         checksum_files = project_release_checksum_filenames(project_release)
@@ -83,6 +84,7 @@ module Moka
           link_target = filename
           link_filename = File.join(source_dir, File.basename(link_target))
 
+          File.delete(link_filename) if File.file?(link_filename)
           File.link(link_target, link_filename)
         end
       end
