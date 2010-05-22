@@ -108,6 +108,8 @@ module Moka
               @release.add_project_release(project_release)
             end
 
+            @release.update
+
             if env['feeds']
               env['feeds'].announce_release(@release, params[:message], authentication_user)
             end
@@ -131,8 +133,6 @@ module Moka
             end
 
             redirect '/'
-
-            @release.update
           end
 
           view :collection_new_release
