@@ -132,7 +132,9 @@ module Moka
           File.makedirs(target_dir) unless File.directory?(target_dir)
           File.delete(fat_tarball) if File.file?(fat_tarball)
 
-          system("cd #{release_dir} && flock --timeout=5 #{fat_tarball} tar cjf #{fat_tarball} #{source_dir}")
+          if system("cd #{release_dir} && flock --timeout=5 #{fat_tarball} tar cjf #{fat_tarball} #{source_dir}")
+            update_tarball_checksums(fat_tarball)
+          end
         end
       end
     
@@ -225,26 +227,32 @@ module Moka
           File.move(source_file, target_file)
           File.chmod(0664, target_file)
         end
+        
+        update_tarball_checksums(target_file)
 
-        open("#{target_file}.md5", File::CREAT|File::TRUNC|File::RDWR) do |file|
+        project_branch_update(branch)
+      end
+
+      def update_tarball_checksums(tarball)
+        basename = File.basename(tarball)
+
+        open("#{tarball}.md5", File::CREAT|File::TRUNC|File::RDWR) do |file|
           begin
             file.flock(File::LOCK_EX)
-            file.puts "#{Digest::MD5.file(target_file)}  #{basename}"
+            file.puts "#{Digest::MD5.file(tarball)}  #{basename}"
           ensure
             file.flock(File::LOCK_UN)
           end
         end
     
-        open("#{target_file}.sha1", File::CREAT|File::TRUNC|File::RDWR) do |file|
+        open("#{tarball}.sha1", File::CREAT|File::TRUNC|File::RDWR) do |file|
           begin
             file.flock(File::LOCK_EX)
-            file.puts "#{Digest::SHA1.file(target_file)}  #{basename}"
+            file.puts "#{Digest::SHA1.file(tarball)}  #{basename}"
           ensure
             file.flock(File::LOCK_UN)
           end
         end
-
-        project_branch_update(branch)
       end
     
       def project_release_from_tarball(project, tarball)
