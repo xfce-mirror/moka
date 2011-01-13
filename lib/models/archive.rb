@@ -137,6 +137,11 @@ module Moka
           end
         end
       end
+
+      def collection_release_update_checksums(release)
+        fat_tarball = collection_fat_tarball_filename(release)
+        update_tarball_checksums(fat_tarball)
+      end
     
       def classification_dir(classification)
         File.join(root_dir, 'src', classification.name)

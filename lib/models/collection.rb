@@ -55,7 +55,11 @@ module Moka
         def update
           Archive.instance.collection_release_update(self)
         end
-    
+
+        def update_checksums
+          Archive.instance.collection_release_update_checksums(self)
+        end
+
         def template_name
           'mailinglist_collection_announcement'
         end

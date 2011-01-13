@@ -55,7 +55,7 @@ module Moka
           view :collection_delete
         end
         
-       app. post '/collection/:name/release/:release/delete' do
+       app.post '/collection/:name/release/:release/delete' do
           @collection = Collection.find_by_name(params[:name])
 
           authentication_required(@collection)
@@ -64,7 +64,25 @@ module Moka
           @release.delete
           redirect '/'
         end
-        
+
+        app.get '/collection/:name/release/:release/update_fat_tarball' do
+          @collection = Collection.find_by_name(params[:name])
+
+          authentication_required(@collection)
+
+          @release = Collection::Release.new(@collection, params[:release])
+          @release.update
+        end
+
+        app.get '/collection/:name/release/:release/update_fat_tarball_checksums' do
+          @collection = Collection.find_by_name(params[:name])
+
+          authentication_required(@collection)
+
+          @release = Collection::Release.new(@collection, params[:release])
+          @release.update
+        end
+
         app.get '/collection/:name/new-release' do
           @collection = Collection.find_by_name(params[:name])
 

@@ -1,4 +1,7 @@
 <%= header :title => "Update #{@collection.display_name} #{@release.version}" %>
+<h2>Administrative Tasks</h2>
+<p><a href="/collection/<%= @collection.name %>/release/<%= @release.version %>/update_fat_tarball">Regenerate fat tarball</a></p>
+<p><a href="/collection/<%= @collection.name %>/release/<%= @release.version %>/update_fat_tarball_checksum">Update fat tarball checksums</a></p>
 <h2>Projects to include in the release</h2>
 <form method="post">
   <table cellspacing="0" cellpadding="0">
