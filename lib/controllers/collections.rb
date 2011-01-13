@@ -72,6 +72,8 @@ module Moka
 
           @release = Collection::Release.new(@collection, params[:release])
           @release.update
+
+          view :collection_release
         end
 
         app.get '/collection/:name/release/:release/update_fat_tarball_checksums' do
@@ -81,6 +83,8 @@ module Moka
 
           @release = Collection::Release.new(@collection, params[:release])
           @release.update
+
+          view :collection_release
         end
 
         app.get '/collection/:name/new-release' do
