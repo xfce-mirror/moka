@@ -10,6 +10,12 @@ module Moka
           view :announcements
         end
 
+        app.get '/announcements/identica' do
+          authentication_required
+
+          redirect '/announcements'
+        end
+
         app.post '/announcements/identica' do
           authentication_required
 
@@ -31,6 +37,8 @@ module Moka
             end
 
             env['identica'].post(status)
+
+            redirect '/'
           end
 
           view :announcements
