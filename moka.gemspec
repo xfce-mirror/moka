@@ -65,7 +65,7 @@ Gem::Specification.new do |s|
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
-    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
+    if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<pony>, ["= 0.3"])
       s.add_runtime_dependency(%q<sinatra>, ["= 0.9.2"])
       s.add_runtime_dependency(%q<warden>, ["= 0.2.3"])
