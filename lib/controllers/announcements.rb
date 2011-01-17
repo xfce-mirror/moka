@@ -14,7 +14,7 @@ module Moka
           authentication_required
 
           unless env['identica']
-            error_set(:text, 'Posting announcements on identi.ca is not supported.')
+            error_set(:identica, 'Publishing announcements on identi.ca is not supported at the moment.')
           end
 
           unless error_set?
