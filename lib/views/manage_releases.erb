@@ -1,4 +1,6 @@
 <%= header :title => 'Manage releases' %>
+<h2>Utilities</h2>
+<p><a href="/announcements">Publish announcements</a></p>
 <h2>Collections</h2>
 <table cellspacing="0" cellpadding="0">
   <% for collection in Collection.find_all_by_maintainer(env['warden'].user).sort %>
