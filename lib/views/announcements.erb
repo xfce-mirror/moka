@@ -5,11 +5,11 @@
 <% end %>
 <form method="post" action="/announcements/identica">
   <fieldset>
-    <p><label for="text">Text:</label></p>
-    <p><textarea rows="3" cols="50" name="text"></textarea></p>
+    <p><label for="text">Text:</label> <textarea rows="3" cols="50" name="text"></textarea></p>
     <% if error(:text) %>
-      <p class="error"><%= error(:text) %></p>
+      <p class="error"><span class="placeholder">&nbsp;</span> <%= error(:text) %></p>
     <% end %>
-  <p><input type="submit" value="Publish"/></p>
+    <p><span class="placeholder">&nbsp;</span> <input type="submit" value="Publish"/></p>
+  </fieldset>
 </form>
 <%= footer %>
