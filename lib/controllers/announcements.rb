@@ -25,7 +25,7 @@ module Moka
 
           unless error_set?
             group_length = if env['identica'].group then 1 + env['identica'].group.size else 0 end
-            if params[:text].size > (140 - group_string_length)
+            if params[:text].size > (140 - group_length)
               if group_length > 0
                 error_set(:text, "Message length is limited to 140 characters including the <tt>!#{env['identica'].group}</tt> that will be appended to the message.")
               else
