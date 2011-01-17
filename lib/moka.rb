@@ -21,6 +21,7 @@ require File.join(directory, 'models', 'archive')
 
 require File.join(directory, 'helpers', 'general')
 
+require File.join(directory, 'controllers', 'announcements')
 require File.join(directory, 'controllers', 'authentication')
 require File.join(directory, 'controllers', 'collections')
 require File.join(directory, 'controllers', 'projects')
@@ -37,6 +38,7 @@ module Moka
 
     register Moka::Helpers::General
 
+    register Moka::Controllers::Announcements
     register Moka::Controllers::Authentication
     register Moka::Controllers::Projects
     register Moka::Controllers::Collections
@@ -46,7 +48,7 @@ module Moka
   
     get '/stylesheet.css' do
       content_type 'text/css', :charset => 'utf-8'
-      
+
       directory = File.join(File.expand_path(File.dirname(__FILE__)), 'views')
   
       template = File.read(File.join(directory, 'stylesheet.sass'))

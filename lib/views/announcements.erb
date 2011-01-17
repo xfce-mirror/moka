@@ -1,0 +1,9 @@
+<%= header :title => "Announcements" %>
+<% if env['identica'] %>
+<h2>Publish an announcement on identi.ca</h2>
+<form method="post" action="/announcements/identica">
+  <p><textarea rows="3" cols="30" name="text"></textarea></p>
+  <p><input type="submit" value="Publish"/></p>
+</form>
+<% end %>
+<%= footer %>
