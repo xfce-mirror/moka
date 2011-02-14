@@ -55,29 +55,40 @@ module Moka
           env['warden'].authenticated?
         end
 
-        def authentication_required(context = nil, role = 'admin')
+        def authentication_required(context = nil, roles = ['admin'])
           redirect '/login' unless authentication_finished?
 
           if (context.is_a? Moka::Models::Project)
+            # abort processing the current page if the user is not
+            # a maintainer of the project and his/her user roles
+            # and the required roles have no elements in common
             unless context.maintainers.include?(authentication_user)
-              unless authentication_user.roles.include?(role)
+              if (authentication_user.roles & roles).empty?
                 halt(view(:permission_denied, binding))
               end
             end
           elsif (context.is_a? Moka::Models::Collection)
+            # abort processing the current page if the user is not
+            # a maintainer of the collection and his/her user roles
+            # and the required roles have no elements in common
             unless context.maintainers.include?(authentication_user)
-              unless authentication_user.roles.include?(role)
+              if (authentication_user.roles & roles).empty?
                 halt(view(:permission_denied, binding))
               end
             end
           elsif (context.is_a? Moka::Models::Maintainer)
+            # abort processing the current page if the user is not
+            # the same as the required maintainer and his/her user 
+            # roles and the required roles have no elements in common
             unless authentication_user == context
-              unless authentication_user.roles.include?(role)
+              if (authentication_user.roles & roles).empty?
                 halt(view(:permission_denied, binding))
               end
             end
           else
-            unless authentication_user.roles.include?(role)
+            # abort processing the current page if the user roles
+            # and the required roles have no elements in common
+            if (authentication_user.roles & roles).empty?
               halt(view(:permission_denied, binding))
             end
           end
