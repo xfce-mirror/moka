@@ -1,6 +1,6 @@
 <%= header :title => "Release new version of #{@project.name} (1/4)" %>
 <h2>Release information</h2>
-<p><strong>Before releasing, please make sure the <a href="/project/<%= @project.name %>">project information</a> is up to date. Also make sure your <a href="/maintainer/<%= authentication_user.username %>">email address</a> is correct.</strong></p>
+<p><strong>Before releasing, please make sure the <a href="/project/<%= @project.name %>">project information</a> is up to date. Also make sure you are subscribed to the mailing lists with <a href="/maintainer/<%= authentication_user.username %>"><%= authentication_user.email %></a> else the announcement will not be posted.</strong></p>
 <form method="get" action="/project/<%= @project.name %>/new-release/tarball">
   <fieldset>
     <p><span class="placeholder">&nbsp;</span> <input type="submit" value="I verified the information is correct"/></p>
