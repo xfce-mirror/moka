@@ -13,12 +13,13 @@
       <% else %>
         <a href="/login">Manage Releases</a>
       <% end %>
-      <% if env['feeds'] %>
-        <a href="<%= env['feeds'].base_url %>">News Feeds</a>
-      <% end %>
-      <a href="http://identi.ca/xfce">identi.ca Channel</a>
       <% if not Moka::Models::Maintainer.use_http_auth? and env['warden'].authenticated? %>
         <a href="/maintainer/<%= authentication_user.username %>">Profile</a>
         <a href="/logout">Logout</a>
       <% end %>
+      <br />
+      <% if env['feeds'] %>
+        <a href="<%= env['feeds'].base_url %>">News Feeds</a>
+      <% end %>
+      <a href="http://identi.ca/xfce">identi.ca Channel</a>
     </p>
