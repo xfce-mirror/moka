@@ -8,7 +8,7 @@
   <% elsif context.is_a? Moka::Models::Maintainer %>
     You are not <%= context.realname %> and your roles include none of <%= roles.to_s %> either.
   <% else %>
-    One of the <%= role.to_s %> roles is required for this.
+    One of the <%= roles.to_s %> roles is required for this.
   <% end %>
 </strong></p>
 <p><a href="javascript:history.back()">Bring me back!</a></p>
