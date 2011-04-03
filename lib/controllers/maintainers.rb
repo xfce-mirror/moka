@@ -12,6 +12,13 @@ module Moka
           view :maintainer_profile
         end
 
+        app.get '/maintainer' do
+
+          authentication_required
+
+          view :maintainer
+        end
+
         app.post '/maintainer/profile/:username' do
           @maintainer = Maintainer.find_by_username(params[:username])
 
