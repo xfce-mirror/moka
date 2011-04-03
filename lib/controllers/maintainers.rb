@@ -4,15 +4,15 @@ module Moka
       include Moka::Models
 
       def self.registered(app)
-        app.get '/maintainer/:username' do
+        app.get '/maintainer/profile/:username' do
           @maintainer = Maintainer.find_by_username(params[:username])
 
           authentication_required(@maintainer)
 
-          view :maintainer
+          view :maintainer_profile
         end
 
-        app.post '/maintainer/:username' do
+        app.post '/maintainer/profile/:username' do
           @maintainer = Maintainer.find_by_username(params[:username])
 
           authentication_required(@maintainer)
@@ -52,7 +52,7 @@ module Moka
             end
           end
 
-          view :maintainer
+          view :maintainer_profile
         end
       end
     end

@@ -20,7 +20,7 @@
       <% for list in env['mailinglists'].lists %>
         <p><span class="placeholder">&nbsp;</span> <input type="checkbox" name="mailinglists[<%= list %>]" value="announce" <%= 'checked="checked"' if @collection.mailinglists.include?(list) %>/> Announce on <%= list %></p>
       <% end %>
-      <p><span class="placeholder">&nbsp;</span> <strong>Make sure to be subscribed to these mailinglists with <%= authentication_user.email %>. You can <a href="/maintainer/<%= authentication_user.username %>">change your email address here</a>.</strong></p>
+      <p><span class="placeholder">&nbsp;</span> <strong>Make sure to be subscribed to these mailinglists with <%= authentication_user.email %>. You can <a href="/maintainer/profile/<%= authentication_user.username %>">change your email address here</a>.</strong></p>
     <% end %>
   </fieldset>
   <h2>Projects</h2>

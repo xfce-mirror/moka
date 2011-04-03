@@ -44,7 +44,7 @@ Gem::Specification.new do |s|
     "lib/views/foot.erb",
     "lib/views/head.erb",
     "lib/views/index.erb",
-    "lib/views/maintainer.erb",
+    "lib/views/maintainer_profile.erb",
     "lib/views/manage_releases.erb",
     "lib/views/permission_denied.erb",
     "lib/views/project.erb",

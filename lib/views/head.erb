@@ -14,7 +14,7 @@
         <a href="/login">Manage Releases</a>
       <% end %>
       <% if not Moka::Models::Maintainer.use_http_auth? and env['warden'].authenticated? %>
-        <a href="/maintainer/<%= authentication_user.username %>">Profile</a>
+        <a href="/maintainer/profile/<%= authentication_user.username %>">Profile</a>
         <a href="/logout">Logout</a>
       <% end %>
       <br />
