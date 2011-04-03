@@ -31,11 +31,19 @@ module Moka
               end
             end
 
+            # cleanup the pubkeys
+            pubkeys = []
+            params[:pubkeys].split("\n").each do |key|
+              key = key.strip
+              pubkeys.push(key) if not key.empty?
+            end
+
             @maintainer.email = params[:email]
             @maintainer.realname = params[:realname]
+            @maintainer.pubkeys = pubkeys
             @maintainer.save
 
-            error_set(:succeed, 'The changes to your name and password have been saved.')
+            error_set(:succeed, 'The changes to your profile have been saved.')
           else
             if authentication_user.username == @maintainer.username
               error_set(:password, 'You did not enter your old password correctly.')

@@ -9,13 +9,15 @@ module Moka
       attr_accessor :password
       attr_accessor :email
       attr_accessor :roles
+      attr_accessor :pubkeys
     
-      def initialize(username, realname, password, email, roles)
+      def initialize(username, realname, password, email, roles, pubkeys)
         @username = username
         @realname = realname
         @password = password
         @email = email
         @roles = if roles.nil? then [] else roles end
+        @pubkeys = if pubkeys.nil? then [] else pubkeys end
       end
     
       def to_json(*a)
@@ -25,12 +27,13 @@ module Moka
           'realname' => realname,
           'password' => password,
           'email' => email,
-          'roles' => roles
+          'roles' => roles,
+          'pubkeys' => pubkeys
         }.to_json(*a)
       end
     
       def self.json_create(o)
-        new(o['username'], o['realname'], o['password'], o['email'], o['roles'])
+        new(o['username'], o['realname'], o['password'], o['email'], o['roles'], o['pubkeys'])
       end
     
       def ==(other)

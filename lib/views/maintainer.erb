@@ -7,6 +7,7 @@
   <fieldset>
     <p><label for="email">Email address:</label> <input type="text" id="email" name="email" value="<%= @maintainer.email %>"/></p>
     <p><label for="realname">Real Name:</label> <input type="text" id="realname" name="realname" value="<%= @maintainer.realname %>"/></p>
+    <p><label for="pubkeys">SSH public-keys:</label> <textarea id="pubkeys" name="pubkeys" rows="5" wrap="off"><%= @maintainer.pubkeys.join("\n") %></textarea></p>
     <% if not Moka::Models::Maintainer.use_http_auth? %>
       <hr />
       <p>Leave the password fields empty if you don't want to set a new password. The password needs to be at least 6 characters long.</p>
