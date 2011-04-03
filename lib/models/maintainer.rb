@@ -3,96 +3,53 @@ require 'digest/sha1'
 module Moka
   module Models
     class Maintainer
-    
-      attr_accessor :username
-      attr_accessor :realname
-      attr_accessor :password
-      attr_accessor :email
-      attr_accessor :roles
-      attr_accessor :pubkeys
-    
-      def initialize(username, realname, password, email, roles, pubkeys)
-        @username = username
-        @realname = realname
-        @password = password
-        @email = email
-        @roles = if roles.nil? then [] else roles end
-        @pubkeys = if pubkeys.nil? then [] else pubkeys end
+      include DataMapper::Resource
+
+      property :username, String, :key => true
+      property :realname, String
+      property :password, String
+      property :email,    String
+      property :pubkeys,  Text
+
+      has n, :roles, :through => Resource
+
+      #has n, :collections, :through => Resource
+      #has n, :projects, :through => Resource
+
+      def self.authenticate(username, password)
+        encrypted_password = Digest::SHA1.hexdigest(password)
+
+        maintainer = get(username)
+        if maintainer and maintainer.password == encrypted_password
+          maintainer
+        else
+          nil
+        end
       end
-    
-      def to_json(*a)
-        {
-          'json_class' => self.class.name,
-          'username' => username,
-          'realname' => realname,
-          'password' => password,
-          'email' => email,
-          'roles' => roles,
-          'pubkeys' => pubkeys
-        }.to_json(*a)
+
+      def <=>(other)
+        return 0 unless other.is_a?(self.class)
+        username <=> other.username
       end
-    
-      def self.json_create(o)
-        new(o['username'], o['realname'], o['password'], o['email'], o['roles'], o['pubkeys'])
-      end
-    
-      def ==(other)
-        other.is_a?(self.class) and other.username == username
+
+      def authorized?(required_roles)
+        if required_roles.is_a?(String)
+          required_roles = [required_roles]
+        end
+
+        matched_roles = []
+        for role in roles
+          matched_roles << role if required_roles.include?(role.name)
+        end
+        not matched_roles.empty?
       end
 
       def display_email
         "#{realname} <#{email}>"
       end
 
-      def save
-        self.class.do_save(self)
-      end
-
-      def self.use_http_auth=(value)
-        @use_http_auth = value
-      end
-
-      def self.use_http_auth?
-        !@use_http_auth.nil? and @use_http_auth
-      end
-    
-      def self.find_all
-        @load = lambda do [] end if @load.nil?
-        @maintainers = @load.call unless @maintainers
-        @maintainers
-      end
-    
-      def self.find_by_username(username)
-        find_all.find do |maintainer|
-          maintainer.username == username
-        end
-      end
-    
-      def self.authenticate(username, password)
-        encrypted_password = Digest::SHA1.hexdigest(password)
-        
-        find_all.find do |maintainer|
-          maintainer.username == username \
-            and maintainer.password == encrypted_password
-        end
-      end
-
-      def self.load(&block)
-        @load = block if block_given?
-      end
-
-      def self.save(&block)
-        @save = block if block_given?
-      end
-
-      def self.reload_all
-        @maintainers = nil
-        find_all
-      end
-
-      def self.do_save(maintainer)
-        @save = lambda do end if @save.nil?
-        @save.call(maintainer)
+      def is_admin
+        authorized?('admin')
       end
     end
   end

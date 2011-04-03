@@ -7,29 +7,25 @@
   <fieldset>
     <p><label for="email">Email address:</label> <input type="text" id="email" name="email" value="<%= @maintainer.email %>"/></p>
     <p><label for="realname">Real Name:</label> <input type="text" id="realname" name="realname" value="<%= @maintainer.realname %>"/></p>
-    <p><label for="pubkeys">SSH public-keys:</label> <textarea id="pubkeys" name="pubkeys" rows="5" wrap="off"><%= @maintainer.pubkeys.join("\n") %></textarea></p>
-    <% if not Moka::Models::Maintainer.use_http_auth? %>
-      <hr />
-      <p>Leave the password fields empty if you don't want to set a new password. The password needs to be at least 6 characters long.</p>
-      <% if error(:newpassword) %>
-        <p class="error"><%= error(:newpassword) %></p>
-      <% end %>
-      <p><label for="new_password">New password:</label> <input type="password" id="new_password" name="new_password" value=""/></p>
-      <p><label for="new_password2">Confirm new password:</label> <input type="password" id="new_password2" name="new_password2" value=""/></p>
-      <hr />
-      <% if authentication_user.username == @maintainer.username %>
-        <p>Please enter your existing password to confirm account changes.</p>
-      <% else %>
-        <p>You are editing the account of someone else; enter your <strong>OWN</strong> password to confirm.</strong></p>
-      <% end %>
-      <% if error(:password) %>
-        <p class="error"><%= error(:password) %></p>
-      <% end %>
-      <p><label for="password">Password:</label> <input type="password" id="password" name="password" value=""></p>
-      <p><span class="placeholder">&nbsp;</span> <input type="submit" value="Save"/></p>
-    <% else %>
-      <p><label for="password">Password:</label> <a href="https://xfce.org">Change it here</a></p
+    <p><label for="pubkeys">SSH public-keys:</label> <textarea id="pubkeys" name="pubkeys" rows="5" wrap="off"><%= @maintainer.pubkeys %></textarea></p>
+    <hr />
+    <p>Leave the password fields empty if you don't want to set a new password. The password needs to be at least 6 characters long.</p>
+    <% if error(:newpassword) %>
+    <p class="error"><%= error(:newpassword) %></p>
     <% end %>
+    <p><label for="new_password">New password:</label> <input type="password" id="new_password" name="new_password" value=""/></p>
+    <p><label for="new_password2">Confirm new password:</label> <input type="password" id="new_password2" name="new_password2" value=""/></p>
+    <hr />
+    <% if authentication_user.username == @maintainer.username %>
+    <p>Please enter your existing password to confirm account changes.</p>
+    <% else %>
+    <p>You are editing the account of someone else; enter your <strong>OWN</strong> password to confirm.</strong></p>
+    <% end %>
+    <% if error(:password) %>
+    <p class="error"><%= error(:password) %></p>
+    <% end %>
+    <p><label for="password">Password:</label> <input type="password" id="password" name="password" value=""></p>
+    <p><span class="placeholder">&nbsp;</span> <input type="submit" value="Save"/></p>
   </fieldset>
 </form>
 <%= footer %>

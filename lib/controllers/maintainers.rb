@@ -4,8 +4,8 @@ module Moka
       include Moka::Models
 
       def self.registered(app)
-        app.get '/maintainer/profile/:username' do
-          @maintainer = Maintainer.find_by_username(params[:username])
+        app.get '/maintainer/:name' do
+          @maintainer = Maintainer.get(params[:name])
 
           authentication_required(@maintainer)
 
@@ -19,14 +19,14 @@ module Moka
           view :maintainer
         end
 
-        app.post '/maintainer/profile/:username' do
-          @maintainer = Maintainer.find_by_username(params[:username])
+        app.post '/maintainer/:id' do
+          @maintainer = Maintainer.get(params[:name])
 
           authentication_required(@maintainer)
 
           # validate the password against the authenticated user
           encrypted_password = Digest::SHA1.hexdigest(params[:password])
-          if Moka::Models::Maintainer.use_http_auth? or authentication_user.password == encrypted_password
+          if authentication_user.password == encrypted_password
             if not params[:new_password].empty?
               if not params[:new_password].eql? params[:new_password2]
                 error_set(:newpassword, 'The two passwords you entered did not match.')
@@ -38,7 +38,7 @@ module Moka
               end
             end
 
-            # cleanup the pubkeys
+            # put lines in an array and clean it up
             pubkeys = []
             params[:pubkeys].split("\n").each do |key|
               key = key.strip
@@ -47,12 +47,12 @@ module Moka
 
             @maintainer.email = params[:email]
             @maintainer.realname = params[:realname]
-            @maintainer.pubkeys = pubkeys
+            @maintainer.pubkeys = pubkeys.join("\n")
             @maintainer.save
 
             error_set(:succeed, 'The changes to your profile have been saved.')
           else
-            if authentication_user.username == @maintainer.username
+            if authentication_user.name == @maintainer.name
               error_set(:password, 'You did not enter your old password correctly.')
             else
               error_set(:password, 'You did not enter your OWN password correctly.')

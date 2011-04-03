@@ -5,7 +5,7 @@ module Moka
 
       def self.registered(app)
         app.get '/project/:name' do
-          @project = Project.find_by_name(params[:name])
+          @project = Project.get(params[:name])
 
           authentication_required(@project)
 
@@ -13,8 +13,8 @@ module Moka
         end
 
         app.post '/project/:name/information' do
-          @project = Project.find_by_name(params[:name])
-          
+          @project = Project.get(params[:name])
+
           authentication_required(@project)
 
           @project.website = params[:website]
@@ -23,10 +23,10 @@ module Moka
 
           redirect "/project/#{params[:name]}"
         end
-        
+
         app.post '/project/:name/classify' do
-          @project = Project.find_by_name(params[:name])
-          
+          @project = Project.get(params[:name])
+
           authentication_required
 
           classification = Classification.find_by_name(params[:classification])
@@ -36,8 +36,8 @@ module Moka
         end
 
         app.get '/project/:name/branch/:branch/release/:version/update' do
-          @project = Project.find_by_name(params[:name])
-          
+          @project = Project.get(params[:name])
+
           authentication_required(@project)
 
           @branch = Project::Branch.new(@project, params[:branch])
@@ -46,15 +46,15 @@ module Moka
         end
 
         app.post '/project/:name/branch/:branch/release/:version/update' do
-          @project = Project.find_by_name(params[:name])
-          
+          @project = Project.get(params[:name])
+
           authentication_required(@project)
 
           @branch = Project::Branch.new(@project, params[:branch])
           @release = Project::Release.new(@project, @branch, params[:version])
 
           error_set(:tarball, 'No file specified.') if params[:tarball].nil?
-            
+
           unless error_set?
             if params[:tarball][:filename] != @release.tarball_basename
               error_set(:tarball, "Wrong filename. <tt>#{@release.tarball_basename}</tt> required.")
@@ -82,8 +82,8 @@ module Moka
         end
 
         app.get '/project/:name/branch/:branch/release/:version/delete' do
-          @project = Project.find_by_name(params[:name])
-          
+          @project = Project.get(params[:name])
+
           authentication_required(@project)
 
           @branch = Project::Branch.new(@project, params[:branch])
@@ -93,7 +93,7 @@ module Moka
         end
 
         app.post '/project/:name/branch/:branch/release/:version/delete' do
-          @project = Project.find_by_name(params[:name])
+          @project = Project.get(params[:name])
 
           authentication_required(@project)
 
@@ -106,11 +106,11 @@ module Moka
 
           @release.delete
 
-          redirect "/project/#{@project.name}"
+          redirect "/project/#{@project.id}"
         end
 
         app.get '/project/:name/new-release' do
-          @project = Project.find_by_name(params[:name])
+          @project = Project.get(params[:name])
 
           authentication_required(@project)
 
@@ -118,7 +118,7 @@ module Moka
         end
 
         app.get '/project/:name/new-release/tarball' do
-          @project = Project.find_by_name(params[:name])
+          @project = Project.get(params[:name])
 
           authentication_required(@project)
 
@@ -126,8 +126,8 @@ module Moka
         end
 
         app.post '/project/:name/new-release/tarball' do
-          @project = Project.find_by_name(params[:name])
-          
+          @project = Project.get(params[:name])
+
           authentication_required(@project)
 
           error_set(:tarball, 'No file specified.') if params[:tarball].nil?
@@ -152,7 +152,7 @@ module Moka
           unless error_set?
             if @branch.has_release?(@release)
               error_set(:tarball, "Release tarball already exists. " \
-                         "You can use <a href=\"/project/#{@project.name}/branch/#{@branch.name}/release/#{@release.version}/update\">this page</a> to update the release.")
+                         "You can use <a href=\"/project/#{@project.id}/branch/#{@branch.name}/release/#{@release.version}/update\">this page</a> to update the release.")
             end
           end
 
@@ -172,8 +172,8 @@ module Moka
         end
 
         app.get '/project/:name/branch/:branch/new-release/:version/announcement' do
-          @project = Project.find_by_name(params[:name])
-          
+          @project = Project.get(params[:name])
+
           authentication_required(@project)
 
           @branch = Project::Branch.new(@project, params[:branch])
@@ -183,15 +183,15 @@ module Moka
         end
 
         app.post '/project/:name/branch/:branch/new-release/:version/announcement' do
-          @project = Project.find_by_name(params[:name])
-          
+          @project = Project.get(params[:name])
+
           authentication_required(@project)
 
           @branch = Project::Branch.new(@project, params[:branch])
           @release = Project::Release.new(@project, @branch, params[:version])
 
           if env['identica'] and params[:identica]
-            url = env['feeds'].get_project_feed_url(@project)      
+            url = env['feeds'].get_project_feed_url(@project)
 
             if env['identica'].group.nil?
               @announcement_status = "#{@project.name} #{@release.version} released: #{url}"
@@ -213,8 +213,8 @@ module Moka
         end
 
         app.post '/project/:name/branch/:branch/new-release/:version/confirm' do
-          @project = Project.find_by_name(params[:name])
-          
+          @project = Project.get(params[:name])
+
           authentication_required(@project)
 
           @branch = Project::Branch.new(@project, params[:branch])
@@ -226,7 +226,7 @@ module Moka
             end
 
             if env['identica'] and params[:identica]
-              url = env['feeds'].get_project_feed_url(@project)      
+              url = env['feeds'].get_project_feed_url(@project)
 
               if env['identica'].group.nil?
                 status = "#{@project.name} #{@release.version} released: #{url}"
@@ -236,14 +236,14 @@ module Moka
 
               env['identica'].post(status)
             end
-            
+
             if env['mailinglists'] and params[:mailinglists]
               env['mailinglists'].announce_release(@release, params[:message],
-                                                   authentication_user, 
+                                                   authentication_user,
                                                    params[:mailinglists].keys)
             end
-            
-            redirect "/project/#{@project.name}"
+
+            redirect "/project/#{@project.id}"
           end
         end
 

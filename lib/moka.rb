@@ -1,8 +1,5 @@
 require 'rubygems'
 
-require 'json'
-require 'json/add/core'
-
 gem 'sinatra', '0.9.2'
 require 'sinatra'
 
@@ -13,9 +10,9 @@ directory = File.expand_path(File.dirname(__FILE__))
 
 require File.join(directory, 'models', 'configuration')
 require File.join(directory, 'models', 'classification')
-require File.join(directory, 'models', 'collection')
+require File.join(directory, 'models', 'role')
 require File.join(directory, 'models', 'maintainer')
-require File.join(directory, 'models', 'mirror')
+require File.join(directory, 'models', 'collection')
 require File.join(directory, 'models', 'project')
 require File.join(directory, 'models', 'archive')
 

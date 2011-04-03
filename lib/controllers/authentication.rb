@@ -15,7 +15,7 @@ module Moka
         end
         
         Warden::Manager.serialize_from_session do |username| 
-          Moka::Models::Maintainer.find_by_username(username) 
+          Moka::Models::Maintainer.get(username) 
         end
         
         Warden::Manager.before_failure do |env, opts|
@@ -24,19 +24,11 @@ module Moka
         
         Warden::Strategies.add(:maintainer) do 
           def valid?
-            if Moka::Models::Maintainer.use_http_auth?
-              env.has_key?('REMOTE_USER')
-            else
-              params['username'] and params['password']
-            end
+            params['username'] and params['password']
           end
         
           def authenticate!
-            if Moka::Models::Maintainer.use_http_auth?
-              maintainer = Moka::Models::Maintainer.find_by_username(env['REMOTE_USER'])
-            else
-              maintainer = Moka::Models::Maintainer.authenticate(params['username'], params['password'])
-            end
+            maintainer = Moka::Models::Maintainer.authenticate(params['username'], params['password'])
             maintainer.nil? ? fail!("Authentication failed") : success!(maintainer)
           end
         end
@@ -49,9 +41,6 @@ module Moka
 
       module Helpers
         def authentication_finished?
-          if Moka::Models::Maintainer.use_http_auth?
-            env['warden'].authenticate!
-          end
           env['warden'].authenticated?
         end
 
@@ -63,7 +52,7 @@ module Moka
             # a maintainer of the project and his/her user roles
             # and the required roles have no elements in common
             unless context.maintainers.include?(authentication_user)
-              if (authentication_user.roles & roles).empty?
+              if not authentication_user.authorized?(roles)
                 halt(view(:permission_denied, binding))
               end
             end
@@ -72,7 +61,7 @@ module Moka
             # a maintainer of the collection and his/her user roles
             # and the required roles have no elements in common
             unless context.maintainers.include?(authentication_user)
-              if (authentication_user.roles & roles).empty?
+              if not authentication_user.authorized?(roles)
                 halt(view(:permission_denied, binding))
               end
             end
@@ -81,14 +70,14 @@ module Moka
             # the same as the required maintainer and his/her user 
             # roles and the required roles have no elements in common
             unless authentication_user == context
-              if (authentication_user.roles & roles).empty?
+              if not authentication_user.authorized?(roles)
                 halt(view(:permission_denied, binding))
               end
             end
           else
             # abort processing the current page if the user roles
             # and the required roles have no elements in common
-            if (authentication_user.roles & roles).empty?
+            if not authentication_user.authorized?(roles)
               halt(view(:permission_denied, binding))
             end
           end
@@ -108,7 +97,7 @@ module Moka
 
         app.post '/login/?' do
           
-          maintainer = Moka::Models::Maintainer.find_by_username(params['username'])
+          maintainer = Moka::Models::Maintainer.get(params['username'])
 
           if maintainer and maintainer.password == 'invalid'
             maintainer.password = Digest::SHA1.hexdigest(params['password'])

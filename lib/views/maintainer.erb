@@ -9,10 +9,10 @@
     <th>Real Name</th>
     <th>Email</th>
   </tr>
-  <% for maintainer in Maintainer.find_all.sort! { |a,b| a.username <=> b.username } %>
+  <% for maintainer in Maintainer.all.sort %>
     <tr>
       <td>
-        <a href="/maintainer/profile/<%= maintainer.username %>"><%= maintainer.username %></a>
+        <a href="/maintainer/<%= maintainer.username %>"><%= maintainer.username %></a>
       </td>
       <td>
         <%= maintainer.realname %>

@@ -5,7 +5,7 @@ module Moka
 
       def self.registered(app)
         app.get '/collection/:name' do
-          @collection = Collection.find_by_name(params[:name])
+          @collection = Collection.get(params[:name])
 
           authentication_required(@collection)
 
@@ -13,7 +13,7 @@ module Moka
         end
 
         app.get '/collection/:name/release/:release' do
-          @collection = Collection.find_by_name(params[:name])
+          @collection = Collection.get(params[:name])
 
           authentication_required(@collection)
 
@@ -22,7 +22,7 @@ module Moka
         end
         
         app.post '/collection/:name/release/:release' do
-          @collection = Collection.find_by_name(params[:name])
+          @collection = Collection.get(params[:name])
 
           authentication_required(@collection)
 
@@ -48,7 +48,7 @@ module Moka
         end
         
         app.get '/collection/:name/release/:release/delete' do
-          @collection = Collection.find_by_name(params[:name])
+          @collection = Collection.get(params[:name])
 
           authentication_required(@collection)
 
@@ -56,7 +56,7 @@ module Moka
         end
         
        app.post '/collection/:name/release/:release/delete' do
-          @collection = Collection.find_by_name(params[:name])
+          @collection = Collection.get(params[:name])
 
           authentication_required(@collection)
 
@@ -66,7 +66,7 @@ module Moka
         end
 
         app.get '/collection/:name/release/:release/update_fat_tarball' do
-          @collection = Collection.find_by_name(params[:name])
+          @collection = Collection.get(params[:name])
 
           authentication_required(@collection)
 
@@ -77,7 +77,7 @@ module Moka
         end
 
         app.get '/collection/:name/release/:release/update_fat_tarball_checksums' do
-          @collection = Collection.find_by_name(params[:name])
+          @collection = Collection.get(params[:name])
 
           authentication_required(@collection)
 
@@ -88,7 +88,7 @@ module Moka
         end
 
         app.get '/collection/:name/new-release' do
-          @collection = Collection.find_by_name(params[:name])
+          @collection = Collection.get(params[:name])
 
           authentication_required(@collection)
 
@@ -96,7 +96,7 @@ module Moka
         end
 
         app.post '/collection/:name/new-release' do
-          @collection = Collection.find_by_name(params[:name])
+          @collection = Collection.get(params[:name])
 
           authentication_required(@collection)
 
@@ -121,7 +121,7 @@ module Moka
             for project_name, project_version in params[:project_version]
               next if project_version == 'nil'
 
-              project = Project.find_by_name(project_name)
+              project = Project.get(project_name)
 
               project_release = project.releases.find do |prelease|
                 prelease.version == project_version

@@ -1,8 +1,17 @@
 #!/usr/bin/env ruby
 
 require 'rubygems'
-require 'sinatra'
-require 'moka'
+require 'dm-core'
+require 'dm-migrations'
+require 'digest/sha1'
+
+require '../../lib/moka'
+
+directory = File.expand_path(File.dirname(__FILE__))
+db = File.join(directory, 'example.db')
+
+DataMapper::Logger.new($stdout, :debug)
+DataMapper.setup(:default, 'sqlite://' + db)
 
 use Moka::Middleware::Identica do |identica|
   identica.username = 'username'
@@ -10,33 +19,60 @@ use Moka::Middleware::Identica do |identica|
   identica.group    = 'group'
 end
 
-use Moka::Middleware::Mailinglists do |mailer|
-  mailer.lists = [ 'announce@someproject.org', 'another-list@someproject.org' ]
-  
-  mailer.project_subject do |release, message, sender|
-    "#{release.project.name} #{release.version} released"
-  end
-
-  mailer.project_body do |release, message, sender| 
-    ERB.new(File.read('project_release_mail.erb')).result(binding)
-  end
-end
-
+# global configuration
 Moka::Models::Configuration.load do |conf|
-  conf.set :moka_url, 'https://moka.someproject.org'
-  conf.set :archive_dir, '/var/www/download.someproject.org'
+  conf.set :moka_url, 'https://releases.xfce.org'
+  conf.set :archive_dir, '/home/nick/websites/archive.xfce.org/'
+  conf.set :archive_url, 'http://archive.xfce.org'
+  conf.set :collection_release_pattern, /^([0-9]).([0-9]+)(pre[0-9])?$/
 end
 
-Moka::Models::Maintainer.load do
-  [ Moka::Models::Maintainer.new('username', 'Real Name', 'SHA1 password', 'mail@someproject.org') ]
-end
+# Uncheck for production environment
+DataMapper.auto_migrate!
 
-Moka::Models::Project.load do
-  [ Moka::Models::Project.new('someproject', [ 'username' ], [ 'announce@someproject.org' ]) ]
-end
+# create dummy roles
+admin = Moka::Models::Role.first_or_create(:name => 'admin')
+admin.save
 
-Moka::Models::Mirror.load do
-  [ Moka::Models::Mirror.new('http://download.someproject.org') ]
-end
+# create dummy user
+user = Moka::Models::Maintainer.first_or_create(
+  { :username => 'nick' },
+  { :realname => 'Nick Schermer',
+    :password => Digest::SHA1.hexdigest('test'),
+    :email => 'nick@xfce.org' }
+)
+user.roles << admin
+user.save
+user = Moka::Models::Maintainer.first_or_create(
+  { :username => 'jannis' },
+  { :realname => 'Jannis Pohlmann',
+    :password => Digest::SHA1.hexdigest('test'),
+    :email => 'jannis@xfce.org' }
+)
+user.save
+user = Moka::Models::Maintainer.first_or_create(
+  { :username => 'jeromeg' },
+  { :realname => 'Jérôme Guelfuccin',
+    :password => Digest::SHA1.hexdigest('test'),
+    :email => 'jeromeg@xfce.org' }
+)
+user.save
+
+project = Moka::Models::Project.first_or_create(
+  { :name =>        'xfce4-panel' },
+  { :website =>     'http://www.xfce.org',
+    :description => 'Xfce\'s Panel' }
+)
+project.maintainers << user
+project.save
+
+# create dummy classification
+collection = Moka::Models::Collection.first_or_create(
+  { :name => 'xfce' },
+  { :display_name => 'Xfce',
+    :website => 'http://www.xfce.org' }
+)
+collection.maintainers << user
+collection.save
 
 run Moka::Application

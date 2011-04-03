@@ -34,6 +34,7 @@ Gem::Specification.new do |s|
     "lib/models/maintainer.rb",
     "lib/models/mirror.rb",
     "lib/models/project.rb",
+    "lib/models/role.rb",
     "lib/moka.rb",
     "lib/views/announcements.erb",
     "lib/views/auth_login.erb",
