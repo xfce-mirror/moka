@@ -11,18 +11,41 @@ module Moka
 
           view :maintainer
         end
-        
+
         app.post '/maintainer/:username' do
           @maintainer = Maintainer.find_by_username(params[:username])
 
           authentication_required(@maintainer)
 
-	  @maintainer.email = params[:email]
-	  @maintainer.save
-          
-	  view :maintainer
-        end
+          # validate the password against the authenticated user
+          encrypted_password = Digest::SHA1.hexdigest(params[:password])
+          if Moka::Models::Maintainer.use_http_auth? or authentication_user.password == encrypted_password
+            if not params[:new_password].empty?
+              if not params[:new_password].eql? params[:new_password2]
+                error_set(:newpassword, 'The two passwords you entered did not match.')
+              elsif params[:new_password].length < 6
+                error_set(:newpassword, 'The password must be at least 6 characters long.')
+              else
+                encrypted_password = Digest::SHA1.hexdigest(params[:new_password])
+                @maintainer.password = encrypted_password
+              end
+            end
 
+            @maintainer.email = params[:email]
+            @maintainer.realname = params[:realname]
+            @maintainer.save
+
+            error_set(:succeed, 'The changes to your name and password have been saved.')
+          else
+            if authentication_user.username == @maintainer.username
+              error_set(:password, 'You did not enter your old password correctly.')
+            else
+              error_set(:password, 'You did not enter your OWN password correctly.')
+            end
+          end
+
+          view :maintainer
+        end
       end
     end
   end
