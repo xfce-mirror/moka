@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
     "lib/controllers/collections.rb",
     "lib/controllers/maintainers.rb",
     "lib/controllers/projects.rb",
+    "lib/controllers/request.rb",
     "lib/helpers/general.rb",
     "lib/middleware/feeds.rb",
     "lib/middleware/identica.rb",
@@ -56,6 +57,9 @@ Gem::Specification.new do |s|
     "lib/views/project_new_release_tarball.erb",
     "lib/views/project_release_delete.erb",
     "lib/views/project_release_update.erb",
+    "lib/views/request.erb",
+    "lib/views/request_finished.erb",
+    "lib/views/request_sshinfo.erb",
     "lib/views/stylesheet.sass"
   ]
   s.homepage = %q{http://git.xfce.org/jannis/moka}

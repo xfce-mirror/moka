@@ -11,7 +11,8 @@
       <% if env['warden'].authenticated? %>
         <a href="/">Manage Releases</a>
       <% else %>
-        <a href="/login">Manage Releases</a>
+        <a href="/login">Login</a>
+        <a href="/request">Request Account</a>
       <% end %>
       <% if env['warden'].authenticated? and authentication_user %>
         <% if authentication_user.is_admin %>

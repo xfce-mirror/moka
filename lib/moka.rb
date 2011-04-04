@@ -23,6 +23,7 @@ require File.join(directory, 'controllers', 'authentication')
 require File.join(directory, 'controllers', 'collections')
 require File.join(directory, 'controllers', 'projects')
 require File.join(directory, 'controllers', 'maintainers')
+require File.join(directory, 'controllers', 'request')
 
 require File.join(directory, 'middleware', 'feeds')
 require File.join(directory, 'middleware', 'identica')
@@ -40,6 +41,7 @@ module Moka
     register Moka::Controllers::Projects
     register Moka::Controllers::Collections
     register Moka::Controllers::Maintainers
+    register Moka::Controllers::Request
 
     authentication_initialize
   
