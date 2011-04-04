@@ -7,7 +7,7 @@
     <% if env[:error][:tarball] %>
       <p class="error quote"><%= env[:error][:tarball] %></p>
     <% end %>
-    <p><label for="checksum">Checksum (SHA1):</label> <input type="text" id="checksum" name="checksum" value="<%= params[:checksum] %>"/></p>
+    <p><label for="checksum">Checksum (SHA1):</label> <input type="text" id="checksum" name="checksum" size="40" value="<%= params[:checksum] %>"/></p>
     <% if env[:error][:checksum] %>
       <p class="error quote"><%= env[:error][:checksum] %></p>
     <% end %>
