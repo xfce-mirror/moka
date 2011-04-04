@@ -60,7 +60,7 @@ jannis.save
 
 jeromeg = Moka::Models::Maintainer.first_or_create(
   { :username => 'jeromeg' },
-  { :realname => 'Jérôme Guelfuccin',
+  { :realname => 'Jérôme Guelfucci',
     :password => Digest::SHA1.hexdigest('test'),
     :email => 'jeromeg@xfce.org' }
 )
