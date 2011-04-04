@@ -60,6 +60,21 @@ module Moka
         def update_checksums
           Archive.instance.collection_release_update_checksums(self)
         end
+        
+        def release_url
+          dir = Archive.instance.collection_release_dir(self)
+          dir.gsub(Archive.instance.root_dir, Configuration.get(:mirror))
+        end
+        
+        def download_url
+          dir  = Archive.instance.collection_source_dir(self)
+          dir.gsub(Archive.instance.root_dir, Configuration.get(:mirror))
+        end
+        
+        def fat_tarball_url
+          dir = Archive.instance.collection_fat_tarball_dir(self)
+          dir.gsub(Archive.instance.root_dir, Configuration.get(:mirror))
+        end
 
         def template_name
           'mailinglist_collection_announcement'
@@ -71,10 +86,7 @@ module Moka
       property :display_name, String
       property :website,      String
 
-      has n, :maintainers, :through => Resource
-      #has n, :maintainers, :through => Resource
-      #has n, :mailinglists, :through => Resource
-      #belongs_to :maintainer
+      has n,   :maintainers, :through => Resource
 
       def ==(other)
         other.is_a?(self.class) and other.name == name
@@ -82,10 +94,6 @@ module Moka
 
       def releases
         Archive.instance.collection_releases(self).sort
-      end
-
-      def self.find_all_by_maintainer(maintainer)
-        all()
       end
     end
   end

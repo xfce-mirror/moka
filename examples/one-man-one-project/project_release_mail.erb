@@ -7,6 +7,5 @@
 
 from the following mirrors:
 
-<% for mirror in Moka::Models::Mirror.find_all %>  <%= mirror.download_url(release) %>
-<% end %>
+<%= release.download_url %>
 <%= message %>

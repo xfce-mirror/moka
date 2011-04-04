@@ -3,7 +3,7 @@
 <ul>
   <li><a href="/feed">View the release news feed</a></li>
   <li><a href="http://identi.ca/xfce">Visit the identi.ca release news channel</a></li>
-  <% if env['warden'].authenticated? %>
+  <% if authentication_finished? %>
     <li><a href="/">Manage releases of your projects</a></li>
   <% else %>
     <li><a href="/login">Manage releases of your projects</a></li>

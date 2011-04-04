@@ -11,10 +11,9 @@ module Moka
       property :email,    String
       property :pubkeys,  Text
 
-      has n, :roles, :through => Resource
-
-      #has n, :collections, :through => Resource
-      #has n, :projects, :through => Resource
+      has n,   :roles,       :through => Resource
+      has n,   :collections, :through => Resource
+      has n,   :projects,    :through => Resource
 
       def self.authenticate(username, password)
         encrypted_password = Digest::SHA1.hexdigest(password)

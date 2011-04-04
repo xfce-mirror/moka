@@ -8,13 +8,13 @@
   <body>
     <h1><%= if params.has_key?(:title) then params[:title] else 'Xfce Release Manager' end %></h1>
     <p id="main-toolbar">
-      <% if env['warden'].authenticated? %>
+      <% if authentication_finished? %>
         <a href="/">Manage Releases</a>
       <% else %>
         <a href="/login">Login</a>
         <a href="/request">Request Account</a>
       <% end %>
-      <% if env['warden'].authenticated? and authentication_user %>
+      <% if authentication_finished? and authentication_user %>
         <% if authentication_user.is_admin %>
           <a href="/maintainer">Maintainers</a>
         <% end %>

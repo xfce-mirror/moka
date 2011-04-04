@@ -68,21 +68,33 @@ module Moka
           Archive.instance.project_release_delete(self)
         end
 
+        def release_url
+          dir = Archive.instance.project_branch_dir(self.project, self.branch)
+          dir.gsub(Archive.instance.root_dir, Configuration.get(:mirror))
+        end
+
+        def download_url
+          dir = Archive.instance.project_branch_dir(self.project, self.branch)
+          dir.gsub(Archive.instance.root_dir, Configuration.get(:mirror))
+        end
+
         def template_name
           'mailinglist_project_announcement'
         end
 
       end
 
-      property :name,           String, :key => true
-      property :website,        String
-      property :classification, String
-      property :description,    Text
+      property :name,        String, :key => true
+      property :website,     String
+      property :description, Text
 
       has n,   :maintainers, :through => Resource
 
-      # classification
       # mailinglists
+
+      def classification
+        Classification.find_by_project(self)
+      end
 
       def ==(other)
         other.is_a?(self.class) and other.name == name
@@ -117,10 +129,6 @@ module Moka
 
       def release_from_tarball(tarball)
         Archive.instance.project_release_from_tarball(self, tarball)
-      end
-
-      def self.find_all_by_maintainer(maintainer)
-        all()
       end
     end
   end

@@ -29,7 +29,7 @@
     <% for release in releases %>
       <tr>
         <th><%= "#{branch.name} Branch" if release == releases.first %></th>
-        <th><a href="<%= Mirror.find_all.first.download_url(release) %>"><%= release.version %></a></th>
+        <th><a href="<%= release.download_url %>"><%= release.version %></a></th>
         <td>
           <a href="/project/<%= @project.name %>/branch/<%= branch.name %>/release/<%= release.version %>/update">Update</a>
           <a href="/project/<%= @project.name %>/branch/<%= branch.name %>/release/<%= release.version %>/delete">Delete</a>

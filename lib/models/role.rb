@@ -4,6 +4,8 @@ module Moka
       include DataMapper::Resource
 
       property :name, String, :key => true
+
+      has n,   :maintainers, :through => Resource
     end
   end
 end

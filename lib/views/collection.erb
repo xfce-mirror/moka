@@ -3,7 +3,7 @@
 <table cellspacing="0" cellpadding="0">
   <% for release in @collection.releases.sort.reverse %>
     <tr>
-      <th><a href="<%= Mirror.find_all.first.release_url(release) %>"><%= release.version %></a></th>
+      <th><a href="<%= release.release_url %>"><%= release.version %></a></th>
       <td>
         <a href="/collection/<%= @collection.name %>/release/<%= release.version %>">Update</a>
         <a href="/collection/<%= @collection.name %>/release/<%= release.version %>/delete">Delete</a>

@@ -33,7 +33,6 @@ Gem::Specification.new do |s|
     "lib/models/collection.rb",
     "lib/models/configuration.rb",
     "lib/models/maintainer.rb",
-    "lib/models/mirror.rb",
     "lib/models/project.rb",
     "lib/models/role.rb",
     "lib/moka.rb",
