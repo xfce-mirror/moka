@@ -5,20 +5,20 @@
 <form method="post">
   <fieldset>
     <p><label for="message">Release notes:</label> <textarea class="message" id="message" name="message" style="height:20em"></textarea></p>
-    <p><span class="placeholder">&nbsp;</span> <strong>This message will appear below the download and project info, so you don't have to start it with a greeting.</strong></p>
+    <p class="quote"><strong>This message will appear below the download and project info, so you don't have to start it with a greeting.</strong></p>
     <% if env['feeds'] %>
-      <p><span class="placeholder">&nbsp;</span> <input type="checkbox" id="feeds" name="feeds" value="announce" checked="checked"/> Update <a href="<%= env['feeds'].get_project_feed_url(@project) %>">news feed</a></p>
+      <p class="quote"><input type="checkbox" id="feeds" name="feeds" value="announce" checked="checked"/> Update <a href="<%= env['feeds'].get_project_feed_url(@project) %>">news feed</a></p>
     <% end %>
     <% if env['identica'] %>
-      <p><span class="placeholder">&nbsp;</span> <input type="checkbox" id="identica" name="identica" value="announce" checked="checked"/> Announce on <a href="http://identi.ca/xfce">identi.ca/xfce</a></p>
+      <p class="quote"><input type="checkbox" id="identica" name="identica" value="announce" checked="checked"/> Announce on <a href="http://identi.ca/xfce">identi.ca/xfce</a></p>
     <% end %>
     <% if env['mailinglists'] %>
       <% for list in env['mailinglists'].lists %>
-        <p><span class="placeholder">&nbsp;</span> <input type="checkbox" name="mailinglists[<%= list %>]" value="announce" <%= 'checked="checked"' if @project.mailinglists.include?(list) %>/> Announce on <%= list %></p>
+        <p class="quote"><input type="checkbox" name="mailinglists[<%= list %>]" value="announce" <%= 'checked="checked"' if @project.mailinglists.include?(list) %>/> Announce on <%= list %></p>
       <% end %>
-      <p><span class="placeholder">&nbsp;</span> <strong>Make sure to be subscribed to these mailinglists with <%= authentication_user.email %>. You can <a href="/maintainer/profile/<%= authentication_user.username %>">change your email address here</a>.</strong></p>
+      <p class="quote"><strong>Make sure to be subscribed to these mailinglists with <%= authentication_user.email %>. You can <a href="/maintainer/profile/<%= authentication_user.username %>">change your email address here</a>.</strong></p>
     <% end %>
-    <p><span class="placeholder">&nbsp;</span> <input type="submit" value="Continue"/></p>
+    <p class="quote"><input type="submit" value="Continue"/></p>
   </fieldset>
 </form>
 <%= footer %>

@@ -99,7 +99,7 @@ fieldset
   p 
     padding: 0em
 
-  label, span.placeholder
+  label
     display: block
     float: left
     min-width: 25%
@@ -107,18 +107,20 @@ fieldset
     padding-right: 0.5em
     line-height: 1.65em
 
+  p.quote
+    margin-left: 25%
+    padding-left: 0.5em
+    line-height: 1.65em
+
   label.inline
     display: inline-block
     float: none
     min-width: 0%
 
-  span.placeholder
-    height: 2em
-
   textarea
-    width: 60%
+    width: 70%
 
-  span.error, span.info
+  p.error, p.info
     padding-left: 1em
 
 hr
@@ -126,10 +128,16 @@ hr
   border: 0
   border-bottom: thin dotted rgb(0,50,150)
 
+pre
+  padding: 0.5em
+
+em, pre
+  background: #ddd
+
 .error
   color: red
 
-.message
+.info
   color: green
 
 .preview

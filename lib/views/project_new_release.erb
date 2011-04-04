@@ -3,7 +3,7 @@
 <p><strong>Before releasing, please make sure the <a href="/project/<%= @project.name %>">project information</a> is up to date. Also make sure you are subscribed to the mailing lists with <a href="/maintainer/profile/<%= authentication_user.username %>"><%= authentication_user.email %></a> else the announcement will not be posted.</strong></p>
 <form method="get" action="/project/<%= @project.name %>/new-release/tarball">
   <fieldset>
-    <p><span class="placeholder">&nbsp;</span> <input type="submit" value="I verified the information is correct"/></p>
+    <p class="quote"><input type="submit" value="I verified the information is correct"/></p>
   </fieldset>
 </form>
 <%= footer %>

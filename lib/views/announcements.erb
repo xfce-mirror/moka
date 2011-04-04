@@ -7,9 +7,9 @@
   <fieldset>
     <p><label for="text">Text:</label> <textarea id="text" name="text" class="message" style="height:5em;"><%= params[:text] %></textarea></p>
     <% if error(:text) %>
-      <p class="error"><span class="placeholder">&nbsp;</span> <%= error(:text) %></p>
+      <p class="error quote"><%= error(:text) %></p>
     <% end %>
-    <p><span class="placeholder">&nbsp;</span> <input type="submit" value="Publish"/></p>
+    <p class="quote"><input type="submit" value="Publish"/></p>
   </fieldset>
 </form>
 <%= footer %>

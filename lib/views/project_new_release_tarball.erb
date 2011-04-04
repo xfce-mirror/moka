@@ -4,13 +4,13 @@
   <fieldset>
     <p><label for="tarball">Tarball:</label> <input type="file" id="tarball" name="tarball" size="30"/></p>
     <% if error(:tarball) %>
-      <p class="error"><span class="placeholder">&nbsp;</span> <%= error(:tarball) %></p>
+      <p class="error quote"><%= error(:tarball) %></p>
     <% end %>
     <p><label for="checksum">Checksum (SHA1):</label> <input type="text" id="checksum" name="checksum" size="40" value="<%= params[:checksum] %>"/></p>
     <% if error(:checksum) %>
-      <p class="error"><span class="placeholder">&nbsp;</span> <%= error(:checksum) %></p>
+      <p class="error quote"><%= error(:checksum) %></p>
     <% end %>
-    <p><span class="placeholder">&nbsp;</span> <input type="submit" value="Upload file and continue"/></p>
+    <p class="quote"><input type="submit" value="Upload file and continue"/></p>
   </fieldset>
 </form>
 <%= footer %>
