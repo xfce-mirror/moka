@@ -2,8 +2,9 @@
 <h2>Project information</h2>
 <form method="post" action="/project/<%= @project.name %>/information">
   <fieldset>
-    <p><label for="website">Website:</label> <input type="text" id="website" name="website" style="width:60%" value="<%= @project.website %>"/></p>
+    <p><label for="website">Website:</label> <input type="text" id="website" name="website" style="width:70%" value="<%= @project.website %>"/></p>
     <p><label for="description">Description:</label> <textarea id="description" name="description" style="height:10em;"><%= @project.description %></textarea></p>
+    <p><label for="maintainers">Maintainers:</label> <%= maintainer_names(@project) %>.
     <p class="quote"><input type="submit" value="Save"/></p>
   </fieldset>
 </form>

@@ -50,6 +50,14 @@ module Moka
       def is_admin
         authorized?('admin')
       end
+
+      def project_names
+        names = []
+        for project in self.projects.sort
+          names << project.name
+        end
+        names.join(', ')
+      end
     end
   end
 end

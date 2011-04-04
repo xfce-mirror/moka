@@ -50,6 +50,14 @@ module Moka
             env[:error].has_key?(key)
           end
         end
+
+      def maintainer_names(model)
+        names = []
+        for maintainer in model.maintainers.sort
+          names << maintainer.realname
+        end
+        names.join(', ')
+      end
       end
     end
   end
