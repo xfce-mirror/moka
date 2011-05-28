@@ -1,0 +1,23 @@
+%h2 Utilities
+%p
+  %a{:href => "/announcements"} Publish announcements
+
+%h2 Collections
+%table
+  %tr
+  - for collection in authentication_user.collections.sort
+    %tr
+      %th
+        %a{:href => "/collection/#{collection.name}"} #{collection.display_name}
+      %td
+        %a{:href => "/collection/#{collection.name}/new-release"} Release new version
+
+%h2 Projects
+%table
+  %tr
+  - for project in authentication_user.projects.sort
+    %tr
+      %th
+        %a{:href => "/project/#{project.name}"} #{project.name}
+      %td
+        %a{:href => "/project/#{project.name}/new-release"} Release new version

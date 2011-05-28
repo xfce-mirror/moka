@@ -1,0 +1,14 @@
+%h2 Announcement
+%p Publish an announcement on identi.ca.
+
+- if error(:identica)
+  %p.error.quote #{error(:identica)}
+
+%form{:method => "post", :action => "/announcements/identica"}
+  %p
+    %label{:for => "test"} Text:
+    %textarea{:name => "test", :rows => "5", :wrap => "off", :value => params[:text]}
+  - if error(:text)
+    %p.error.quote #{error(:text)}
+  %p
+    %input{:type => "submit", :value => "Publish"}

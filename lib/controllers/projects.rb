@@ -106,7 +106,7 @@ module Moka
 
           @release.delete
 
-          redirect "/project/#{@project.id}"
+          redirect "/project/#{@project.name}"
         end
 
         app.get '/project/:name/new-release' do
@@ -190,18 +190,20 @@ module Moka
           @branch = Project::Branch.new(@project, params[:branch])
           @release = Project::Release.new(@project, @branch, params[:version])
 
-          if env['identica'] and params[:identica]
-            url = env['feeds'].get_project_feed_url(@project)
-
-            if env['identica'].group.nil?
-              @announcement_status = "#{@project.name} #{@release.version} released: #{url}"
-            else
-              @announcement_status = "#{@project.name} #{@release.version} released: #{url} !#{env['identica'].group}"
+          if env['feeds']
+            if env['identica'] and params[:identica]
+              url = env['feeds'].get_project_feed_url(@project)
+            
+              if env['identica'].group.nil?
+                @announcement_status = "#{@project.name} #{@release.version} released: #{url}"
+              else
+                @announcement_status = "#{@project.name} #{@release.version} released: #{url} !#{env['identica'].group}"
+              end
             end
-          end
 
-          if env['feeds'] and params[:feeds]
-             # TODO
+            if params[:feeds]
+              # TODO
+            end
           end
 
           if env['mailinglists'] and params[:mailinglists]

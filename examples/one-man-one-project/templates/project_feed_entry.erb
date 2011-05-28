@@ -1,0 +1,25 @@
+<pre><a href="<%= release.project.website %>"><%= release.project.name %></a> <%= release.version %> is now available for download from
+
+  <a href="<%= Moka::Models::Mirror.find_all.first.download_url(release) %>/<%= release.tarball_basename %>"><%= Moka::Models::Mirror.find_all.first.download_url(release) %>/<%= release.tarball_basename %></a>
+  <a href="<%= Moka::Models::Mirror.find_all.first.download_url(release) %>/<%= release.tarball_basename %>.md5"><%= Moka::Models::Mirror.find_all.first.download_url(release) %>/<%= release.tarball_basename %>.md5</a>
+  <a href="<%= Moka::Models::Mirror.find_all.first.download_url(release) %>/<%= release.tarball_basename %>.sha1"><%= Moka::Models::Mirror.find_all.first.download_url(release) %>/<%= release.tarball_basename %>.sha1</a>
+
+  SHA1 checksum: <%= release.checksum(Digest::SHA1) %>
+   MD5 checksum: <%= release.checksum(Digest::MD5) %>
+
+
+What is <%= release.project.name %>?
+========<%= Array.new(release.project.name.size, '=').join %>=
+
+<%= wrap_text(release.project.description).strip %>
+
+Website:
+  <a href="<%= release.project.website %>"><%= release.project.website %></a>
+
+
+Release notes for <%= release.version %>
+==================<%= Array.new(release.version.size, '=').join %>
+<% if (release.version.split('.')[1].to_i % 2) > 0 %>[Please note that this is a development release.]
+<% end %>
+<%= wrap_text(message).strip %>
+

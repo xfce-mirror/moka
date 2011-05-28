@@ -92,7 +92,7 @@ module Moka
         app.helpers Helpers
 
         app.get '/login/?' do
-          view :auth_login
+          view :login
         end
 
         app.post '/login/?' do
@@ -108,10 +108,34 @@ module Moka
           env['warden'].authenticate!
           redirect '/'
         end
+        
+        app.post '/unauthenticated' do
+          view :login_unauthenticated
+        end
     
         app.get '/logout/?' do
           env['warden'].logout
           redirect '/'
+        end
+        
+        app.get '/login/forgot' do
+          
+          view :login_forgot
+        end
+        
+        app.get '/login/request' do
+          
+          view :login_request
+        end
+
+        app.get '/login/request/sshinfo' do
+          
+          view :login_request_sshinfo
+        end
+
+        app.post '/login/request' do
+
+          view :login_request_finished
         end
       end
     end

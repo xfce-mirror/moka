@@ -55,6 +55,11 @@ module Moka
             and other.branch == branch \
             and other.version == version
         end
+        
+        def <=>(other)
+          return 0 unless other.is_a?(self.class)
+          version <=> other.version
+        end
 
         def checksum(type)
           Archive.instance.project_release_checksum(self, type)

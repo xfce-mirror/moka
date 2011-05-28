@@ -1,0 +1,19 @@
+%h2 Release information
+%p
+  Before releasing, please make sure the project information below is
+  up to date. Also make sure you are subscribed to the mailing lists with
+  <strong>#{authentication_user.email}</strong> else the announcement will
+  not be posted!
+
+%h3 Project information
+%form
+  %p
+    %label{:for => "website"} Website:
+    %input{:type => "text", :name => "website", :disabled => true, :value => "#{@project.website}"}
+  %p
+    %label{:for => "description"} Description:
+    %textarea{:name => "description", :disabled => true} #{@project.description}
+
+%form{:method => "get", :action => "/project/#{@project.name}/new-release/tarball"}
+  %p.quote
+    %input{:type => "submit", :value => "I verified the information is correct"}

@@ -1,3 +1,5 @@
+require 'haml'
+
 module Moka
   module Helpers
     module General
@@ -12,27 +14,22 @@ module Moka
       module Helpers
         include Moka::Models
 
-        def header(args={})
-          custom_binding = binding.clone
-          eval 'params = ' + args.inspect, custom_binding
-          import('head', custom_binding)
-        end
-  
-        def footer
-          import('foot')
-        end
-  
-        def import(template, custom_binding=nil)
+        def render_layout(custom_binding, &block)
           directory = File.expand_path(File.dirname(__FILE__))
-          filename = File.join(directory, '..', 'views', "#{template}.erb")
-          erb = open(filename) do |file|
-            ERB.new(file.read)
+          filename = File.join(directory, '..', 'views', 'layout.haml')
+          engine = open(filename) do |file| Haml::Engine.new(file.read) end
+          engine.render(if custom_binding.nil? then binding else custom_binding end) do
+            block.call(self)
           end
-          erb.result(if custom_binding.nil? then binding else custom_binding end)
         end
 
-        def view(*args)
-          import(*args)
+        def view(template, custom_binding = nil)
+          render_layout(custom_binding) do 
+            directory = File.expand_path(File.dirname(__FILE__))
+            filename = File.join(directory, '..', 'views', "#{template}.haml")
+            engine = open(filename) do |file| Haml::Engine.new(file.read) end
+            engine.render(if custom_binding.nil? then binding else custom_binding end)
+          end
         end
 
         def error_set(key, value)

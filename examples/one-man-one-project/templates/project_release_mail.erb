@@ -1,0 +1,24 @@
+<%= release.project.name %> <%= release.version %> is now available for download from
+  
+  <%= release.download_url %>/<%= release.tarball_basename %>
+  <%= release.download_url %>/<%= release.tarball_basename %>.md5
+  <%= release.download_url %>/<%= release.tarball_basename %>.sha1
+
+  SHA1 checksum: <%= release.checksum(Digest::SHA1) %>
+   MD5 checksum: <%= release.checksum(Digest::MD5) %>
+
+
+What is <%= release.project.name %>?
+========<%= Array.new(release.project.name.size, '=').join %>=
+
+<%= wrap_text(release.project.description).strip %>
+
+Website: 
+  <%= release.project.website %>
+
+
+Release notes for <%= release.version %>
+==================<%= Array.new(release.version.size, '=').join %>
+<% if (release.version.split('.')[1].to_i % 2) > 0 %>[Please note that this is a development release.]
+<% end %>
+<%= wrap_text(message).strip %>

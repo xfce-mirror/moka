@@ -1,0 +1,14 @@
+%h2 Permission denied
+%p.error You're denied access to this page for the following reason:
+
+- if context.is_a? Moka::Models::Project
+  %p.error You are not listed as a maintainer of #{context.name} and your roles include none of #{roles.to_s} either.
+- elsif context.is_a? Moka::Models::Collection
+  %p.error You are not listed as a maintainer of #{context.display_name} and your roles include none of #{roles.to_s} either.
+- elsif context.is_a? Moka::Models::Maintainer
+  %p.error You are not #{context.realname} and your roles include none of #{roles.to_s} either.
+- else
+  %p.error One of the #{roles.to_s} roles is required for this.
+
+%p 
+  %a{:href => "javascript:history.back()"} Bring me back!

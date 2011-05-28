@@ -1,0 +1,39 @@
+%h2 Project information
+%form{:method => "post", :action => "/project/#{@project.name}/information"}
+  %p
+    %label{:for => "website"} Website:
+    %input{:type => "text", :name => "website", :value => "#{@project.website}"}
+  %p
+    %label{:for => "description"} Description:
+    %textarea{:name => "description"} #{@project.description}
+  %p
+    %label{:for => "maintainers"} Maintainers:
+    %input{:type => "text", :name => "maintainers", :disabled => true, :value => "#{maintainer_names(@project)}"}
+  %p.quote
+    %input{:type => "submit", :value => "Save"}
+
+%h2 Classification
+%form{:method => "post", :action => "/project/#{@project.name}/classify"}
+  %p
+    %select{:name => "classification"}
+      - for classification in Classification.find_all
+        %option{:name => classification.name, :selected => @project.classification.name == classification.name} #{classification.name}
+    %input{:type => "submit", :value => "Change"}
+
+%h2 Releases
+%p
+  %a{:href => "/project/#{@project.name}/new-release"} Release new version
+
+%table
+  - for branch in @project.branches.sort.reverse
+    - releases = @project.releases(branch).sort.reverse
+    - for release in releases
+      %tr
+        %th
+          - if release == releases.first
+            #{branch.name} Branch
+        %th
+          %a{:href => "#{release.download_url}"} #{release.version}
+        %td
+          %a{:href => "/project/#{@project.name}/branch/#{branch.name}/release/#{release.version}/update"} Update
+          %a{:href => "/project/#{@project.name}/branch/#{branch.name}/release/#{release.version}/delete"} Delete

@@ -1,0 +1,21 @@
+%h2 Collection information</h2>
+%form
+  %p
+    %label{:for => "website"} Website:
+    %input{:name => "website", :disabled => true, :value => "#{@collection.website}"}
+  %p
+    %label{:for => "maintainers"} Maintainers:
+    %input{:name => "maintainers", :disabled => true, :value => "#{maintainer_names(@collection)}"}
+
+%p
+  %a{:href => "/collection/#{@collection.name}/new-release"} Release new version
+
+%h2 Releases
+%table
+  - for release in @collection.releases.sort.reverse
+    %tr
+      %th
+        %a{:href => "#{release.release_url}"} #{release.version}
+      %td
+        %a{:href => "/collection/#{@collection.name}/release/#{release.version}"} Update
+        %a{:href => "/collection/#{@collection.name}/release/#{release.version}/delete"} Delete

@@ -1,0 +1,22 @@
+%h2 Administrative Tasks
+%p
+  %a{:href => "/collection/#{@collection.name}/release/#{@release.version}/update_fat_tarball"} Regenerate fat tarball
+%p
+  %a{:href => "/collection/#{@collection.name}/release/#{@release.version}/update_fat_tarball_checksums"} Update fat tarball checksums
+
+%h2 Projects to include in the release
+%form
+  %table
+    - for project in Project.find_all.sort
+      %tr
+        %th #{project.name}
+        %td
+          %label{:for => ""} Included version:
+          %select{:name => "version[#{project.name}]"}
+            - included_release = @release.included_project_release(project)
+            %option{:selected => included_release.nil?} None
+            - for release in project.releases
+              %option{:value => "#{release.branch.name}:#{release.version}", :selected => (release == included_release)} #{release.version}
+  %p
+    %input{:type => "submit", :value => "Save"}
+

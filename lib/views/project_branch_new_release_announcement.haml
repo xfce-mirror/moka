@@ -1,0 +1,24 @@
+%h2 Tarball uploaded
+%p The tarball is now uploaded. You can stop here if that is all you wanted to do.
+
+%h2 Announcement
+%form{:method => "post"}
+  %p
+    %label{:for => "message"} Release notes:
+    %textarea{:name => "message", :class => "message"}
+    - if env['feeds']
+      %p.quote
+        %input{:type => "checkbox", :name => "feeds", :value => "announce", :checked => true} Update news feed
+    - if env['identica']
+      %p.quote
+        %input{:type => "checkbox", :name => "identica", :value => "announce", :checked => true} Announce on identi.ca
+    - if env['mailinglists']
+      - for list in env['mailinglists'].lists
+        %p.quote
+          %input{:type => "checkbox", :name => "mailinglists[#{list}]", :value => "announce"}
+            Announce on #{list}
+      %p.quote
+        Make sure to be subscribed to these mailinglists with #{authentication_user.email}.
+        You can change your email address in your profile.
+    %p.quote
+      %input{:type => "submit", :value => "Continue"}

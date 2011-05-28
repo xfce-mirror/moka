@@ -8,26 +8,22 @@ require 'sass'
 
 directory = File.expand_path(File.dirname(__FILE__))
 
-require File.join(directory, 'models', 'configuration')
-require File.join(directory, 'models', 'classification')
-require File.join(directory, 'models', 'role')
-require File.join(directory, 'models', 'maintainer')
-require File.join(directory, 'models', 'collection')
-require File.join(directory, 'models', 'project')
-require File.join(directory, 'models', 'archive')
+models = ['configuration', 'classification', 'role', 'maintainer', 'collection', 'project', 'archive']
+for model in models
+  require File.join(directory, 'models', model)
+end
 
 require File.join(directory, 'helpers', 'general')
 
-require File.join(directory, 'controllers', 'announcements')
-require File.join(directory, 'controllers', 'authentication')
-require File.join(directory, 'controllers', 'collections')
-require File.join(directory, 'controllers', 'projects')
-require File.join(directory, 'controllers', 'maintainers')
-require File.join(directory, 'controllers', 'request')
+helpers = ['announcements', 'authentication', 'collections', 'projects', 'maintainers']
+for helper in helpers
+  require File.join(directory, 'controllers', helper)
+end
 
-require File.join(directory, 'middleware', 'feeds')
-require File.join(directory, 'middleware', 'identica')
-require File.join(directory, 'middleware', 'mailinglists')
+middlewares = ['feeds', 'identica', 'mailinglists']
+for middleware in middlewares
+  require File.join(directory, 'middleware', middleware)
+end
 
 module Moka
   class Application < Sinatra::Base
@@ -41,7 +37,6 @@ module Moka
     register Moka::Controllers::Projects
     register Moka::Controllers::Collections
     register Moka::Controllers::Maintainers
-    register Moka::Controllers::Request
 
     authentication_initialize
   
@@ -57,7 +52,7 @@ module Moka
   
     get '/' do
       if authentication_finished?
-        view :manage_releases
+        view :index_login
       else
         view :index
       end

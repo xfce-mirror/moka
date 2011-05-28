@@ -1,0 +1,30 @@
+%h2 Confirmation
+%p The following announcements will be sent.
+
+- if env['identica'] and params[:identica]
+  %h3 Identi.ca
+  %p.preview #{@announcement_status}
+
+- if env['mailinglists'] and params[:mailinglists]
+  %h3 Mailing Lists
+
+  %h4 Subject
+  %p.preview #{@announcement_subject}
+  
+  %h4 Body
+  %p.preview #{@announcement_body}
+  
+%h2 Everything alright?
+%form{:method => "post", :action => "/project/#{@project.name}/branch/#{@branch.name}/new-release/#{@release.version}/confirm"}
+  - if env['feeds'] and params[:feeds]
+    %input{:type => "hidden", :name => "feeds", :value => "announce"}
+  - if env['identica'] and params[:identica]
+    %input{:type => "hidden", :name => "identica", :value => "announce"}
+  - if env['mailinglists'] and params[:mailinglists]
+    - for list in env['mailinglists'].lists
+      - if params[:mailinglists].has_key?(list)
+        %input{:type => "hidden", :name => "mailinglists[#{list}]", :value => "announce"}
+  %input{:type => "hidden", :name => "message", :value => "#{params[:message]}"}
+  %p.center
+    %input{:type => "button", :onclick => "history.back()", :value => "No, let me edit the announcement again"}
+    %input{:type => "submit", :value => "Yes, release the damn thing already!"}

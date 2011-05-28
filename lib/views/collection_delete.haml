@@ -1,0 +1,6 @@
+%h2 Delete #{@collection.display_name} #{params[:release]}
+%p Do you really want to delete this release?
+%form
+  %p
+    %input{:type => "button", onclick => "history.back()", :value => "No, I came here by mistake!"}
+    %input{:type => "submit", :value => "Yes, please delete!""}

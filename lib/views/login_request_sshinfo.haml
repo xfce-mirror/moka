@@ -1,0 +1,35 @@
+%h2 Introduction
+%p 
+  For a secure connection to push git commits, the Xfce project uses
+  SSH keys to authorize on the server. This has the advantage a secure
+  connection is established between the server with simple passwords.
+
+%h2 Generating SSH keys
+%p
+  SSH keys are stored in your home directory in the <em>~/.ssh</em>
+  directory. To generate a key pair use the following command:</p>
+
+%pre
+  :plain
+        <strong>cd ~/.ssh</strong>
+    .ssh <strong> ssh-keygen -t dsa -f id_dsa</strong>
+    Generating public/private dsa key pair.
+    Enter passphrase (empty for no passphrase): <strong>[ENTER]</strong>
+    Enter same passphrase again: <strong>[ENTER]</strong>
+    Your identification has been saved in id_dsa.
+    Your public key has been saved in id_dsa.pub.
+    The key fingerprint is:
+    e7:c3:bd:c9:33:2e:19:33:b2:62:75:74:b3:99:b1:99 user@localhost
+
+%p 
+  After you have created the key files, you should submit the
+  <em>id_dsa.pub</em> file to us in the text field. This string looks
+  like <em>ssh-dss ... user@localhost</em>. Afterwards you can maintain
+  the keys through this website. We will add the pubkey to your 
+  <em>~/.ssh/authorized_keys</em> file on the Xfce server and 
+  you can then log onto our server without a password.
+
+%h2 Using SSH keys with GIT
+%p 
+  You can read about this in the 
+  %a{:href => "http://wiki.xfce.org/dev/howto/git#committers"} Xfce Wiki.

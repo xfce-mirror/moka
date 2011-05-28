@@ -1,0 +1,20 @@
+<%= release.collection.display_name %> <%= release.version %> is now available for download.
+
+It includes the following releases of Xfce core components:
+<% for project in (Moka::Models::Project.find_all.sort.select do |project| release.included_project_release(project) != nil end) %>
+  <%= project.name %> <%= release.included_project_release(project).version %><% end %>
+
+Release tarballs can be retrieved from the following mirrors (please
+note that it may take a few hours for the mirrors to catch up):
+<% for mirror in Moka::Models::Mirror.find_all %>
+  <%= mirror.download_url(release) %><% end %>
+
+A tarball including all individual releases can be downloaded here:
+<% for mirror in Moka::Models::Mirror.find_all %>
+  <%= mirror.fat_tarball_url(release) %><% end %>
+
+
+Release notes for <%= release.version %>
+==================<%= Array.new(release.version.size, '=').join %>
+
+<%= wrap_text(message).strip %>

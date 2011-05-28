@@ -1,0 +1,29 @@
+!!! Strict
+%html
+  %head
+    %meta{"http-equiv" => "Content-Type", :content => "text/html; charset=utf-8"}/
+    %title Xfce Release Manager
+    %link{:rel => "stylesheet", :href => "/stylesheet.css", :media => "all", :type => "text/css"}/
+  %body
+    %h1 Xfce Release Manager
+    %ul
+      %li
+        %a{:href => "/"} Home
+      - if authentication_finished? and authentication_user
+        %li
+          %a{:href => "/maintainer/#{authentication_user.username}"} Profile
+        %li
+          %a{:href => "/maintainer"} Maintainers
+        %li
+          %a{:href => "/project"} Projects
+        %li
+          %a{:href => "/logout"} Logout
+      - else
+        %li
+          %a{:href => "/login"} Log in
+        %li
+          %a{:href => "/login/request"} New Account
+        %li
+          %a{:href => "/login/forgot"} Forgot Password
+
+    =yield
