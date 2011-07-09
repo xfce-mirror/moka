@@ -29,4 +29,41 @@
     %input{:type => "submit", :value => "Save"}
 
 %h2 Permissions
+%form{:method => "post", :action => "/maintainer/#{@maintainer.username}/permissions" }
+  %h3 Roles
+  - visible_roles = false
+  - for role in Role.all
+    - if authentication_user.is_admin or @maintainer.roles.include?(role)
+      - visible_roles = true
+      %p
+        %input{:type => "checkbox", :name => "roles[#{role.name}]", :checked => @maintainer.roles.include?(role), :disabled => !authentication_user.is_admin}
+        %label{:for => "roles[#{role.name}]"} #{role.description}
+  - if !visible_roles
+    %p This user has no roles.
 
+  %h3 Collections
+  - visible_collections = false
+  - for collection in Collection.all
+    - if authentication_user.is_admin or @maintainer.collections.include?(collection)
+      - visible_collections = true
+      %p
+        %input{:type => "checkbox", :name => "collections[#{collection.name}]", :checked => @maintainer.collections.include?(collection), :disabled => !authentication_user.is_admin}
+        %label{:for => "collections[#{collection.name}]"} #{collection.display_name}
+  - if !visible_collections
+    %p This user is not maintaining a collection.
+
+  %h3 Projects
+  - visible_projects = false
+  - for project in Project.all.sort
+    - if authentication_user.is_admin or @maintainer.projects.include?(project)
+      - visible_projects = true
+      %p
+        %input{:type => "checkbox", :name => "projects[#{project.name}]", :checked => @maintainer.projects.include?(project), :disabled => !authentication_user.is_admin}
+        %label{:for => "projects[#{project.name}]"}
+          %a{:href => "/project/#{project.name}" } #{project.name}
+  - if !visible_projects
+    %p This users is not maintaining a project.
+
+  - if authentication_user.is_admin
+    %p
+      %input{:type => "submit", :value => "Save"}

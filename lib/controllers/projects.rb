@@ -4,6 +4,13 @@ module Moka
       include Moka::Models
 
       def self.registered(app)
+        app.get '/project' do
+
+          authentication_required
+
+          view :project_list
+        end
+
         app.get '/project/:name' do
           @project = Project.get(params[:name])
 
@@ -193,7 +200,7 @@ module Moka
           if env['feeds']
             if env['identica'] and params[:identica]
               url = env['feeds'].get_project_feed_url(@project)
-            
+
               if env['identica'].group.nil?
                 @announcement_status = "#{@project.name} #{@release.version} released: #{url}"
               else

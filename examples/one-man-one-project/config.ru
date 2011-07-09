@@ -89,10 +89,22 @@ DataMapper.auto_upgrade!
 DataMapper.finalize
 
 # create dummy roles
-admin = Moka::Models::Role.first_or_create(:name => 'admin')
+#admin = Moka::Models::Role.first_or_create(:name => 'admin')
+#admin.save
+
+#goodies = Moka::Models::Role.first_or_create(:name => 'goodies')
+#goodies.save
+
+admin = Moka::Models::Role.first_or_create(
+  { :name => 'admin' },
+  { :description => "Administrator" }
+)
 admin.save
 
-goodies = Moka::Models::Role.first_or_create(:name => 'goodies')
+goodies = Moka::Models::Role.first_or_create(
+  { :name => 'goodies' },
+  { :description => "Goodies Maintainer" }
+)
 goodies.save
 
 # create dummy user
@@ -140,6 +152,32 @@ thunar = Moka::Models::Project.first_or_create(
 thunar.maintainers << nick
 thunar.maintainers << jannis
 thunar.save
+
+terminal = Moka::Models::Project.first_or_create(
+  { :name =>           'terminal' },
+  { :website =>        'http://www.xfce.org',
+    :description =>    'Xfce\'s Terminal Emulator' }
+)
+terminal.maintainers << nick
+terminal.save
+
+tumbler = Moka::Models::Project.first_or_create(
+  { :name =>           'tumbler' },
+  { :website =>        'http://www.xfce.org',
+    :description =>    'Thumbnail generator' }
+)
+tumbler.maintainers << jannis
+tumbler.save
+
+libxfce4ui = Moka::Models::Project.first_or_create(
+  { :name =>           'libxfce4ui' },
+  { :website =>        'http://www.xfce.org',
+    :description =>    'Xfce Widgets Library' }
+)
+libxfce4ui.maintainers << jannis
+libxfce4ui.maintainers << nick
+libxfce4ui.maintainers << jeromeg
+libxfce4ui.save
 
 # create dummy classification
 collection = Moka::Models::Collection.first_or_create(

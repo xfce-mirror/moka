@@ -61,6 +61,40 @@ module Moka
 
           view :maintainer_profile
         end
+
+        app.post '/maintainer/:name/permissions' do
+          @maintainer = Maintainer.get(params[:name])
+
+          authentication_required
+
+          @maintainer.roles.clear
+          if params[:roles]
+            for name in params[:roles].keys do
+              role = Role.get(name)
+              @maintainer.roles << role
+            end
+          end
+
+          @maintainer.collections.clear
+          if params[:collections]
+            for name in params[:collections].keys do
+              collection = Collection.get(name)
+              @maintainer.collections << collection
+            end
+          end
+
+          @maintainer.projects.clear
+          if params[:projects]
+            for name in params[:projects].keys do
+              project = Project.get(name)
+              @maintainer.projects << project
+            end
+          end
+
+          @maintainer.save
+
+          redirect "/maintainer/#{@maintainer.username}"
+        end
       end
     end
   end

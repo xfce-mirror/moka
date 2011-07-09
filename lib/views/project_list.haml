@@ -1,0 +1,15 @@
+%h2 Projects
+
+%table
+  %tr
+    %th Name
+    %th Description
+    %th Maintainers
+  - for project in Project.all.sort
+    %tr
+      %td
+        %a{:href => "/project/#{project.name}"} #{project.name}
+      %td
+        #{project.description}
+      %td
+        #{maintainer_names(project)}
