@@ -6,6 +6,7 @@ module Moka
       include DataMapper::Resource
 
       property :username, String, :key => true
+      property :active,   Boolean, :default  => false
       property :realname, String
       property :password, String
       property :email,    String

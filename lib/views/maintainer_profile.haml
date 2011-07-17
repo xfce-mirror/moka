@@ -2,10 +2,15 @@
 %form{:method => "post"}
   %p
     %label{:for => "username"} Login Name:
-    %input{:type => "text", :name => "username", :disabled => true, :value => @maintainer.username}
+    %input{:type => "text", :name => "fooname", :disabled => true, :value => @maintainer.username}
+    %input{:type => "hidden", :name => "username", :value => @maintainer.username}
   %p
     %label{:for => "email"} Email address:
     %input{:type => "text", :name => "email", :value => @maintainer.email}
+  - if authentication_user.is_admin
+    %p
+      %label{:for => "active"} Account active:
+      %input{:type => "checkbox", :name => "active", :checked => @maintainer.active}
   %p
     %label{:for => "realname"} Real Name:
     %input{:type => "text", :name => "realname", :value => @maintainer.realname}
@@ -14,6 +19,8 @@
     %textarea{:name => "pubkeys", :rows => "5", :wrap => "off", :value => @maintainer.pubkeys}
   %hr
   %p Leave the password fields empty if you don't want to set a new password. The password needs to be at least 6 characters long.
+  - if env[:error][:newpassword]
+    %p.error.quote #{env[:error][:newpassword]}
   %p
     %label{:for => "new_password"} New password:
     %input{:type => "password", :name => "new_password"}
@@ -22,6 +29,8 @@
     %input{:type => "password", :name => "new_password2"}
   %hr
   %p Please enter your existing password to confirm account changes.
+  - if env[:error][:password]
+    %p.error.quote #{env[:error][:password]}
   %p
     %label{:for => "password"} Password:
     %input{:type => "password", :name => "password"}

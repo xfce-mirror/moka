@@ -112,7 +112,8 @@ nick = Moka::Models::Maintainer.first_or_create(
   { :username => 'nick' },
   { :realname => 'Nick Schermer',
     :password => Digest::SHA1.hexdigest('test'),
-    :email => 'nick@xfce.org' }
+    :email => 'nick@xfce.org',
+    :active => true }
 )
 nick.roles << admin
 nick.roles << goodies
@@ -122,7 +123,8 @@ jannis = Moka::Models::Maintainer.first_or_create(
   { :username => 'jannis' },
   { :realname => 'Jannis Pohlmann',
     :password => Digest::SHA1.hexdigest('test'),
-    :email => 'jannis@xfce.org' }
+    :email => 'jannis@xfce.org',
+    :active => true }
 )
 jannis.roles << goodies
 jannis.save
@@ -131,7 +133,8 @@ jeromeg = Moka::Models::Maintainer.first_or_create(
   { :username => 'jeromeg' },
   { :realname => 'Jérôme Guelfucci',
     :password => Digest::SHA1.hexdigest('test'),
-    :email => 'jeromeg@xfce.org' }
+    :email => 'jeromeg@xfce.org',
+    :active => false }
 )
 jeromeg.roles << goodies
 jeromeg.save

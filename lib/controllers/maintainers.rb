@@ -20,13 +20,13 @@ module Moka
         end
 
         app.post '/maintainer/:id' do
-          @maintainer = Maintainer.get(params[:name])
+          @maintainer = Maintainer.get(params[:username])
 
           authentication_required(@maintainer)
 
           # validate the password against the authenticated user
           encrypted_password = Digest::SHA1.hexdigest(params[:password])
-          if authentication_user.password == encrypted_password
+          if authentication_user.password.eql? encrypted_password
             if not params[:new_password].empty?
               if not params[:new_password].eql? params[:new_password2]
                 error_set(:newpassword, 'The two passwords you entered did not match.')
@@ -45,6 +45,10 @@ module Moka
               pubkeys.push(key) if not key.empty?
             end
 
+            if authentication_user.is_admin
+              @maintainer.active = params[:active] ? true : false
+            end
+
             @maintainer.email = params[:email]
             @maintainer.realname = params[:realname]
             @maintainer.pubkeys = pubkeys.join("\n")
@@ -52,7 +56,7 @@ module Moka
 
             error_set(:succeed, 'The changes to your profile have been saved.')
           else
-            if authentication_user.name == @maintainer.name
+            if authentication_user.username == @maintainer.username
               error_set(:password, 'You did not enter your old password correctly.')
             else
               error_set(:password, 'You did not enter your OWN password correctly.')

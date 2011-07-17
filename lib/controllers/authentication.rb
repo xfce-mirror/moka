@@ -9,30 +9,30 @@ module Moka
     module Authentication
       def authentication_initialize
         use Rack::Session::Cookie
-        
-        Warden::Manager.serialize_into_session do |maintainer| 
-          maintainer.username 
+
+        Warden::Manager.serialize_into_session do |maintainer|
+          maintainer.username
         end
-        
-        Warden::Manager.serialize_from_session do |username| 
-          Moka::Models::Maintainer.get(username) 
+
+        Warden::Manager.serialize_from_session do |username|
+          Moka::Models::Maintainer.get(username)
         end
-        
+
         Warden::Manager.before_failure do |env, opts|
           env['REQUEST_METHOD'] = 'POST'
         end
-        
-        Warden::Strategies.add(:maintainer) do 
+
+        Warden::Strategies.add(:maintainer) do
           def valid?
             params['username'] and params['password']
           end
-        
+
           def authenticate!
             maintainer = Moka::Models::Maintainer.authenticate(params['username'], params['password'])
-            maintainer.nil? ? fail!("Authentication failed") : success!(maintainer)
+            maintainer.nil? or maintainer.active == false ? fail!("Authentication failed") : success!(maintainer)
           end
         end
-        
+
         use Warden::Manager do |manager|
           manager.default_strategies :maintainer
           manager.failure_app = Moka::Application
@@ -67,7 +67,7 @@ module Moka
             end
           elsif (context.is_a? Moka::Models::Maintainer)
             # abort processing the current page if the user is not
-            # the same as the required maintainer and his/her user 
+            # the same as the required maintainer and his/her user
             # roles and the required roles have no elements in common
             unless authentication_user == context
               if not authentication_user.authorized?(roles)
@@ -87,7 +87,7 @@ module Moka
           env['warden'].user
         end
       end
-            
+
       def self.registered(app)
         app.helpers Helpers
 
@@ -96,10 +96,10 @@ module Moka
         end
 
         app.post '/login/?' do
-          
+
           maintainer = Moka::Models::Maintainer.get(params['username'])
 
-          if maintainer and maintainer.password == 'invalid'
+          if maintainer and maintainer.active == true and maintainer.password == 'invalid'
             maintainer.password = Digest::SHA1.hexdigest(params['password'])
             maintainer.save
             redirect '/'
@@ -108,34 +108,54 @@ module Moka
           env['warden'].authenticate!
           redirect '/'
         end
-        
+
         app.post '/unauthenticated' do
           view :login_unauthenticated
         end
-    
+
         app.get '/logout/?' do
           env['warden'].logout
           redirect '/'
         end
-        
+
         app.get '/login/forgot' do
-          
+
           view :login_forgot
         end
-        
+
         app.get '/login/request' do
-          
+
           view :login_request
         end
 
         app.get '/login/request/sshinfo' do
-          
+
           view :login_request_sshinfo
         end
 
         app.post '/login/request' do
+          if params[:username].empty? or params[:realname].empty? or params[:email].empty?
+            error_set(:username, 'All fields below are required')
+            view :login_request
+          elsif not Moka::Models::Maintainer.get(params[:username]).nil?
+            error_set(:username, 'This username is already taken')
+            view :login_request
+          elsif params[:password].empty? or params[:password].length < 6
+            error_set(:password, 'The password must be at least 6 characters long.')
+            view :login_request
+          elsif not params[:password].eql? params[:password2]
+            error_set(:password, 'The two passwords you entered did not match.')
+            view :login_request
+          else
+            @maintainer = Moka::Models::Maintainer.create (:username => params[:username])
+            @maintainer.email = params[:email]
+            @maintainer.realname = params[:realname]
+            @maintainer.password = Digest::SHA1.hexdigest(params[:password])
+            @maintainer.active = false
+            @maintainer.save
 
-          view :login_request_finished
+            view :login_request_finished
+          end
         end
       end
     end

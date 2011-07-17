@@ -1,6 +1,18 @@
 %h2 Inactive Maintainers
 %p Account for maintainers that have not been activated yet.
 
+%table
+  %tr
+    %th Username
+    %th Real Name
+    %th Email
+  - for maintainer in Maintainer.all(:active => false).sort
+    %tr
+      %td
+        %a{:href => "/maintainer/#{maintainer.username}"} #{maintainer.username}
+      %td #{maintainer.realname}
+      %td #{maintainer.email}
+
 %h2 Active Maintainers
 %p Accounts of the maintainers that are currently using the release manager.
 
@@ -9,7 +21,7 @@
     %th Username
     %th Real Name
     %th Email
-  - for maintainer in Maintainer.all.sort
+  - for maintainer in Maintainer.all(:active => true).sort
     %tr
       %td
         %a{:href => "/maintainer/#{maintainer.username}"} #{maintainer.username}
