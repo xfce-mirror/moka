@@ -88,24 +88,11 @@ end
 DataMapper.auto_upgrade!
 DataMapper.finalize
 
-# create dummy roles
-#admin = Moka::Models::Role.first_or_create(:name => 'admin')
-#admin.save
-
-#goodies = Moka::Models::Role.first_or_create(:name => 'goodies')
-#goodies.save
-
 admin = Moka::Models::Role.first_or_create(
   { :name => 'admin' },
   { :description => "Administrator" }
 )
 admin.save
-
-goodies = Moka::Models::Role.first_or_create(
-  { :name => 'goodies' },
-  { :description => "Goodies Maintainer" }
-)
-goodies.save
 
 # create dummy user
 nick = Moka::Models::Maintainer.first_or_create(
@@ -116,7 +103,6 @@ nick = Moka::Models::Maintainer.first_or_create(
     :active => true }
 )
 nick.roles << admin
-nick.roles << goodies
 nick.save
 
 jannis = Moka::Models::Maintainer.first_or_create(
@@ -126,7 +112,6 @@ jannis = Moka::Models::Maintainer.first_or_create(
     :email => 'jannis@xfce.org',
     :active => true }
 )
-jannis.roles << goodies
 jannis.save
 
 jeromeg = Moka::Models::Maintainer.first_or_create(
@@ -136,7 +121,6 @@ jeromeg = Moka::Models::Maintainer.first_or_create(
     :email => 'jeromeg@xfce.org',
     :active => false }
 )
-jeromeg.roles << goodies
 jeromeg.save
 
 panel = Moka::Models::Project.first_or_create(
