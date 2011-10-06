@@ -1,6 +1,6 @@
 require 'rubygems'
 
-gem 'pony', '0.3'
+#gem 'pony', '0.3'
 require 'pony'
 
 module Moka

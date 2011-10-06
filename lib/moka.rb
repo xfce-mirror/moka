@@ -1,9 +1,9 @@
 require 'rubygems'
 
-gem 'sinatra', '0.9.2'
+# gem 'sinatra', '0.9.2'
 require 'sinatra'
 
-gem 'haml', '2.2.1'
+# gem 'haml', '2.2.1'
 require 'sass'
 
 directory = File.expand_path(File.dirname(__FILE__))

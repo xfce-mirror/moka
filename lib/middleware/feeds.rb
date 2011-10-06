@@ -1,6 +1,6 @@
 require 'rubygems'
 
-gem 'ratom', '0.6.2'
+#gem 'ratom', '0.6.2'
 require 'atom'
 
 module Moka

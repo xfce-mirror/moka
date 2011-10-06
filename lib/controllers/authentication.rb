@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'pp'
 
-gem 'warden', '0.2.3'
+#gem 'warden', '0.2.3'
 require 'warden'
 
 module Moka
