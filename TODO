@@ -1,3 +1,4 @@
-Register: Almost finished...
-
-A token for changing your password has been emailed to you. Follow the instructions in that email to change your password. 
+- Registration
+- Send verification email on email address change and ssk key change.
+- Password recovery.
+- Tool to generate gitolit config file and ssh key files.
