@@ -65,7 +65,7 @@ module Moka
         body = render_body(release, message, sender)
 
         recipients = [ recipients ] unless recipients.is_a? Array
-          
+
         for recipient in recipients 
           Pony.mail(:from => sender.display_email,
                     :to => recipient, 

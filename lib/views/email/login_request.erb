@@ -1,14 +1,8 @@
-You have (or someone impersonating you has) requested to change your
-Release manager password. To complete the change, visit the following link:
+Hello, this is Moka at <a href="<%= params[:request_url] %>"><%= params[:request_url] %></a>.
 
-<%= params[:token_url] %>
+The user '<%= params[:request_username] %>' has asked for access from
+<%= request.env['REMOTE_ADDR'] %> on <%= params[:request_stamp] %>.
 
+Always at your service.
 
-If you are not the person who made this request, or you wish to cancel
-this request, visit the following link:
-
-<%= params[:token_abort_url] %>
-
-
-If you do nothing, the request will lapse after 2 hours
-(<%= params[:token_expire] %>) or when you log in successfully.
+ --Moka

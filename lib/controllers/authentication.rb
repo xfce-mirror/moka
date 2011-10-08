@@ -154,7 +154,7 @@ module Moka
             Pony.mail :to => maintainer.email,
                       :from => Moka::Models::Configuration.get(:noreply),
                       :subject => "Xfce Release Manager change password request",
-                      :body => erb(:'email/login_request')
+                      :body => erb(:'email/login_forget')
           end
 
           env[:step] = "emailed"
@@ -230,6 +230,24 @@ module Moka
             @maintainer.password = Digest::SHA1.hexdigest(params[:password])
             @maintainer.active = false
             @maintainer.save
+
+            params[:request_url] = Moka::Models::Configuration.get(:moka_url)
+            params[:request_username] = params[:username]
+            params[:request_stamp] = Time.now.to_s
+
+            subject = "Xfce Release Manager Request: " + params[:username]
+            body = erb(:'email/login_request')
+
+            # mail all admins about the request
+            recipients = Moka::Models::Maintainer.all()
+            for recipient in recipients
+              if recipient.is_admin
+                Pony.mail :to => recipient.email,
+                          :from => Moka::Models::Configuration.get(:noreply),
+                          :subject => subject,
+                          :body => body
+              end
+            end
 
             view :login_request_finished
           end
