@@ -36,7 +36,7 @@ module Moka
             pubkeys = []
             params[:pubkeys].split("\n").each do |key|
               key = key.strip
-              pubkeys.push(key) if not key.empty?
+              pubkeys.push(key) if not key.empty? and key.start_with? "ssh-"
             end
 
             if authentication_user.is_admin
