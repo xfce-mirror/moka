@@ -27,15 +27,9 @@ module Moka
           # validate the password against the authenticated user
           encrypted_password = Digest::SHA1.hexdigest(params[:password])
           if authentication_user.password.eql? encrypted_password
-            if not params[:new_password].empty?
-              if not params[:new_password].eql? params[:new_password2]
-                error_set(:newpassword, 'The two passwords you entered did not match.')
-              elsif params[:new_password].length < 6
-                error_set(:newpassword, 'The password must be at least 6 characters long.')
-              else
-                encrypted_password = Digest::SHA1.hexdigest(params[:new_password])
-                @maintainer.password = encrypted_password
-              end
+            if not params[:newpassword].empty? and validate_password(params[:newpassword], params[:newpassword2])
+              encrypted_password = Digest::SHA1.hexdigest(params[:newpassword])
+              @maintainer.password = encrypted_password
             end
 
             # put lines in an array and clean it up

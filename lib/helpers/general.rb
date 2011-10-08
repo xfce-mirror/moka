@@ -48,13 +48,24 @@ module Moka
           end
         end
 
-      def maintainer_names(model)
-        names = []
-        for maintainer in model.maintainers.sort
-          names << maintainer.realname
+        def maintainer_names(model)
+          names = []
+          for maintainer in model.maintainers.sort
+            names << maintainer.realname
+          end
+          names.join(', ')
         end
-        names.join(', ')
-      end
+        
+        def validate_password(password1, password2)
+          if password1.empty? or password1.length < 6
+              error_set(:newpassword, 'The password must be at least 6 characters long.')
+          elsif password2.empty? or not password1.eql? password2
+              error_set(:newpassword, 'The two passwords you entered did not match.')
+          else
+            return true
+          end
+          return false
+        end
       end
     end
   end

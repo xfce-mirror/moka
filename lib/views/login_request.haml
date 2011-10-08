@@ -23,8 +23,8 @@
     %label{:for => "email"} Email address:
     %input{:type => "text", :name => "email", :value => params[:email]}
   %hr
-  - if env[:error][:password]
-    %p.error.quote #{env[:error][:password]}
+  - if env[:error][:newpassword]
+    %p.error.quote #{env[:error][:newpassword]}
   %p
     %label{:for => "password"} Password:
     %input{:type => "password", :name => "password"}

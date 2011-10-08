@@ -1,1 +1,50 @@
 %h2 Recover Login
+- if env[:step].eql? "emailed"
+  %p
+    A token for changing your password has been emailed to you. Follow
+    the instructions in that email to change your password.
+  %p
+    %a{:href => "/" } Home
+
+- elsif env[:step].eql? "valid"
+  %p
+    To change your password, enter a new password twice:
+  - if env[:error][:newpassword]
+    %p.error.quote #{env[:error][:newpassword]}
+  %form{:method => "post"}
+    %p
+      %label{:for => "newpassword"} New password:
+      %input{:type => "password", :name => "newpassword"}
+    %p
+      %label{:for => "newpassword2"} Confirm new password:
+      %input{:type => "password", :name => "newpassword2"}
+    %p
+      %input{:type => "submit", :value => "Submit"}
+
+- elsif env[:step].eql? "invalid"
+  %p
+    The token you submitted does not exist, has expired, or has been canceled.
+  %p
+    %a{:href => "/" } Home
+
+- elsif env[:step].eql? "canceled"
+  %p
+    The password request was canceled.
+  %p
+    %a{:href => "/" } Home
+
+- elsif env[:step].eql? "deleted"
+  %p
+    Your password has been changed.
+  %p
+    %a{:href => "/" } Home
+
+- else
+  %p
+    If you have an account, but have forgotten your password, enter your
+    login name below and submit a request to change your password.
+  %form{:method => "post", :action => "/login/forgot"}
+    %p
+      %label{:for => "username"} Username:
+      %input{:type => "text", :name => "username"}
+      %input{:type => "submit", :value => "Reset Password"}

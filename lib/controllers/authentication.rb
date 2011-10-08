@@ -3,6 +3,7 @@ require 'pp'
 
 #gem 'warden', '0.2.3'
 require 'warden'
+require 'pony'
 
 module Moka
   module Controllers
@@ -86,25 +87,38 @@ module Moka
         def authentication_user
           env['warden'].user
         end
+
+        def maintainer_forgot(username, token = nil)
+          maintainer = Moka::Models::Maintainer.get(username)
+          expired = 3600 * 2;
+
+          if maintainer and maintainer.active == true
+            if token
+              if (Time.now.to_f - maintainer.token_stamp) > expired or
+                 maintainer.token.empty? or
+                 not maintainer.token.eql? token
+                return nil
+              end
+            else
+              # check if the old token has not expired yet. this to avoid
+              # spam from annoying people
+              if (Time.now.to_f - maintainer.token_stamp) < expired
+                return nil
+              end
+            end
+          end
+          return maintainer
+        end
       end
 
       def self.registered(app)
         app.helpers Helpers
 
         app.get '/login/?' do
-          view :login
+          redirect '/'
         end
 
         app.post '/login/?' do
-
-          maintainer = Moka::Models::Maintainer.get(params['username'])
-
-          if maintainer and maintainer.active == true and maintainer.password == 'invalid'
-            maintainer.password = Digest::SHA1.hexdigest(params['password'])
-            maintainer.save
-            redirect '/'
-          end
-
           env['warden'].authenticate!
           redirect '/'
         end
@@ -119,17 +133,83 @@ module Moka
         end
 
         app.get '/login/forgot' do
+          view :login_forgot
+        end
+
+        app.post '/login/forgot' do
+          maintainer = maintainer_forgot(params[:username])
+          if maintainer
+            chars = ("a".."z").to_a + ("A".."Z").to_a + ("1".."9").to_a
+            maintainer.token = Array.new(10, '').collect{chars[rand(chars.size)]}.join
+            maintainer.token_stamp = Time.now.to_f
+            maintainer.save
+
+            # parameters used in the template
+            params[:token_url] = Moka::Models::Configuration.get(:moka_url) +
+                                 "/login/forgot/" + maintainer.username +
+                                 "/" + maintainer.token
+            params[:token_abort_url] = params[:token_url] + "/cancel"
+            params[:token_expire] = (Time.now + 3600 * 2).to_s
+
+            Pony.mail :to => maintainer.email,
+                      :from => Moka::Models::Configuration.get(:noreply),
+                      :subject => "Xfce Release Manager change password request",
+                      :body => erb(:'email/login_request')
+          end
+
+          env[:step] = "emailed"
+          view :login_forgot
+        end
+
+        app.get '/login/forgot/:username/:token' do
+          maintainer = maintainer_forgot(params[:username], params[:token])
+          if maintainer
+            env[:step] = "valid"
+          else
+            env[:step] = "invalid"
+          end
+
+          view :login_forgot
+        end
+
+        app.get '/login/forgot/:username/:token/cancel' do
+          maintainer = Moka::Models::Maintainer.get(params[:username])
+          if maintainer and maintainer.token.eql? params[:token]
+            maintainer.token = nil
+            maintainer.token_stamp = 0
+            maintainer.save
+          end
+
+          env[:step] = "canceled"
+          view :login_forgot
+        end
+
+        app.post '/login/forgot/:username/:token' do
+          maintainer = maintainer_forgot(params[:username], params[:token])
+          if maintainer
+            if validate_password(params[:newpassword], params[:newpassword2])
+              # update password
+              maintainer.password = Digest::SHA1.hexdigest(params['newpassword'])
+              maintainer.token = nil
+              maintainer.token_stamp = 0
+              maintainer.save
+
+              env[:step] = "complete"
+            else
+              env[:step] = "valid"
+            end
+          else
+            env[:step] = "invalid"
+          end
 
           view :login_forgot
         end
 
         app.get '/login/request' do
-
           view :login_request
         end
 
         app.get '/login/request/sshinfo' do
-
           view :login_request_sshinfo
         end
 
@@ -140,14 +220,11 @@ module Moka
           elsif not Moka::Models::Maintainer.get(params[:username]).nil?
             error_set(:username, 'This username is already taken')
             view :login_request
-          elsif params[:password].empty? or params[:password].length < 6
-            error_set(:password, 'The password must be at least 6 characters long.')
-            view :login_request
-          elsif not params[:password].eql? params[:password2]
-            error_set(:password, 'The two passwords you entered did not match.')
+          elsif not validate_password(params[:password], params[:password2])
+            # error is set in function
             view :login_request
           else
-            @maintainer = Moka::Models::Maintainer.create (:username => params[:username])
+            @maintainer = Moka::Models::Maintainer.create(:username => params[:username])
             @maintainer.email = params[:email]
             @maintainer.realname = params[:realname]
             @maintainer.password = Digest::SHA1.hexdigest(params[:password])

@@ -23,10 +23,10 @@
     %p.error.quote #{env[:error][:newpassword]}
   %p
     %label{:for => "new_password"} New password:
-    %input{:type => "password", :name => "new_password"}
+    %input{:type => "password", :name => "newpassword"}
   %p
     %label{:for => "new_password2"} Confirm new password:
-    %input{:type => "password", :name => "new_password2"}
+    %input{:type => "password", :name => "newpassword2"}
   %hr
   %p Please enter your existing password to confirm account changes.
   - if env[:error][:password]

@@ -1,16 +1,19 @@
 require 'digest/sha1'
+require 'dm-types'
 
 module Moka
   module Models
     class Maintainer
       include DataMapper::Resource
 
-      property :username, String, :key => true
-      property :active,   Boolean, :default  => false
-      property :realname, String
-      property :password, String
-      property :email,    String
-      property :pubkeys,  Text
+      property :username,    String, :key => true
+      property :active,      Boolean, :default  => false
+      property :realname,    String
+      property :password,    String
+      property :email,       String
+      property :token,       String
+      property :token_stamp, Float, :default => 0
+      property :pubkeys,     Text
 
       has n,   :roles,       :through => Resource
       has n,   :collections, :through => Resource

@@ -78,10 +78,11 @@ end
 
 # global configuration
 Moka::Models::Configuration.load do |conf|
-  conf.set :moka_url, 'https://releases.xfce.org'
+  conf.set :moka_url, 'http://localhost:9292'
   conf.set :archive_dir, '/home/nick/websites/archive.xfce.org/'
   conf.set :mirror, 'http://archive.xfce.org/'
   conf.set :collection_release_pattern, /^([0-9]).([0-9]+)(pre[0-9])?$/
+  conf.set :noreply, 'noreply@xfce.org'
 end
 
 # Uncheck for production environment

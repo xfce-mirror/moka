@@ -1,1 +1,18 @@
 %h2 Welcome
+%p
+  Welcome to the release manager of the Xfce desktop enviromnent. If you
+  want to request developers account, please click the link above.
+
+%h3 Login
+%form{:method => "post", :action => "/login"}
+  - if error(:unauthenticated)
+    %p.error The username or password you entered is not valid. 
+  %p
+    %label{:for => "username"} Username:
+    %input{:type => "text", :name => "username"}
+  %p
+    %label{:for => "password"} Password:
+    %input{:type => "password", :name => "password"}
+  %p
+    %input{:type => "submit", :value => "Log in"}
+    %a{:href => "/login/forgot"} Forgot Password
