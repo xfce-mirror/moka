@@ -22,7 +22,7 @@
     %th Real Name
     %th Email
   - for maintainer in Maintainer.all(:active => true).sort
-    %tr
+    %tr{:class => maintainer.is_admin ? "admin" : ""}
       %td
         %a{:href => "/maintainer/#{maintainer.username}"} #{maintainer.username}
       %td #{maintainer.realname}
