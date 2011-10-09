@@ -1,3 +1,4 @@
 - Registration
 - Send verification email on email address change and ssk key change.
 - Tool to generate gitolit config file and ssh key files.
+- Username checking on registration
