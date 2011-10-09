@@ -11,6 +11,16 @@ module Moka
         @directory = directory
         @project_names = []
       end
+      
+      def ==(other)
+        other.is_a?(self.class) \
+          and other.name == name
+      end
+
+      def <=>(other)
+        return 0 unless other.is_a?(self.class)
+        name <=> other.name
+      end
 
       def self.find_all
         Archive.instance.classifications

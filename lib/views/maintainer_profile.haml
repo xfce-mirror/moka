@@ -34,8 +34,7 @@
     %input{:type => "text", :name => "realname", :value => @maintainer.realname}
   %p
     %label{:for => "pubkeys"} SSH public-keys:
-    %textarea{:name => "pubkeys", :rows => "5", :wrap => "off"}
-      #{@maintainer.pubkeys}
+    %textarea{:name => "pubkeys", :rows => "5", :wrap => "off"} #{@maintainer.pubkeys}
   %p.info
     Each line of the public keys should start with ssh-dsa or ssh-rsa else
     the key is not saved. Updating the keys on the server can take up to 1

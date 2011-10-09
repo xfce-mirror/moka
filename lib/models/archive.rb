@@ -170,7 +170,7 @@ module Moka
               cdir = Dir.new(classification_dir(classification))
 
               classification.project_names = cdir.entries.select do |entry|
-                entry != '.' and entry != '.' \
+                entry != '.' and entry != '..' \
                   and File.directory?(File.join(classification_dir(classification), entry))
               end
             end
