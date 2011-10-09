@@ -39,10 +39,6 @@ module Moka
               pubkeys.push(key) if not key.empty? and key.start_with? "ssh-"
             end
 
-            if authentication_user.is_admin
-              @maintainer.active = params[:active] ? true : false
-            end
-
             @maintainer.email = params[:email]
             @maintainer.realname = params[:realname]
             @maintainer.pubkeys = pubkeys.join("\n")
@@ -60,38 +56,58 @@ module Moka
           view :maintainer_profile
         end
 
-        app.post '/maintainer/:name/permissions' do
-          @maintainer = Maintainer.get(params[:name])
-
+        app.post '/maintainer/:name/activate' do
           authentication_required
 
-          @maintainer.roles.clear
+          maintainer = Maintainer.get(params[:name])
+          if maintainer
+            maintainer.active = !maintainer.active
+            maintainer.save
+          end
+
+          redirect "/maintainer/#{params[:name]}"
+        end
+
+        app.post '/maintainer/:name/delete' do
+          authentication_required
+
+          maintainer = Maintainer.get(params[:name])
+          maintainer.destroy if maintainer and not maintainer.active
+
+          view :maintainer
+        end
+
+        app.post '/maintainer/:name/permissions' do
+          authentication_required
+
+          maintainer = Maintainer.get(params[:name])
+          maintainer.roles.clear
           if params[:roles]
             for name in params[:roles].keys do
               role = Role.get(name)
-              @maintainer.roles << role
+              maintainer.roles << role
             end
           end
 
-          @maintainer.collections.clear
+          maintainer.collections.clear
           if params[:collections]
             for name in params[:collections].keys do
               collection = Collection.get(name)
-              @maintainer.collections << collection
+              maintainer.collections << collection
             end
           end
 
-          @maintainer.projects.clear
+          maintainer.projects.clear
           if params[:projects]
             for name in params[:projects].keys do
               project = Project.get(name)
-              @maintainer.projects << project
+              maintainer.projects << project
             end
           end
 
-          @maintainer.save
+          maintainer.save
 
-          redirect "/maintainer/#{@maintainer.username}"
+          redirect "/maintainer/#{maintainer.username}"
         end
       end
     end

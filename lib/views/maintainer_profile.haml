@@ -1,4 +1,26 @@
-%h2 Account data
+:javascript
+  function info_submit()
+  {
+    var field = document.getElementById('infopass');
+    document.getElementById('infosubmit').disabled = !(field.value.length > 0);
+  }
+  function admin_delete()
+  {
+    var result = confirm ("Are you sure you want to delete #{@maintainer.username}?");
+    return result
+  }
+
+- if authentication_user.is_admin
+  %h2 Administrator
+  %form{:method => "post", :class => "admintasks", :action => "/maintainer/#{@maintainer.username}/activate" }
+    %input{:type => "submit",
+           :value => @maintainer.active ? "Deactivate" : "Activate" }
+  %form{:method => "post", :class => "admintasks", :action => "/maintainer/#{@maintainer.username}/delete" }
+    %input{:type => "submit", :value => "Delete",
+           :disabled => @maintainer.active,
+           :onclick => "return admin_delete()" }
+
+%h2 Account Information
 %form{:method => "post"}
   %p
     %label{:for => "username"} Login Name:
@@ -7,10 +29,6 @@
   %p
     %label{:for => "email"} Email address:
     %input{:type => "text", :name => "email", :value => @maintainer.email}
-  - if authentication_user.is_admin
-    %p
-      %label{:for => "active"} Account active:
-      %input{:type => "checkbox", :name => "active", :checked => @maintainer.active}
   %p
     %label{:for => "realname"} Real Name:
     %input{:type => "text", :name => "realname", :value => @maintainer.realname}
@@ -18,29 +36,33 @@
     %label{:for => "pubkeys"} SSH public-keys:
     %textarea{:name => "pubkeys", :rows => "5", :wrap => "off"}
       #{@maintainer.pubkeys}
-    %br
-    Each line of the public keys should start with ssh-dsa or ssh-rsa else the key is not saved.
-  %hr
-  %p 
-    Leave the password fields empty if you don't want to set a new password. 
-    The password needs to be at least 6 characters long.
-  - if env[:error][:newpassword]
-    %p.error.quote #{env[:error][:newpassword]}
-  %p
-    %label{:for => "new_password"} New password:
-    %input{:type => "password", :name => "newpassword"}
-  %p
-    %label{:for => "new_password2"} Confirm new password:
-    %input{:type => "password", :name => "newpassword2"}
+  %p.info
+    Each line of the public keys should start with ssh-dsa or ssh-rsa else
+    the key is not saved. Updating the keys on the server can take up to 1
+    hour, so please be patient after updating the keys.
+
+  - if authentication_user.eql? @maintainer
+    %hr
+    %p
+      Leave the password fields empty if you don't want to set a new password.
+      The password needs to be at least 6 characters long.
+    - if env[:error][:newpassword]
+      %p.error.quote #{env[:error][:newpassword]}
+    %p
+      %label{:for => "new_password"} New password:
+      %input{:type => "password", :name => "newpassword" }
+    %p
+      %label{:for => "new_password2"} Confirm new password:
+      %input{:type => "password", :name => "newpassword2"}
   %hr
   %p Please enter your existing password to confirm account changes.
   - if env[:error][:password]
     %p.error.quote #{env[:error][:password]}
   %p
     %label{:for => "password"} Password:
-    %input{:type => "password", :name => "password"}
+    %input{:type => "password", :name => "password", :id => "infopass", :onkeyup => "info_submit()" }
   %p
-    %input{:type => "submit", :value => "Save"}
+    %input{:type => "submit", :value => "Save", :id => "infosubmit", :disabled => true }
 
 %h2 Permissions
 %form{:method => "post", :action => "/maintainer/#{@maintainer.username}/permissions" }
