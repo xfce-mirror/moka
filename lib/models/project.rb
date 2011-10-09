@@ -55,10 +55,15 @@ module Moka
             and other.branch == branch \
             and other.version == version
         end
-        
+
         def <=>(other)
           return 0 unless other.is_a?(self.class)
-          version <=> other.version
+          a = version.split('.')
+          b = other.version.split('.')
+          for n in (0..[a.length, b.length].min)
+            return a[n].to_i - b[n].to_i if not a[n].eql? b[n]
+          end
+          return version <=> other.version
         end
 
         def checksum(type)
