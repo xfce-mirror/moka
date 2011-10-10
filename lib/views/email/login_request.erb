@@ -1,7 +1,6 @@
-Hello, this is Moka at <a href="<%= params[:request_url] %>"><%= params[:request_url] %></a>.
+Hello, this is Moka at <%= Moka::Models::Configuration.get(:moka_url) %>.
 
-The user '<%= params[:request_username] %>' has asked for access from
-<%= request.env['REMOTE_ADDR'] %> on <%= params[:request_stamp] %>.
+The user '<%= params[:username] %>' has asked for access from <%= request.env['REMOTE_ADDR'] %> on <%= Time.now.to_s %>.
 
 Always at your service.
 

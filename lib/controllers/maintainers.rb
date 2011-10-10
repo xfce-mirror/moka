@@ -27,21 +27,42 @@ module Moka
           # validate the password against the authenticated user
           encrypted_password = Digest::SHA1.hexdigest(params[:password])
           if authentication_user.password.eql? encrypted_password
-            if not params[:newpassword].empty? and validate_password(params[:newpassword], params[:newpassword2])
+            if params[:newpassword] and
+               not params[:newpassword].empty? and
+               validate_password(params[:newpassword], params[:newpassword2])
               encrypted_password = Digest::SHA1.hexdigest(params[:newpassword])
               @maintainer.password = encrypted_password
             end
 
             # put lines in an array and clean it up
-            pubkeys = []
+            pubkeys_arr = []
             params[:pubkeys].split("\n").each do |key|
               key = key.strip
-              pubkeys.push(key) if not key.empty? and key.start_with? "ssh-"
+              pubkeys_arr.push(key) if not key.empty? and key.start_with? "ssh-"
+            end
+            pubkeys = pubkeys_arr.join("\n")
+
+            if not @maintainer.email.to_s.eql? params[:email].to_s
+              # send mail to old address
+              Pony.mail :to => @maintainer.email,
+                        :from => Moka::Models::Configuration.get(:noreply),
+                        :subject => 'Release Manager Profile Change: E-mail',
+                        :body => erb(:'email/maintainer_change_email')
+
+              @maintainer.email = params[:email]
             end
 
-            @maintainer.email = params[:email]
+            if not @maintainer.pubkeys.to_s.eql? pubkeys.to_s
+              # send mail to new address
+              Pony.mail :to => @maintainer.email,
+                        :from => Moka::Models::Configuration.get(:noreply),
+                        :subject => 'Release Manager Profile Change: SSH',
+                        :body => erb(:'email/maintainer_change_ssh')
+
+              @maintainer.pubkeys = pubkeys
+            end
+
             @maintainer.realname = params[:realname]
-            @maintainer.pubkeys = pubkeys.join("\n")
             @maintainer.save
 
             error_set(:succeed, 'The changes to your profile have been saved.')

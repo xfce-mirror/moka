@@ -1,18 +1,19 @@
-You have (or someone impersonating you has) requested to change your
-Release manager password. To complete the change, visit the following link:
+Hello, this is Moka at <%= Moka::Models::Configuration.get(:moka_url) %>.
+
+You have (or someone impersonating you has) requested to change your release manager password. To complete the change, visit the following link:
 
 <%= params[:token_url] %>
 
 
-If you are not the person who made this request, or you wish to cancel
-this request, visit the following link:
+If you are not the person who made this request, or you wish to cancel this request, visit the following link:
 
 <%= params[:token_abort_url] %>
 
 
-If you do nothing, the request will lapse after 2 hours
-(<%= params[:token_expire] %>) or when you log in successfully.
+If you do nothing, the request will lapse after 2 hours (<%= params[:token_expire] %>) or when you log in successfully.
 
-The request was generated from <%= request.env['REMOTE_ADDR'] %>. Forward
-this email to the Xfce administrators <xfce-repo-admin@xfce.org> in
-case of problems.
+The request was generated from <%= request.env['REMOTE_ADDR'] %>. Forward this email to the Xfce administrators <releases@xfce.org> in case of problems.
+
+Always at your service.
+
+ --Moka

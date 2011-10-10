@@ -237,10 +237,6 @@ module Moka
             @maintainer.active = false
             @maintainer.save
 
-            params[:request_url] = Moka::Models::Configuration.get(:moka_url)
-            params[:request_username] = params[:username]
-            params[:request_stamp] = Time.now.to_s
-
             subject = "Xfce Release Manager Request: " + params[:username]
             body = erb(:'email/login_request')
 
