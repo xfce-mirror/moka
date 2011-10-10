@@ -77,16 +77,23 @@ module Moka
           view :maintainer_profile
         end
 
-        app.post '/maintainer/:name/activate' do
+        app.post '/maintainer/:username/activate' do
           authentication_required
 
-          maintainer = Maintainer.get(params[:name])
+          maintainer = Maintainer.get(params[:username])
           if maintainer
             maintainer.active = !maintainer.active
             maintainer.save
+
+            if maintainer.active
+              Pony.mail :to => @maintainer.email,
+                        :from => Moka::Models::Configuration.get(:noreply),
+                        :subject => 'Release Manager Account Activated',
+                        :body => erb(:'email/maintainer_activated')
+            end
           end
 
-          redirect "/maintainer/#{params[:name]}"
+          redirect "/maintainer/#{params[:username]}"
         end
 
         app.post '/maintainer/:name/delete' do
