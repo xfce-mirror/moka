@@ -215,13 +215,19 @@ module Moka
 
         app.post '/login/request' do
           if params[:username].empty? or params[:realname].empty? or params[:email].empty?
-            error_set(:username, 'All fields below are required')
+            error_set(:message, 'All fields below are required')
             view :login_request
-          elsif not Moka::Models::Maintainer.get(params[:username]).nil?
-            error_set(:username, 'This username is already taken')
+          elsif (params[:username] =~ /^[a-z]*$/).nil?
+            error_set(:message, 'The username can only contain lowercaser letters')
+            view :login_request
+          elsif (params[:email] =~ /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i).nil?
+            error_set(:message, 'Please use a valid email address')
             view :login_request
           elsif not validate_password(params[:password], params[:password2])
             # error is set in function
+            view :login_request
+          elsif not Moka::Models::Maintainer.get(params[:username]).nil?
+            error_set(:message, 'This username is already taken')
             view :login_request
           else
             @maintainer = Moka::Models::Maintainer.create(:username => params[:username])

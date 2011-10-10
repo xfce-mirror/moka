@@ -11,16 +11,16 @@
 
 %h2 Account Information
 %form{:method => "post"}
-  - if env[:error][:username]
-    %p.error.quote #{env[:error][:username]}
+  - if env[:error][:message]
+    %p.error.quote #{env[:error][:message]}
   %p
-    %label{:for => "username"} Login Name:
+    %label{:for => "username"} Username:
     %input{:type => "text", :name => "username", :value => params[:username]}
   %p
     %label{:for => "realname"} Real Name:
     %input{:type => "text", :name => "realname", :value => params[:realname]}
   %p
-    %label{:for => "email"} Email address:
+    %label{:for => "email"} Email Address:
     %input{:type => "text", :name => "email", :value => params[:email]}
   %hr
   - if env[:error][:newpassword]
