@@ -57,7 +57,7 @@ end
 
 # Mailinglist configuration and template handling
 use Moka::Middleware::Mailinglists do |mailer|
-  mailer.lists = ['xfce-announce@xfce.org', 'xfce@xfce.org', 'thunar-dev@xfce.org', 'nickschermer@gmail.com']
+  mailer.lists = ['xfce-announce@xfce.org', 'xfce@xfce.org', 'thunar-dev@xfce.org', 'nick@schermer']
   
   mailer.project_subject do |release, message, sender|
     "ANNOUNCE: #{release.project.name} #{release.version} released"

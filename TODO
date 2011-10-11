@@ -1,1 +1,3 @@
 - Tool to generate gitolit config file and ssh key files.
+- Move email templates to lib/view/mail. This makes it easier to maintain
+  the templates in git and on the server.
