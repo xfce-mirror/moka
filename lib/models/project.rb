@@ -95,7 +95,7 @@ module Moka
       end
 
       property :name,        String, :key => true
-      property :website,     String
+      property :website,     String, :length => 100
       property :description, Text
 
       has n,   :maintainers, :through => Resource
