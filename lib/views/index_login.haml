@@ -13,11 +13,15 @@
         %a{:href => "/collection/#{collection.name}/new-release"} Release new version
 
 %h2 Projects
+- projects = authentication_user.projects.sort
 %table
-  %tr
-  - for project in authentication_user.projects.sort
-    %tr
-      %th
-        %a{:href => "/project/#{project.name}"} #{project.name}
-      %td
-        %a{:href => "/project/#{project.name}/new-release"} Release new version
+  - for classification in authentication_user.project_classifications
+    %tr{:class => 'head'}
+      %th{:colspan => 2} #{classification.name.capitalize}
+    - for project in projects
+      - if project.classification.eql? classification
+        %tr
+          %th
+            %a{:href => "/project/#{project.name}"} #{project.name}
+          %td
+            %a{:href => "/project/#{project.name}/new-release"} Release new version

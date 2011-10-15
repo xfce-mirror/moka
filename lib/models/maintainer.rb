@@ -62,6 +62,15 @@ module Moka
         end
         names.join(', ')
       end
+
+      def project_classifications
+        classes = []
+        for project in self.projects
+          pclass = project.classification
+          classes << pclass if pclass
+        end
+        classes.uniq.sort
+      end
     end
   end
 end
