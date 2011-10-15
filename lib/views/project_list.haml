@@ -6,7 +6,7 @@
     %th Description
     %th Maintainers
   - for project in Project.all.sort
-    %tr
+    %tr{:class => cycle}
       %td
         %a{:href => "/project/#{project.name}"} #{project.name}
       %td

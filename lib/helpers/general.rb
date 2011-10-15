@@ -66,6 +66,11 @@ module Moka
           end
           return false
         end
+
+        def cycle
+          %w{even odd}[@_cycle = ((@_cycle || -1) + 1) % 2]
+        end
+
       end
     end
   end
