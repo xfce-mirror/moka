@@ -4,7 +4,7 @@
     %meta{"http-equiv" => "Content-Type", :content => "text/html; charset=utf-8"}/
     %title Xfce Release Manager
     %link{:rel => "stylesheet", :href => "/stylesheet.css", :media => "all", :type => "text/css"}/
-  %body
+  %body{:class => ENV['RACK_ENV'] || "development" }
     %h1 Xfce Release Manager
     %div{:id => 'main-toolbar'}
       %ul{:id => 'main-toolbar'}
