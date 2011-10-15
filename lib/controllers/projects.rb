@@ -177,7 +177,7 @@ module Moka
           unless error_set?
             if @branch.has_release?(@release)
               error_set(:tarball, "Release tarball already exists. " \
-                         "You can use <a href=\"/project/#{@project.id}/branch/#{@branch.name}/release/#{@release.version}/update\">this page</a> to update the release.")
+                         "You can use <a href=\"/project/#{@project.name}/branch/#{@branch.name}/release/#{@release.version}/update\">this page</a> to update the release.")
             end
           end
 

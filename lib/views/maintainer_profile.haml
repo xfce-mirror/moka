@@ -21,50 +21,51 @@
            :onclick => "return admin_delete()" }
 
 %h2 Account Information
-%form{:method => "post"}
-  %p
-    %label{:for => "username"} Login Name:
-    %input{:type => "text", :name => "fooname", :disabled => true, :value => @maintainer.username}
-    %input{:type => "hidden",
-           :name => "username",
-           :id => "username",
-           :value => @maintainer.username}
-  %p
-    %label{:for => "email"} Email address:
-    %input{:type => "text", :name => "email", :id => "email", :value => @maintainer.email}
-  %p
-    %label{:for => "realname"} Real Name:
-    %input{:type => "text", :name => "realname", :id => "realname", :value => @maintainer.realname}
-  %p
-    %label{:for => "pubkeys"} SSH public-keys:
-    %textarea{:name => "pubkeys", :id => "pubkeys", :rows => "5", :wrap => "off"} #{@maintainer.pubkeys}
-  %p.info
-    Each line of the public keys should start with ssh-dsa or ssh-rsa else
-    the key is not saved. Updating the keys on the server can take up to 1
-    hour, so please be patient after updating the keys.
-
-  - if authentication_user.eql? @maintainer
+%fieldset
+  %form{:method => "post"}
+    %p
+      %label{:for => "username"} Login Name:
+      %input{:type => "text", :name => "fooname", :disabled => true, :value => @maintainer.username}
+      %input{:type => "hidden",
+             :name => "username",
+             :id => "username",
+             :value => @maintainer.username}
+    %p
+      %label{:for => "email"} Email address:
+      %input{:type => "text", :name => "email", :id => "email", :value => @maintainer.email}
+    %p
+      %label{:for => "realname"} Real Name:
+      %input{:type => "text", :name => "realname", :id => "realname", :value => @maintainer.realname}
+    %p
+      %label{:for => "pubkeys"} SSH public-keys:
+      %textarea{:name => "pubkeys", :id => "pubkeys", :rows => "5", :wrap => "off"} #{@maintainer.pubkeys}
+    %p.info
+      Each line of the public keys should start with ssh-dsa or ssh-rsa else
+      the key is not saved. Updating the keys on the server can take up to 1
+      hour, so please be patient after updating the keys.
+  
+    - if authentication_user.eql? @maintainer
+      %hr
+      %p
+        Leave the password fields empty if you don't want to set a new password.
+        The password needs to be at least 6 characters long.
+      - if env[:error][:newpassword]
+        %p.error.quote #{env[:error][:newpassword]}
+      %p
+        %label{:for => "new_password"} New password:
+        %input{:type => "password", :id => "new_password", :name => "newpassword" }
+      %p
+        %label{:for => "new_password2"} Confirm new password:
+        %input{:type => "password", :id => "new_password2", :name => "newpassword2"}
     %hr
+    %p Please enter your existing password to confirm account changes.
+    - if env[:error][:password]
+      %p.error.quote #{env[:error][:password]}
     %p
-      Leave the password fields empty if you don't want to set a new password.
-      The password needs to be at least 6 characters long.
-    - if env[:error][:newpassword]
-      %p.error.quote #{env[:error][:newpassword]}
-    %p
-      %label{:for => "new_password"} New password:
-      %input{:type => "password", :id => "new_password", :name => "newpassword" }
-    %p
-      %label{:for => "new_password2"} Confirm new password:
-      %input{:type => "password", :id => "new_password2", :name => "newpassword2"}
-  %hr
-  %p Please enter your existing password to confirm account changes.
-  - if env[:error][:password]
-    %p.error.quote #{env[:error][:password]}
-  %p
-    %label{:for => "password"} Password:
-    %input{:type => "password", :name => "password", :id => "password", :onkeyup => "info_submit()" }
-  %p
-    %input{:type => "submit", :value => "Save", :id => "infosubmit", :disabled => true }
+      %label{:for => "password"} Password:
+      %input{:type => "password", :name => "password", :id => "password", :onkeyup => "info_submit()" }
+    %p.quote
+      %input{:type => "submit", :value => "Save", :id => "infosubmit", :disabled => true }
 
 %h2 Permissions
 %form{:method => "post", :action => "/maintainer/#{@maintainer.username}/permissions" }

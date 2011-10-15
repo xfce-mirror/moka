@@ -6,14 +6,15 @@
   not be posted!
 
 %h3 Project information
-%form
-  %p
-    %label{:for => "website"} Website:
-    %input{:type => "text", :name => "website", :disabled => true, :value => "#{@project.website}"}
-  %p
-    %label{:for => "description"} Description:
-    %textarea{:name => "description", :disabled => true} #{@project.description}
+%fieldset
+  %form
+    %p
+      %label{:for => "website"} Website:
+      %input{:type => "text", :name => "website", :disabled => true, :value => "#{@project.website}"}
+    %p
+      %label{:for => "description"} Description:
+      %textarea{:name => "description", :disabled => true} #{@project.description}
 
-%form{:method => "get", :action => "/project/#{@project.name}/new-release/tarball"}
-  %p.quote
-    %input{:type => "submit", :value => "I verified the information is correct"}
+  %form{:method => "get", :action => "/project/#{@project.name}/new-release/tarball"}
+    %p.quote
+      %input{:type => "submit", :value => "I verified the information is correct"}

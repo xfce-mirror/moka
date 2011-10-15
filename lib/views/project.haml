@@ -1,23 +1,24 @@
 %h2 Project information
-%form{:method => "post", :action => "/project/#{@project.name}/information"}
-  %p
-    %label{:for => "website"} Website:
-    %input{:type => "text", 
-           :name => "website", 
-           :id => "website", 
-           :value => "#{@project.website}"}
-  %p
-    %label{:for => "description"} Description:
-    %textarea{:name => "description", :id => "description"} #{@project.description}
-  %p
-    %label{:for => "maintainers"} Maintainers:
-    %input{:type => "text", 
-           :name => "maintainers",
-           :id =>  "maintainers",
-           :disabled => true, 
-           :value => "#{maintainer_names(@project)}"}
-  %p.quote
-    %input{:type => "submit", :value => "Save"}
+%fieldset
+  %form{:method => "post", :action => "/project/#{@project.name}/information"}
+    %p
+      %label{:for => "website"} Website:
+      %input{:type => "text", 
+             :name => "website", 
+             :id => "website", 
+             :value => "#{@project.website}"}
+    %p
+      %label{:for => "description"} Description:
+      %textarea{:name => "description", :id => "description"} #{@project.description}
+    %p
+      %label{:for => "maintainers"} Maintainers:
+      %input{:type => "text", 
+             :name => "maintainers",
+             :id =>  "maintainers",
+             :disabled => true, 
+             :value => "#{maintainer_names(@project)}"}
+    %p.quote
+      %input{:type => "submit", :value => "Save"}
 
 %h2 Classification
 %form{:method => "post", :action => "/project/#{@project.name}/classify"}

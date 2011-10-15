@@ -1,16 +1,18 @@
 %h2 Tarball
-%form{:method => "post", :enctype => "multipart/form-data"}
-  %p
-    %label Filename: <tt>#{@release.tarball_basename}</tt>
-  %p
-    %label{:for => "tarball"} Tarball:
-    %input{:type => "file", :name => "tarball"}
-    - if env[:error][:tarball]
-      %p.error.quote #{env[:error][:tarball]}
-  %p
-    %label{:for => "checksum"} Checksum (SHA1):
-    %input{:type => "text", :name => "checksum", :size => "40", :value => "#{params[:checksum]}"}
-    - if env[:error][:checksum]
-      %p.error.quote #{env[:error][:checksum]}
-  %p.quote
-    %input{:type => "submit", :value => "Replace current tarball"}
+%fieldset
+  %form{:method => "post", :enctype => "multipart/form-data"}
+    %p
+      %label Filename: 
+      %input{:type => "text", :disabled => true, :value => @release.tarball_basename, :size => 30}
+    %p
+      %label{:for => "tarball"} Tarball:
+      %input{:type => "file", :name => "tarball", :size => 30}
+      - if env[:error][:tarball]
+        %p.error.quote #{env[:error][:tarball]}
+    %p
+      %label{:for => "checksum"} Checksum (SHA1):
+      %input{:type => "text", :name => "checksum", :size => "40", :value => "#{params[:checksum]}"}
+      - if env[:error][:checksum]
+        %p.error.quote #{env[:error][:checksum]}
+    %p.quote
+      %input{:type => "submit", :value => "Replace current tarball"}

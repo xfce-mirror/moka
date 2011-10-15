@@ -4,15 +4,16 @@
   want to request developers account, please click the link above.
 
 %h3 Login
-%form{:method => "post", :action => "/login"}
-  - if error(:unauthenticated)
-    %p.error The username or password you entered is not valid. 
-  %p
-    %label{:for => "username"} Username:
-    %input{:type => "text", :name => "username", :id => "username"}
-  %p
-    %label{:for => "password"} Password:
-    %input{:type => "password", :name => "password", :id => "password"}
-  %p
-    %input{:type => "submit", :value => "Log in"}
-    %a{:href => "/login/forgot"} Forgot Password
+%fieldset
+  %form{:method => "post", :action => "/login"}
+    - if error(:unauthenticated)
+      %p.error The username or password you entered is not valid. 
+    %p
+      %label{:for => "username"} Username:
+      %input{:type => "text", :name => "username", :id => "username"}
+    %p
+      %label{:for => "password"} Password:
+      %input{:type => "password", :name => "password", :id => "password"}
+    %p
+      %input{:type => "submit", :value => "Log in"}
+      %a{:href => "/login/forgot"} Forgot Password

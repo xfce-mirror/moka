@@ -1,15 +1,16 @@
 %h2 Create Project
-%form{:method => "post" }
-  %p
-    %label{:for => "name"} Name:
-    %input{:type => "text", :name => "name", :id => "name" }
-  %p
-    %label{:for => "classification"} Classification:
-    %select{:name => "classification", :id => "classification"}
-      - for classification in Classification.find_all
-        %option{:name => classification.name} #{classification.name}
-  %p
-    %input{:type => "submit", :value => "Create" }
+%fieldset
+  %form{:method => "post" }
+    %p
+      %label{:for => "name"} Name:
+      %input{:type => "text", :name => "name", :id => "name" }
+    %p
+      %label{:for => "classification"} Classification:
+      %select{:name => "classification", :id => "classification"}
+        - for classification in Classification.find_all
+          %option{:name => classification.name} #{classification.name}
+    %p.quote
+      %input{:type => "submit", :value => "Create" }
 
 %h2 Projects
 - projects = Project.all.sort
