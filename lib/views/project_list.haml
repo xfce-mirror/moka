@@ -2,10 +2,10 @@
 %form{:method => "post" }
   %p
     %label{:for => "name"} Name:
-    %input{:type => "text", :name => "name" }
+    %input{:type => "text", :name => "name", :id => "name" }
   %p
     %label{:for => "classification"} Classification:
-    %select{:name => "classification"}
+    %select{:name => "classification", :id => "classification"}
       - for classification in Classification.find_all
         %option{:name => classification.name} #{classification.name}
   %p

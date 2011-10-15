@@ -2,13 +2,20 @@
 %form{:method => "post", :action => "/project/#{@project.name}/information"}
   %p
     %label{:for => "website"} Website:
-    %input{:type => "text", :name => "website", :value => "#{@project.website}"}
+    %input{:type => "text", 
+           :name => "website", 
+           :id => "website", 
+           :value => "#{@project.website}"}
   %p
     %label{:for => "description"} Description:
-    %textarea{:name => "description"} #{@project.description}
+    %textarea{:name => "description", :id => "description"} #{@project.description}
   %p
     %label{:for => "maintainers"} Maintainers:
-    %input{:type => "text", :name => "maintainers", :disabled => true, :value => "#{maintainer_names(@project)}"}
+    %input{:type => "text", 
+           :name => "maintainers",
+           :id =>  "maintainers",
+           :disabled => true, 
+           :value => "#{maintainer_names(@project)}"}
   %p.quote
     %input{:type => "submit", :value => "Save"}
 
@@ -17,7 +24,8 @@
   %p
     %select{:name => "classification"}
       - for classification in Classification.find_all
-        %option{:name => classification.name, :selected => (@project.classification.eql? classification)} #{classification.name}
+        %option{:name => classification.name, 
+                :selected => (@project.classification.eql? classification)} #{classification.name}
     %input{:type => "submit", :value => "Change"}
 
 %h2 Releases

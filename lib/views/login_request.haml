@@ -15,22 +15,22 @@
     %p.error.quote #{env[:error][:message]}
   %p
     %label{:for => "username"} Username:
-    %input{:type => "text", :name => "username", :value => params[:username]}
+    %input{:type => "text", :name => "username", :id => "username", :value => params[:username]}
   %p
     %label{:for => "realname"} Real Name:
-    %input{:type => "text", :name => "realname", :value => params[:realname]}
+    %input{:type => "text", :name => "realname", :id => "realname", :value => params[:realname]}
   %p
     %label{:for => "email"} Email Address:
-    %input{:type => "text", :name => "email", :value => params[:email]}
+    %input{:type => "text", :name => "email", :id => "email", :value => params[:email]}
   %hr
   - if env[:error][:newpassword]
     %p.error.quote #{env[:error][:newpassword]}
   %p
     %label{:for => "password"} Password:
-    %input{:type => "password", :name => "password"}
+    %input{:type => "password", :id => "password", :name => "password"}
   %p
     %label{:for => "password2"} Confirm password:
-    %input{:type => "password", :name => "password2"}
+    %input{:type => "password", :id => "password2", :name => "password2"}
   %hr
   %p.quote
     The public key is required to push git commits over ssh. Make sure you provide the publickey and
@@ -38,6 +38,6 @@
     %a{:href => "/login/request/sshinfo"} here.
   %p
     %label{:for => "pubkeys"} SSH public-keys:
-    %textarea{:name => "pubkeys", :rows => "5", :wrap => "off"} #{params[:pubkeys]}
+    %textarea{:name => "pubkeys", :rows => "5", :id => "pubkeys", :wrap => "off"} #{params[:pubkeys]}
   %p
     %input{:type => "submit", :value => "Submit"}

@@ -1,7 +1,7 @@
 :javascript
   function info_submit()
   {
-    var field = document.getElementById('infopass');
+    var field = document.getElementById('password');
     document.getElementById('infosubmit').disabled = !(field.value.length > 0);
   }
   function admin_delete()
@@ -25,16 +25,19 @@
   %p
     %label{:for => "username"} Login Name:
     %input{:type => "text", :name => "fooname", :disabled => true, :value => @maintainer.username}
-    %input{:type => "hidden", :name => "username", :value => @maintainer.username}
+    %input{:type => "hidden", 
+           :name => "username", 
+           :id => "username",
+           :value => @maintainer.username}
   %p
     %label{:for => "email"} Email address:
-    %input{:type => "text", :name => "email", :value => @maintainer.email}
+    %input{:type => "text", :name => "email", :id => "email", :value => @maintainer.email}
   %p
     %label{:for => "realname"} Real Name:
-    %input{:type => "text", :name => "realname", :value => @maintainer.realname}
+    %input{:type => "text", :name => "realname", :id => "realname", :value => @maintainer.realname}
   %p
     %label{:for => "pubkeys"} SSH public-keys:
-    %textarea{:name => "pubkeys", :rows => "5", :wrap => "off"} #{@maintainer.pubkeys}
+    %textarea{:name => "pubkeys", :id => "pubkeys", :rows => "5", :wrap => "off"} #{@maintainer.pubkeys}
   %p.info
     Each line of the public keys should start with ssh-dsa or ssh-rsa else
     the key is not saved. Updating the keys on the server can take up to 1
@@ -49,17 +52,17 @@
       %p.error.quote #{env[:error][:newpassword]}
     %p
       %label{:for => "new_password"} New password:
-      %input{:type => "password", :name => "newpassword" }
+      %input{:type => "password", :id => "new_password", :name => "newpassword" }
     %p
       %label{:for => "new_password2"} Confirm new password:
-      %input{:type => "password", :name => "newpassword2"}
+      %input{:type => "password", :id => "new_password2", :name => "newpassword2"}
   %hr
   %p Please enter your existing password to confirm account changes.
   - if env[:error][:password]
     %p.error.quote #{env[:error][:password]}
   %p
     %label{:for => "password"} Password:
-    %input{:type => "password", :name => "password", :id => "infopass", :onkeyup => "info_submit()" }
+    %input{:type => "password", :name => "password", :id => "password", :onkeyup => "info_submit()" }
   %p
     %input{:type => "submit", :value => "Save", :id => "infosubmit", :disabled => true }
 
@@ -71,8 +74,12 @@
     - if authentication_user.is_admin or @maintainer.roles.include?(role)
       - visible_roles = true
       %p
-        %input{:type => "checkbox", :name => "roles[#{role.name}]", :checked => @maintainer.roles.include?(role), :disabled => !authentication_user.is_admin}
-        %label{:for => "roles[#{role.name}]"} #{role.description}
+        %input{:type => "checkbox",
+               :name => "roles[#{role.name}]",
+               :id => "r_#{role.name}",
+               :checked => @maintainer.roles.include?(role),
+               :disabled => !authentication_user.is_admin}
+        %label{:for => "r_#{role.name}"} #{role.description}
   - if !visible_roles
     %p This user has no roles.
 
@@ -82,8 +89,12 @@
     - if authentication_user.is_admin or @maintainer.collections.include?(collection)
       - visible_collections = true
       %p
-        %input{:type => "checkbox", :name => "collections[#{collection.name}]", :checked => @maintainer.collections.include?(collection), :disabled => !authentication_user.is_admin}
-        %label{:for => "collections[#{collection.name}]"} #{collection.display_name}
+        %input{:type => "checkbox",
+               :name => "collections[#{collection.name}]",
+               :id => "c_#{collection.name}",
+               :checked => @maintainer.collections.include?(collection),
+               :disabled => !authentication_user.is_admin}
+        %label{:for => "c_#{collection.name}"} #{collection.display_name}
   - if !visible_collections
     %p This user is not maintaining a collection.
 
@@ -93,9 +104,12 @@
     - if authentication_user.is_admin or @maintainer.projects.include?(project)
       - visible_projects = true
       %p
-        %input{:type => "checkbox", :name => "projects[#{project.name}]", :checked => @maintainer.projects.include?(project), :disabled => !authentication_user.is_admin}
-        %label{:for => "projects[#{project.name}]"}
-          %a{:href => "/project/#{project.name}" } #{project.name}
+        %input{:type => "checkbox",
+               :name => "projects[#{project.name}]",
+               :id => "p_#{project.name}",
+               :checked => @maintainer.projects.include?(project),
+               :disabled => !authentication_user.is_admin}
+        %label{:for => "p_#{project.name}"} #{project.name}
   - if !visible_projects
     %p This users is not maintaining a project.
 

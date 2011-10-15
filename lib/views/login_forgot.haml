@@ -14,10 +14,10 @@
   %form{:method => "post"}
     %p
       %label{:for => "newpassword"} New password:
-      %input{:type => "password", :name => "newpassword"}
+      %input{:type => "password", :id => "newpassword", :name => "newpassword"}
     %p
       %label{:for => "newpassword2"} Confirm new password:
-      %input{:type => "password", :name => "newpassword2"}
+      %input{:type => "password", :id => "newpassword2", :name => "newpassword2"}
     %p
       %input{:type => "submit", :value => "Submit"}
 
@@ -46,5 +46,5 @@
   %form{:method => "post", :action => "/login/forgot"}
     %p
       %label{:for => "username"} Username:
-      %input{:type => "text", :name => "username"}
+      %input{:type => "text", :name => "username", :id => "username"}
       %input{:type => "submit", :value => "Reset Password"}
