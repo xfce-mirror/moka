@@ -17,7 +17,7 @@
   %p
     %select{:name => "classification"}
       - for classification in Classification.find_all
-        %option{:name => classification.name, :selected => @project.classification.name == classification.name} #{classification.name}
+        %option{:name => classification.name, :selected => (@project.classification.eql? classification)} #{classification.name}
     %input{:type => "submit", :value => "Change"}
 
 %h2 Releases

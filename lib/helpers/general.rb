@@ -68,9 +68,14 @@ module Moka
         end
 
         def cycle
-          %w{even odd}[@_cycle = ((@_cycle || -1) + 1) % 2]
+          @_cycle ||= reset_cycle
+          @_cycle = [@_cycle.pop] + @_cycle
+          @_cycle.first
         end
 
+        def reset_cycle
+          @_cycle = %w(even odd)
+        end
       end
     end
   end

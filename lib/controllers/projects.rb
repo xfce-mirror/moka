@@ -11,6 +11,24 @@ module Moka
           view :project_list
         end
 
+        app.post '/project' do
+
+          authentication_required
+
+          if params[:name] and not params[:name].empty?
+            project = Moka::Models::Project.first_or_create(:name => params[:name].strip)
+
+            classification = Classification.find_by_name(params[:classification])
+            project.classify_as(classification) if classification
+
+            project.save
+
+            redirect "/project/#{params[:name]}"
+          else
+            view :project_list
+          end
+        end
+
         app.get '/project/:name' do
           @project = Project.get(params[:name])
 

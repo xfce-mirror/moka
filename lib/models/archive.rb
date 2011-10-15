@@ -388,23 +388,27 @@ module Moka
       end
 
       def project_change_classification(project, new_classification)
-        old_classification = project.classification
-        old_dir = project_dir(project)
+        new_dir = File.join(classification_dir(new_classification), project.name)
 
-        project.classification = new_classification
-        new_dir = project_dir(project)
+        if project.classification
+          old_classification = project.classification
+          old_dir = project_dir(project)
 
-        path = Pathname.new(new_dir)
-        parent = path.parent
+          path = Pathname.new(new_dir)
+          parent = path.parent
+          File.makedirs(parent) unless File.directory?(parent)
 
-        File.makedirs(parent) unless File.directory?(parent)
-
-        project.classification = old_classifcation unless File.move(old_dir, new_dir)
-
-        begin
-          Dir.delete(old_dir)
-        rescue SystemCallError
+          project.classification = old_classifcation unless File.move(old_dir, new_dir)
+          begin
+            Dir.delete(old_dir)
+          rescue SystemCallError
+          end
+        else
+          File.makedirs(new_dir) unless File.directory?(new_dir)
         end
+
+        # destroy and reload the classification
+        @classifications = nil
       end
     end
   end
