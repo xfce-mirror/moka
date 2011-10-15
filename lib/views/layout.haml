@@ -6,20 +6,23 @@
     %link{:rel => "stylesheet", :href => "/stylesheet.css", :media => "all", :type => "text/css"}/
   %body
     %h1 Xfce Release Manager
-    %ul
-      %li
-        %a{:href => "/"} Home
-      - if authentication_finished? and authentication_user
+    %div{:id => 'main-toolbar'}
+      %ul{:id => 'main-toolbar'}
         %li
-          %a{:href => "/maintainer/#{authentication_user.username}"} Profile
+          %a{:href => "/"} Home
+        - if authentication_finished? and authentication_user
+          %li
+            %a{:href => "/maintainer/#{authentication_user.username}"} Profile
+          %li
+            %a{:href => "/maintainer"} Maintainers
+          %li
+            %a{:href => "/project"} Projects
+          %li
+            %a{:href => "/logout"} Logout
+        - else
+          %li
+            %a{:href => "/login/request"} Request Account
         %li
-          %a{:href => "/maintainer"} Maintainers
-        %li
-          %a{:href => "/project"} Projects
-        %li
-          %a{:href => "/logout"} Logout
-      - else
-        %li
-          %a{:href => "/login/request"} Request Account
-
+          %a{:href => "http://archive.xfce.org"} Archive
+      %div{:id => 'main-toolbar-clear'}
     =yield
