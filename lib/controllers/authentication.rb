@@ -1,9 +1,8 @@
 require 'rubygems'
-require 'pp'
-
-#gem 'warden', '0.2.3'
+require 'logger'
 require 'warden'
 require 'pony'
+require 'time'
 
 module Moka
   module Controllers
@@ -124,6 +123,12 @@ module Moka
         end
 
         app.post '/unauthenticated' do
+          # report the failed login, so we can use fail2ban on the server
+          logger = Logger.new('auth.log')
+          logger.datetime_format = "%Y-%m-%d %H:%M:%S"
+          logger.warn "Authentication failure for #{request.env['REMOTE_ADDR']}"
+          logger.close
+
           view :login_unauthenticated
         end
 

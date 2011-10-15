@@ -4,14 +4,13 @@ require 'rubygems'
 require 'dm-core'
 require 'dm-migrations'
 require 'digest/sha1'
-
 require '../../lib/moka'
 
 # Connect to the database
 directory = File.expand_path(File.dirname(__FILE__))
 db = File.join(directory, 'example.db')
 
-DataMapper::Logger.new($stdout, :debug)
+#DataMapper::Logger.new($stdout, :debug)
 DataMapper.setup(:default, 'sqlite://' + db)
 
 # From http://blog.macromates.com/2006/wrapping-text-with-regular-expressions/
