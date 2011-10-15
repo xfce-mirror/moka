@@ -11,15 +11,16 @@
     To change your password, enter a new password twice:
   - if env[:error][:newpassword]
     %p.error.quote #{env[:error][:newpassword]}
-  %form{:method => "post"}
-    %p
-      %label{:for => "newpassword"} New password:
-      %input{:type => "password", :id => "newpassword", :name => "newpassword"}
-    %p
-      %label{:for => "newpassword2"} Confirm new password:
-      %input{:type => "password", :id => "newpassword2", :name => "newpassword2"}
-    %p
-      %input{:type => "submit", :value => "Submit"}
+  %fieldset
+    %form{:method => "post"}
+      %p
+        %label{:for => "newpassword"} New password:
+        %input{:type => "password", :id => "newpassword", :name => "newpassword"}
+      %p
+        %label{:for => "newpassword2"} Confirm new password:
+        %input{:type => "password", :id => "newpassword2", :name => "newpassword2"}
+      %p.quote
+        %input{:type => "submit", :value => "Submit"}
 
 - elsif env[:step].eql? "invalid"
   %p
@@ -33,7 +34,7 @@
   %p
     %a{:href => "/" } Home
 
-- elsif env[:step].eql? "deleted"
+- elsif env[:step].eql? "complete"
   %p
     Your password has been changed.
   %p
