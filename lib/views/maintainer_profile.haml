@@ -25,8 +25,8 @@
   %p
     %label{:for => "username"} Login Name:
     %input{:type => "text", :name => "fooname", :disabled => true, :value => @maintainer.username}
-    %input{:type => "hidden", 
-           :name => "username", 
+    %input{:type => "hidden",
+           :name => "username",
            :id => "username",
            :value => @maintainer.username}
   %p
@@ -81,7 +81,7 @@
                :disabled => !authentication_user.is_admin}
         %label{:for => "r_#{role.name}"} #{role.description}
   - if !visible_roles
-    %p This user has no roles.
+    %p You don't have special roles.
 
   %h3 Collections
   - visible_collections = false
@@ -96,22 +96,33 @@
                :disabled => !authentication_user.is_admin}
         %label{:for => "c_#{collection.name}"} #{collection.display_name}
   - if !visible_collections
-    %p This user is not maintaining a collection.
+    %p You are not maintaining a collection.
 
   %h3 Projects
   - visible_projects = false
-  - for project in Project.all.sort
-    - if authentication_user.is_admin or @maintainer.projects.include?(project)
-      - visible_projects = true
-      %p
-        %input{:type => "checkbox",
-               :name => "projects[#{project.name}]",
-               :id => "p_#{project.name}",
-               :checked => @maintainer.projects.include?(project),
-               :disabled => !authentication_user.is_admin}
-        %label{:for => "p_#{project.name}"} #{project.name}
-  - if !visible_projects
-    %p This users is not maintaining a project.
+  - if authentication_user.is_admin
+    - projects = Project.all.sort
+    - classifications = Classification.find_all.sort
+  - else
+    - projects = authentication_user.projects.sort
+    - classifications = authentication_user.project_classifications
+
+  - for classification in classifications
+    %h4 #{classification.name.capitalize}
+    %div{:class => "columns"}
+      - for project in projects
+        - if project.classification.eql? classification
+          - visible_projects = true
+          %p
+            %input{:type => "checkbox",
+                   :name => "projects[#{project.name}]",
+                   :id => "p_#{project.name}",
+                   :checked => @maintainer.projects.include?(project),
+                   :disabled => !authentication_user.is_admin}
+            %label{:for => "p_#{project.name}"} #{project.name}
+      - if !visible_projects
+        %p This users is not maintaining a project.
+      %div{:class => "clearboth"}
 
   - if authentication_user.is_admin
     %p
