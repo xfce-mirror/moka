@@ -84,97 +84,97 @@ Moka::Models::Configuration.load do |conf|
   conf.set :noreply, 'noreply@xfce.org'
 end
 
-# Uncheck for production environment
-DataMapper.auto_upgrade!
 DataMapper.finalize
 
-admin = Moka::Models::Role.first_or_create(
-  { :name => 'admin' },
-  { :description => "Administrator" }
-)
-admin.save
-
-# create dummy user
-nick = Moka::Models::Maintainer.first_or_create(
-  { :username => 'nick' },
-  { :realname => 'Nick Schermer',
-    :password => Digest::SHA1.hexdigest('test'),
-    :email => 'nick@xfce.org',
-    :active => true }
-)
-nick.roles << admin
-nick.save
-
-jannis = Moka::Models::Maintainer.first_or_create(
-  { :username => 'jannis' },
-  { :realname => 'Jannis Pohlmann',
-    :password => Digest::SHA1.hexdigest('test'),
-    :email => 'jannis@xfce.org',
-    :active => true }
-)
-jannis.save
-
-jeromeg = Moka::Models::Maintainer.first_or_create(
-  { :username => 'jeromeg' },
-  { :realname => 'Jérôme Guelfucci',
-    :password => Digest::SHA1.hexdigest('test'),
-    :email => 'jeromeg@xfce.org',
-    :active => false }
-)
-jeromeg.save
-
-panel = Moka::Models::Project.first_or_create(
-  { :name =>           'xfce4-panel' },
-  { :website =>        'http://www.xfce.org',
-    :description =>    'Xfce\'s Panel' }
-)
-panel.maintainers << nick
-panel.save
-
-thunar = Moka::Models::Project.first_or_create(
-  { :name =>           'thunar' },
-  { :website =>        'http://thunar.xfce.org',
-    :description =>    'Xfce\'s File Manager' }
-)
-thunar.maintainers << nick
-thunar.maintainers << jannis
-thunar.save
-
-terminal = Moka::Models::Project.first_or_create(
-  { :name =>           'terminal' },
-  { :website =>        'http://www.xfce.org',
-    :description =>    'Xfce\'s Terminal Emulator' }
-)
-terminal.maintainers << nick
-terminal.save
-
-tumbler = Moka::Models::Project.first_or_create(
-  { :name =>           'tumbler' },
-  { :website =>        'http://www.xfce.org',
-    :description =>    'Thumbnail generator' }
-)
-tumbler.maintainers << jannis
-tumbler.save
-
-libxfce4ui = Moka::Models::Project.first_or_create(
-  { :name =>           'libxfce4ui' },
-  { :website =>        'http://www.xfce.org',
-    :description =>    'Xfce Widgets Library' }
-)
-libxfce4ui.maintainers << jannis
-libxfce4ui.maintainers << nick
-libxfce4ui.maintainers << jeromeg
-libxfce4ui.save
-
-# create dummy classification
-collection = Moka::Models::Collection.first_or_create(
-  { :name => 'xfce' },
-  { :display_name => 'Xfce',
-    :website => 'http://www.xfce.org' }
-)
-collection.maintainers << nick
-collection.maintainers << jannis
-collection.maintainers << jeromeg
-collection.save
+if false
+  admin = Moka::Models::Role.first_or_create(
+    { :name => 'admin' },
+    { :description => "Administrator" }
+  )
+  admin.save
+  
+  # create dummy user
+  nick = Moka::Models::Maintainer.first_or_create(
+    { :username => 'nick' },
+    { :realname => 'Nick Schermer',
+      :password => Digest::SHA1.hexdigest('test'),
+      :email => 'nick@xfce.org',
+      :active => true }
+  )
+  nick.roles << admin
+  nick.save
+  
+  jannis = Moka::Models::Maintainer.first_or_create(
+    { :username => 'jannis' },
+    { :realname => 'Jannis Pohlmann',
+      :password => Digest::SHA1.hexdigest('test'),
+      :email => 'jannis@xfce.org',
+      :active => true }
+  )
+  jannis.save
+  
+  jeromeg = Moka::Models::Maintainer.first_or_create(
+    { :username => 'jeromeg' },
+    { :realname => 'Jérôme Guelfucci',
+      :password => Digest::SHA1.hexdigest('test'),
+      :email => 'jeromeg@xfce.org',
+      :active => false }
+  )
+  jeromeg.save
+  
+  panel = Moka::Models::Project.first_or_create(
+    { :name =>           'xfce4-panel' },
+    { :website =>        'http://www.xfce.org',
+      :description =>    'Xfce\'s Panel' }
+  )
+  panel.maintainers << nick
+  panel.save
+  
+  thunar = Moka::Models::Project.first_or_create(
+    { :name =>           'thunar' },
+    { :website =>        'http://thunar.xfce.org',
+      :description =>    'Xfce\'s File Manager' }
+  )
+  thunar.maintainers << nick
+  thunar.maintainers << jannis
+  thunar.save
+  
+  terminal = Moka::Models::Project.first_or_create(
+    { :name =>           'terminal' },
+    { :website =>        'http://www.xfce.org',
+      :description =>    'Xfce\'s Terminal Emulator' }
+  )
+  terminal.maintainers << nick
+  terminal.save
+  
+  tumbler = Moka::Models::Project.first_or_create(
+    { :name =>           'tumbler' },
+    { :website =>        'http://www.xfce.org',
+      :description =>    'Thumbnail generator' }
+  )
+  tumbler.maintainers << jannis
+  tumbler.save
+  
+  libxfce4ui = Moka::Models::Project.first_or_create(
+    { :name =>           'libxfce4ui' },
+    { :website =>        'http://www.xfce.org',
+      :description =>    'Xfce Widgets Library' }
+  )
+  libxfce4ui.maintainers << jannis
+  libxfce4ui.maintainers << nick
+  libxfce4ui.maintainers << jeromeg
+  libxfce4ui.save
+  
+  # create dummy classification
+  collection = Moka::Models::Collection.first_or_create(
+    { :name => 'xfce' },
+    { :display_name => 'Xfce',
+      :website => 'http://www.xfce.org' }
+  )
+  collection.maintainers << nick
+  collection.maintainers << jannis
+  collection.maintainers << jeromeg
+  collection.save
+end
 
 run Moka::Application
