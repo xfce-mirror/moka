@@ -28,4 +28,5 @@
           %td
             %a{:href => "/project/#{project.name}"} #{project.name}
           %td
-            #{maintainer_names(project)}
+            - for user in project.maintainers.sort
+              %a{:href => "/maintainer/#{user.username}", :title => "#{user.realname}"} #{user.username}
