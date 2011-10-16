@@ -10,6 +10,7 @@ for model in models
 end
 
 require File.join(directory, 'helpers', 'general')
+require File.join(directory, 'helpers', 'gitolite')
 
 helpers = ['announcements', 'authentication', 'collections', 'projects', 'maintainers']
 for helper in helpers
@@ -53,6 +54,5 @@ module Moka
         view :index
       end
     end
-  
   end
 end

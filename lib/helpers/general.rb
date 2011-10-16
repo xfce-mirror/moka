@@ -4,10 +4,10 @@ module Moka
   module Helpers
     module General
       def self.registered(app)
-        app.before do 
+        app.before do
           env[:error] = {}
         end
-      
+
         app.helpers Helpers
       end
 
@@ -24,7 +24,7 @@ module Moka
         end
 
         def view(template, custom_binding = nil)
-          render_layout(custom_binding) do 
+          render_layout(custom_binding) do
             directory = File.expand_path(File.dirname(__FILE__))
             filename = File.join(directory, '..', 'views', "#{template}.haml")
             engine = open(filename) do |file| Haml::Engine.new(file.read) end
@@ -55,7 +55,7 @@ module Moka
           end
           names.join(', ')
         end
-        
+
         def validate_password(password1, password2)
           if password1.empty? or password1.length < 6
               error_set(:newpassword, 'The password must be at least 6 characters long.')
