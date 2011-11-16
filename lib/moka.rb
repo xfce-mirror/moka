@@ -4,7 +4,7 @@ require 'sass'
 
 directory = File.expand_path(File.dirname(__FILE__))
 
-models = ['configuration', 'classification', 'role', 'maintainer', 'collection', 'project', 'archive']
+models = ['configuration', 'classification', 'group', 'role', 'maintainer', 'collection', 'project', 'archive']
 for model in models
   require File.join(directory, 'models', model)
 end

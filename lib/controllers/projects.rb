@@ -21,6 +21,12 @@ module Moka
             classification = Classification.find_by_name(params[:classification])
             project.classify_as(classification) if classification
 
+            if param[:defaultsgroups]
+              project.groups << Group.get('archive')
+              project.groups << Group.get('repo')
+              project.groups << Group.get('public')
+            end
+
             project.save
 
             redirect "/project/#{params[:name]}"
@@ -58,6 +64,23 @@ module Moka
 
           classification = Classification.find_by_name(params[:classification])
           @project.classify_as(classification)
+
+          redirect "/project/#{params[:name]}"
+        end
+
+        app.post '/project/:name/groups' do
+          project = Project.get(params[:name])
+
+          authentication_required
+
+          project.groups.clear
+          if params[:groups]
+            for name in params[:groups].keys do
+              group = Group.get(name)
+              project.groups << group
+            end
+          end
+          project.save
 
           redirect "/project/#{params[:name]}"
         end

@@ -57,15 +57,15 @@ end
 # Mailinglist configuration and template handling
 use Moka::Middleware::Mailinglists do |mailer|
   mailer.lists = ['xfce-announce@xfce.org', 'xfce@xfce.org', 'thunar-dev@xfce.org', 'nick@schermer']
-  
+
   mailer.project_subject do |release, message, sender|
     "ANNOUNCE: #{release.project.name} #{release.version} released"
   end
 
-  mailer.project_body do |release, message, sender| 
+  mailer.project_body do |release, message, sender|
     ERB.new(File.read('templates/project_release_mail.erb')).result(binding)
   end
-  
+
   mailer.collection_subject do |release, message, sender|
     "ANNOUNCE: #{release.collection.display_name} #{release.version} released"
   end
@@ -84,15 +84,23 @@ Moka::Models::Configuration.load do |conf|
   conf.set :noreply, 'noreply@xfce.org'
 end
 
+#DataMapper.auto_migrate!
 DataMapper.finalize
+#require 'migrate'
 
 if false
   admin = Moka::Models::Role.first_or_create(
     { :name => 'admin' },
-    { :description => "Administrator" }
+    { :desc => "Administrator" }
   )
   admin.save
-  
+
+  public = Moka::Models::Group.first_or_create(
+    { :name => 'public' },
+    { :desc => "Public GIT repository" }
+  )
+  public.save
+
   # create dummy user
   nick = Moka::Models::Maintainer.first_or_create(
     { :username => 'nick' },
@@ -103,7 +111,7 @@ if false
   )
   nick.roles << admin
   nick.save
-  
+
   jannis = Moka::Models::Maintainer.first_or_create(
     { :username => 'jannis' },
     { :realname => 'Jannis Pohlmann',
@@ -112,7 +120,7 @@ if false
       :active => true }
   )
   jannis.save
-  
+
   jeromeg = Moka::Models::Maintainer.first_or_create(
     { :username => 'jeromeg' },
     { :realname => 'Jérôme Guelfucci',
@@ -121,7 +129,7 @@ if false
       :active => false }
   )
   jeromeg.save
-  
+
   panel = Moka::Models::Project.first_or_create(
     { :name =>           'xfce4-panel' },
     { :website =>        'http://www.xfce.org',
@@ -129,7 +137,7 @@ if false
   )
   panel.maintainers << nick
   panel.save
-  
+
   thunar = Moka::Models::Project.first_or_create(
     { :name =>           'thunar' },
     { :website =>        'http://thunar.xfce.org',
@@ -137,24 +145,27 @@ if false
   )
   thunar.maintainers << nick
   thunar.maintainers << jannis
+  thunar.groups << public
   thunar.save
-  
+
   terminal = Moka::Models::Project.first_or_create(
     { :name =>           'terminal' },
     { :website =>        'http://www.xfce.org',
       :description =>    'Xfce\'s Terminal Emulator' }
   )
   terminal.maintainers << nick
+  terminal.groups << public
   terminal.save
-  
+
   tumbler = Moka::Models::Project.first_or_create(
     { :name =>           'tumbler' },
     { :website =>        'http://www.xfce.org',
       :description =>    'Thumbnail generator' }
   )
   tumbler.maintainers << jannis
+  tumbler.groups << public
   tumbler.save
-  
+
   libxfce4ui = Moka::Models::Project.first_or_create(
     { :name =>           'libxfce4ui' },
     { :website =>        'http://www.xfce.org',
@@ -163,8 +174,9 @@ if false
   libxfce4ui.maintainers << jannis
   libxfce4ui.maintainers << nick
   libxfce4ui.maintainers << jeromeg
+  libxfce4ui.groups << public
   libxfce4ui.save
-  
+
   # create dummy classification
   collection = Moka::Models::Collection.first_or_create(
     { :name => 'xfce' },

@@ -102,6 +102,7 @@ module Moka
       property :owner,       String
 
       has n,   :maintainers, :through => Resource
+      has n,   :groups,      :through => Resource
 
       def classification
         Classification.find_by_project(self)

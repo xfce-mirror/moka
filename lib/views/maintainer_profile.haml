@@ -71,16 +71,18 @@
 %form{:method => "post", :action => "/maintainer/#{@maintainer.username}/permissions" }
   %h3 Roles
   - visible_roles = false
-  - for role in Role.all
-    - if authentication_user.is_admin or @maintainer.roles.include?(role)
-      - visible_roles = true
-      %p
-        %input{:type => "checkbox",
-               :name => "roles[#{role.name}]",
-               :id => "r_#{role.name}",
-               :checked => @maintainer.roles.include?(role),
-               :disabled => !authentication_user.is_admin}
-        %label{:for => "r_#{role.name}"} #{role.description}
+  %div{:class => "columns"}
+    - for role in Role.all
+      - if authentication_user.is_admin or @maintainer.roles.include?(role)
+        - visible_roles = true
+        %p
+          %input{:type => "checkbox",
+                 :name => "roles[#{role.name}]",
+                 :id => "r_#{role.name}",
+                 :checked => @maintainer.roles.include?(role),
+                 :disabled => !authentication_user.is_admin}
+          %label{:for => "r_#{role.name}"} #{role.desc}
+    %div{:class => "clearboth"}
   - if !visible_roles
     %p You don't have special roles.
 
