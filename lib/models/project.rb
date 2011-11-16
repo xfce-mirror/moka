@@ -96,11 +96,12 @@ module Moka
 
       property :name,        String, :key => true
       property :website,     String, :length => 100
-      property :description, Text
+      property :shortdesc,   String, :length => 100
+      property :longdesc,    Text
+      property :norepo,      Boolean, :default => false
+      property :owner,       String
 
       has n,   :maintainers, :through => Resource
-
-      # mailinglists
 
       def classification
         Classification.find_by_project(self)

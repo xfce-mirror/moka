@@ -3,19 +3,37 @@
   %form{:method => "post", :action => "/project/#{@project.name}/information"}
     %p
       %label{:for => "website"} Website:
-      %input{:type => "text", 
-             :name => "website", 
-             :id => "website", 
+      %input{:type => "text",
+             :name => "website",
+             :id => "website",
+             :maxlength => 100,
+             :class => 'fill',
              :value => "#{@project.website}"}
     %p
-      %label{:for => "description"} Description:
-      %textarea{:name => "description", :id => "description"} #{@project.description}
+      %label{:for => "shortdesc"} Short Description:
+      %input{:type => "text",
+             :name => "shortdesc",
+             :id => "shortdesc",
+             :maxlength => 100,
+             :class => 'fill',
+             :value => "#{@project.shortdesc}"}
+    %p
+      %label{:for => "longdesc"} Long Description:
+      %textarea{:name => "longdesc", :id => "longdesc"} #{@project.longdesc}
+    %p
+      %label{:for => "owner"} Owner:
+      %input{:type => "text",
+             :name => "owner",
+             :id => "owner",
+             :class => 'fill',
+             :value => "#{@project.owner}"}
     %p
       %label{:for => "maintainers"} Maintainers:
-      %input{:type => "text", 
+      %input{:type => "text",
              :name => "maintainers",
              :id =>  "maintainers",
-             :disabled => true, 
+             :disabled => true,
+             :class => 'fill',
              :value => "#{maintainer_names(@project)}"}
     %p.quote
       %input{:type => "submit", :value => "Save"}
@@ -25,7 +43,7 @@
   %p
     %select{:name => "classification"}
       - for classification in Classification.find_all
-        %option{:name => classification.name, 
+        %option{:name => classification.name,
                 :selected => (@project.classification.eql? classification)} #{classification.name}
     %input{:type => "submit", :value => "Change"}
 

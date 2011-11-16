@@ -11,7 +11,7 @@
 What is <%= release.project.name %>?
 ========<%= Array.new(release.project.name.size, '=').join %>=
 
-<%= wrap_text(release.project.description).strip %>
+<%= wrap_text(release.project.longdesc).strip %>
 
 Website: 
   <%= release.project.website %>

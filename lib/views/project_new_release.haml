@@ -12,8 +12,8 @@
       %label{:for => "website"} Website:
       %input{:type => "text", :name => "website", :disabled => true, :value => "#{@project.website}"}
     %p
-      %label{:for => "description"} Description:
-      %textarea{:name => "description", :disabled => true} #{@project.description}
+      %label{:for => "longdesc"} Description:
+      %textarea{:name => "longdesc", :disabled => true} #{@project.longdesc}
 
   %form{:method => "get", :action => "/project/#{@project.name}/new-release/tarball"}
     %p.quote

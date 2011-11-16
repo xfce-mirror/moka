@@ -1,3 +1,4 @@
 pkg/
 examples/xfce/example.db
 examples/xfce/auth.log
+examples/xfce/migrate.rb

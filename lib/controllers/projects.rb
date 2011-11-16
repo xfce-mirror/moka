@@ -43,7 +43,9 @@ module Moka
           authentication_required(@project)
 
           @project.website = params[:website]
-          @project.description = params[:description]
+          @project.longdesc = params[:longdesc]
+          @project.shortdesc = params[:shortdesc]
+          @project.owner = params[:owner]
           @project.save
 
           redirect "/project/#{params[:name]}"
