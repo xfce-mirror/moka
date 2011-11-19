@@ -4,22 +4,20 @@ require 'sass'
 
 directory = File.expand_path(File.dirname(__FILE__))
 
-models = ['configuration', 'classification', 'group', 'role', 'maintainer', 'collection', 'project', 'archive']
-for model in models
-  require File.join(directory, 'models', model)
+for n in ['archive', 'classification', 'collection', 'configuration', 'group', 'maintainer', 'project', 'role']
+  require File.join(directory, 'models', n)
 end
 
-require File.join(directory, 'helpers', 'general')
-require File.join(directory, 'helpers', 'gitolite')
-
-helpers = ['announcements', 'authentication', 'collections', 'projects', 'maintainers']
-for helper in helpers
-  require File.join(directory, 'controllers', helper)
+for n in ['cgit', 'general', 'gitolite']
+  require File.join(directory, 'helpers', n)
 end
 
-middlewares = ['feeds', 'identica', 'mailinglists']
-for middleware in middlewares
-  require File.join(directory, 'middleware', middleware)
+for n in ['announcements', 'authentication', 'collections', 'projects', 'maintainers']
+  require File.join(directory, 'controllers', n)
+end
+
+for n in ['feeds', 'identica', 'mailinglists']
+  require File.join(directory, 'middleware', n)
 end
 
 module Moka

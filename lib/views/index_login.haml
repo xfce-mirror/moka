@@ -1,6 +1,7 @@
-%h2 Utilities
-%p
-  %a{:href => "/announcements"} Publish announcements
+- if authentication_user.authorized?('identica')
+  %h2 Utilities
+  %p
+    %a{:href => "/announcements"} Publish announcements
 
 %h2 Collections
 %table
