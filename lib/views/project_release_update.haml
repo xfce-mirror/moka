@@ -1,6 +1,6 @@
 %h2 Tarball
-%fieldset
-  %form{:method => "post", :enctype => "multipart/form-data"}
+%form{:method => "post", :enctype => "multipart/form-data"}
+  %fieldset
     %p
       %label Filename: 
       %input{:type => "text", :readonly => true, :value => @release.tarball_basename, :size => 30}

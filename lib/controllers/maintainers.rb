@@ -4,6 +4,35 @@ module Moka
       include Moka::Models
 
       def self.registered(app)
+        app.get '/maintainer' do
+
+          authentication_required
+
+          view :maintainer
+        end
+
+        app.post '/maintainer' do
+
+          authentication_required
+
+          unless params[:from].empty? or params[:subject].empty? or params[:body].empty?
+            for maintainer in Maintainer.all(:active => true)
+              next if maintainer.email.empty?
+
+              body = params[:body]
+              body.gsub!('<realname>', maintainer.realname)
+              body.gsub!('<username>', maintainer.username)
+
+              Pony.mail :to => maintainer.email,
+                        :from => params[:from],
+                        :subject => params[:subject],
+                        :body => body
+            end
+          end
+
+          view :maintainer
+        end
+
         app.get '/maintainer/:name' do
           @maintainer = Maintainer.get(params[:name])
 
@@ -12,14 +41,7 @@ module Moka
           view :maintainer_profile
         end
 
-        app.get '/maintainer' do
-
-          authentication_required
-
-          view :maintainer
-        end
-
-        app.post '/maintainer/:id' do
+        app.post '/maintainer/:username' do
           @maintainer = Maintainer.get(params[:username])
 
           authentication_required(@maintainer)
