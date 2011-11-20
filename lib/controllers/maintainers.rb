@@ -19,8 +19,7 @@ module Moka
             for maintainer in Maintainer.all(:active => true)
               next if maintainer.email.empty?
 
-              body = params[:body]
-              body.gsub!('<realname>', maintainer.realname)
+              body = params[:body].gsub('<realname>', maintainer.realname)
               body.gsub!('<username>', maintainer.username)
 
               Pony.mail :to => maintainer.email,
