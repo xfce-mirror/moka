@@ -126,7 +126,7 @@ module Moka
           # report the failed login, so we can use fail2ban on the server
           logger = Logger.new('auth.log')
           logger.datetime_format = "%Y-%m-%d %H:%M:%S"
-          logger.warn "Authentication failure for #{request.env['REMOTE_ADDR']}"
+          logger.warn "Authentication failure from #{request.env['REMOTE_ADDR']}"
           logger.close
 
           view :login_unauthenticated
@@ -172,6 +172,12 @@ module Moka
             env[:step] = "valid"
           else
             env[:step] = "invalid"
+
+            # report the failed token, so we can use fail2ban on the server
+            logger = Logger.new('auth.log')
+            logger.datetime_format = "%Y-%m-%d %H:%M:%S"
+            logger.warn "Invalid token for #{params[:username]} from #{request.env['REMOTE_ADDR']}"
+            logger.close
           end
 
           view :login_forgot
