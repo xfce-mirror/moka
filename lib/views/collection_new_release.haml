@@ -15,21 +15,32 @@
         %input{:type => "checkbox", :name => "identica", :value => "announce", :checked => true} Announce on identi.ca/xfce
     - if env['mailinglists']
       - for list in env['mailinglists'].lists
-        %p.quote 
+        %p.quote
           %input{:type => "checkbox", :name => "mailinglists[#{list}]", :value => "announce"} Announce on #{list}
       %p.quote Make sure to be subscribed to these mailinglists with #{authentication_user.email}. You can change your email address in your profile.
 
   %h2 Projects to include in the release
   %table
-    - for project in Project.find_all.sort
+    - projects = Project.all.sort
+    - counter = 0
+    - for classification in Classification.find_all.sort
+      %tr{:class => 'head'}
+        %th{:colspan => 2} #{classification.name.capitalize}
       %tr
-        %th #{project.name}
-        %td
-          %label{:for => ""} Included version:
-          %select{:name => "project_version[#{project.name}]"}
-            - included_release = params['project_version'][project.name] if params['project_version']
-            %option{:selected => included_release.nil?} None
-            - for release in project.releases.sort.reverse
-              %option{:value => "#{release.version}", :selected => (release.version == included_release)} #{release.version}
+        %th Name
+        %th Version to Include
+      - reset_cycle
+      - for project in projects
+        - if project.classification.eql? classification
+          - counter = counter + 1
+          %tr{:class => cycle}
+            %td
+              %label{:for => "#{counter}"} #{project.name}
+            %td
+              %select{:name => "project_version[#{project.name}]", :id => "#{counter}"}
+                - included_release = params['project_version'][project.name] if params['project_version']
+                %option{:selected => included_release.nil?} None
+                - for release in project.releases.sort.reverse
+                  %option{:value => "#{release.version}", :selected => (release.version == included_release)} #{release.version}
   %p
     %input{:type => "submit", :value => "Release and celebrate!"}
