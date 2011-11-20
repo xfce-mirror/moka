@@ -20,33 +20,33 @@ module Moka
           @release = Collection::Release.new(@collection, params[:release])
           view :collection_release
         end
-        
+
         app.post '/collection/:name/release/:release' do
           @collection = Collection.get(params[:name])
 
           authentication_required(@collection)
 
           @release = Collection::Release.new(@collection, params[:release])
-    
+
           for project in Project.find_all
-           next unless params[:version].has_key?(project.name)
-           branch_name, version = params[:version][project.name].split(/:/)
+            next unless params[:version].has_key?(project.name)
+            branch_name, version = params[:version][project.name].split(/:/)
 
-           project_release = @release.included_project_release(project)
-           @release.remove_project_release(project_release) unless project_release.nil?
+            project_release = @release.included_project_release(project)
+            @release.remove_project_release(project_release) unless project_release.nil?
 
-           unless version.nil?
-             branch = Project::Branch.new(project, branch_name)
-             project_release = Project::Release.new(project, branch, version)
-             @release.add_project_release(project_release)
-           end
+            unless version.nil?
+              branch = Project::Branch.new(project, branch_name)
+              project_release = Project::Release.new(project, branch, version)
+              @release.add_project_release(project_release)
+            end
           end
 
           @release.update
-    
+
           redirect '/'
         end
-        
+
         app.get '/collection/:name/release/:release/delete' do
           @collection = Collection.get(params[:name])
 
@@ -54,7 +54,7 @@ module Moka
 
           view :collection_delete
         end
-        
+
        app.post '/collection/:name/release/:release/delete' do
           @collection = Collection.get(params[:name])
 
@@ -104,7 +104,7 @@ module Moka
 
           error_set(:version, 'Version may not be empty.') if params[:version].empty?
 
-          unless error_set? 
+          unless error_set?
             pattern = Regexp.new(Configuration.get(:collection_release_pattern))
             unless params[:version] =~ pattern
               error_set(:version, "Version has to match the pattern<br /><tt>#{pattern.source}</tt>")
@@ -113,7 +113,7 @@ module Moka
 
           unless error_set?
             if @collection.releases.include?(@release)
-              error_set(:version, 'Version already exists.') 
+              error_set(:version, 'Version already exists.')
             end
           end
 
@@ -127,7 +127,7 @@ module Moka
                 prelease.version == project_version
               end
 
-              @release.add_project_release(project_release)
+              @release.add_project_release(project_release) unless project_release.nil?
             end
 
             @release.update
@@ -135,7 +135,7 @@ module Moka
             if env['feeds']
               env['feeds'].announce_release(@release, params[:message], authentication_user)
             end
-            
+
             if env['identica'] and params[:identica]
 	            url = env['feeds'].get_collection_feed_url(@collection)
 
@@ -147,10 +147,10 @@ module Moka
 
               env['identica'].post(status)
             end
-            
+
             if env['mailinglists'] and params[:mailinglists]
               env['mailinglists'].announce_release(@release, params[:message],
-                                                   authentication_user, 
+                                                   authentication_user,
                                                    params[:mailinglists].keys)
             end
 

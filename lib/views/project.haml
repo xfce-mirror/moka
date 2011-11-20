@@ -30,13 +30,14 @@
     %p
       %label{:for => "maintainers"} Maintainers:
       %input{:type => "text",
-             :name => "maintainers",
-             :id =>  "maintainers",
-             :disabled => true,
+             :name => "owner",
+             :id => "owner",
              :class => 'fill',
+             :readonly => true,
              :value => "#{maintainer_names(@project)}"}
     %p.quote
       %input{:type => "submit", :value => "Save"}
+      
 
 - if authentication_user.is_admin
   %h2 Project Groups

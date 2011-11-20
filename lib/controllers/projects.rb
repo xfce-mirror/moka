@@ -295,7 +295,7 @@ module Moka
                                                    params[:mailinglists].keys)
             end
 
-            redirect "/project/#{@project.id}"
+            redirect "/project/#{@project.name}"
           end
         end
 

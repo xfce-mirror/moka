@@ -27,7 +27,7 @@ module Moka
     
         http = Net::HTTP.new(url.host, url.port)
         http.use_ssl = true
-    
+
         http.start do |http|
           header = {
             'User-Agent' => 'Moka',
@@ -35,7 +35,7 @@ module Moka
             'X-Twitter-Client-Version' => 'Unknown',
             'X-Twitter-Client-URL' => 'http://git.xfce.org/jannis/moka',
           }
-    
+
           request = Net::HTTP::Post.new(url.path)
           request.basic_auth(username, password)
           request.set_form_data({'status' => status})

@@ -10,10 +10,10 @@
   %form
     %p
       %label{:for => "website"} Website:
-      %input{:type => "text", :name => "website", :disabled => true, :value => "#{@project.website}"}
+      #{@project.website}
     %p
       %label{:for => "longdesc"} Description:
-      %textarea{:name => "longdesc", :disabled => true} #{@project.longdesc}
+      %textarea{:name => "longdesc", :readonly => true} #{@project.longdesc}
 
   %form{:method => "get", :action => "/project/#{@project.name}/new-release/tarball"}
     %p.quote

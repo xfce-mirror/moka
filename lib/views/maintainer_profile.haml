@@ -25,7 +25,10 @@
   %form{:method => "post"}
     %p
       %label{:for => "username"} Login Name:
-      %input{:type => "text", :name => "fooname", :disabled => true, :value => @maintainer.username}
+      %input{:type => "text", 
+             :name => "fooname", 
+             :disabled => true, 
+             :value => @maintainer.username}
       %input{:type => "hidden",
              :name => "username",
              :id => "username",

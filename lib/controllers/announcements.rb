@@ -5,19 +5,19 @@ module Moka
 
       def self.registered(app)
         app.get '/announcements' do
-          authentication_required(roles = ['admin', 'board-member'])
+          authentication_required(roles = ['identica'])
 
           view :announcements
         end
 
         app.get '/announcements/identica' do
-          authentication_required(roles = ['admin', 'board-member'])
+          authentication_required(roles = ['identica'])
 
           redirect '/announcements'
         end
 
         app.post '/announcements/identica' do
-          authentication_required(roles = ['admin', 'board-member'])
+          authentication_required(roles = ['identica'])
 
           unless env['identica']
             error_set(:identica, 'Publishing announcements on identi.ca is not supported at the moment.')

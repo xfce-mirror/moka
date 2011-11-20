@@ -3,7 +3,7 @@
   %form{:method => "post", :enctype => "multipart/form-data"}
     %p
       %label Filename: 
-      %input{:type => "text", :disabled => true, :value => @release.tarball_basename, :size => 30}
+      %input{:type => "text", :readonly => true, :value => @release.tarball_basename, :size => 30}
     %p
       %label{:for => "tarball"} Tarball:
       %input{:type => "file", :name => "tarball", :size => 30}

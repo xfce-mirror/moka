@@ -5,10 +5,11 @@
   %p.error.quote #{error(:identica)}
 
 %form{:method => "post", :action => "/announcements/identica"}
-  %p
-    %label{:for => "test"} Text:
-    %textarea{:name => "test", :rows => "5", :wrap => "off", :value => params[:text]}
-  - if error(:text)
-    %p.error.quote #{error(:text)}
-  %p
-    %input{:type => "submit", :value => "Publish"}
+  %fieldset
+    %p
+      %label{:for => "message"} Text:
+      %textarea{:name => "message", :rows => 5, :wrap => "off", :value => params[:text]}
+    - if error(:text)
+      %p.error.quote #{error(:text)}
+    %p.quote
+      %input{:type => "submit", :value => "Publish"}
