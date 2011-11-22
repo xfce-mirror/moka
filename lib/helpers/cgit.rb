@@ -31,8 +31,7 @@ module Moka
             sect << "repo.url=#{classification.name}/#{project.name}\n"
             sect << "repo.name=#{project.name}\n"
             sect << "repo.path=#{path}\n"
-            sect << "repo.desc=#{project.shortdesc}\n" unless
-              project.shortdesc.nil? or project.shortdesc.empty?
+            sect << "repo.desc=#{project.shortdesc}\n"
             sect << "repo.owner=#{project.owner}\n" unless
               project.owner.nil? or project.owner.empty?
             sect << "\n"
