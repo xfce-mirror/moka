@@ -21,12 +21,6 @@ module Moka
             classification = Classification.find_by_name(params[:classification])
             project.classify_as(classification) if classification
 
-            if param[:defaultsgroups]
-              project.groups << Group.get('archive')
-              project.groups << Group.get('repo')
-              project.groups << Group.get('public')
-            end
-
             project.save
 
             redirect "/project/#{params[:name]}"

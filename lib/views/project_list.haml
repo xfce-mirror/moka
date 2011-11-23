@@ -6,12 +6,9 @@
       %input{:type => "text", :name => "name", :id => "name" }
     %p
       %label{:for => "classification"} Classification:
-      %input{:type => "text", :name => "name", :id => "name" }
-    %p.quote
-      %input{:type => "checkbox",
-             :name => "defaultsgroups",
-             :id => "defaultsgroups"}
-      Set default groups (archive, repo and public)
+      %select{:name => "classification", :id => "classification"}
+        - for classification in Classification.find_all
+          %option{:name => classification.name} #{classification.name}
     %p.quote
       %input{:type => "submit", :value => "Create" }
 
