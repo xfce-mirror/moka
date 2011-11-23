@@ -107,7 +107,7 @@ module Moka
             maintainer.save
 
             if maintainer.active
-              Pony.mail :to => @maintainer.email,
+              Pony.mail :to => maintainer.email,
                         :from => Moka::Models::Configuration.get(:noreply),
                         :subject => 'Release Manager Account Activated',
                         :body => erb(:'email/maintainer_activated')
