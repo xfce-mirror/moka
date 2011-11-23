@@ -1,2 +1,3 @@
 - Move email templates to lib/view/mail. This makes it easier to maintain
   the templates in git and on the server.
+- projects without archive.
