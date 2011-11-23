@@ -1,6 +1,2 @@
-- Tool to generate gitolit config file and ssh key files.
-  - The version in /bin writes all keys in 1 .pub file, gitolite
-    does not understand this: should 1 key per-file named $username@$host.pub
-    where $host can be anything unique.
 - Move email templates to lib/view/mail. This makes it easier to maintain
   the templates in git and on the server.
