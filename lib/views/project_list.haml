@@ -7,7 +7,7 @@
     %p
       %label{:for => "classification"} Classification:
       %select{:name => "classification", :id => "classification"}
-        - for classification in Classification.find_all
+        - for classification in Classification.find_all.sort
           %option{:name => classification.name} #{classification.name}
     %p.quote
       %input{:type => "submit", :value => "Create" }
