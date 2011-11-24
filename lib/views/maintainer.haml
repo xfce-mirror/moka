@@ -1,11 +1,11 @@
 %h2 Inactive Maintainers
 %p Account for maintainers that have not been activated yet.
 
-%table
+%table{:width => '70%'}
   %tr
-    %th Username
-    %th Real Name
-    %th Email
+    %th{:width => '33%'} Username
+    %th{:width => '33%'} Real Name
+    %th{:width => '33%'} Email
   - for maintainer in Maintainer.all(:active => false).sort
     %tr
       %td
@@ -47,12 +47,12 @@
   %b Bold
   users have administration permission.
 
-%table
+%table{:width => '100%'}
   %tr
-    %th Username
-    %th Real Name
-    %th Email
-    %th # Projects
+    %th{:width => '25%'} Username
+    %th{:width => '25%'} Real Name
+    %th{:width => '25%'} Email
+    %th{:width => '25%'} # Projects
   - for maintainer in Maintainer.all(:active => true).sort
     %tr{:class => maintainer.is_admin ? "admin" : ""}
       %td
