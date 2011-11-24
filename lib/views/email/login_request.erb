@@ -2,6 +2,11 @@ Hello, this is Moka at <%= Moka::Models::Configuration.get(:moka_url) %>.
 
 The user '<%= params[:username] %>' has asked for access from <%= request.env['REMOTE_ADDR'] %> on <%= Time.now.to_s %>.
 
+=======
+<%= params[:msg] %>
+
+=======
+
 Always at your service.
 
  --Moka

@@ -241,25 +241,36 @@ module Moka
             error_set(:message, 'This username is already taken')
             view :login_request
           else
+            pubkeys_arr = []
+            params[:pubkeys].split("\n").each do |key|
+              key = key.strip
+              pubkeys_arr.push(key) if not key.empty? and key.start_with? "ssh-"
+            end
+
             @maintainer = Moka::Models::Maintainer.create(:username => params[:username])
             @maintainer.email = params[:email]
             @maintainer.realname = params[:realname]
             @maintainer.password = Digest::SHA1.hexdigest(params[:password])
+            @maintainer.pubkeys = pubkeys_arr.join("\n") unless pubkeys_arr.empty?
             @maintainer.active = false
             @maintainer.save
 
-            subject = "Xfce Release Manager Request: " + params[:username]
-            body = erb(:'email/login_request')
+            # collect admin emails
+            recipients = []
+            for recipient in Moka::Models::Maintainer.all()
+              recipients.push(recipient.email) if recipient.is_admin
+            end
 
             # mail all admins about the request
-            recipients = Moka::Models::Maintainer.all()
-            for recipient in recipients
-              if recipient.is_admin
-                Pony.mail :to => recipient.email,
-                          :from => Moka::Models::Configuration.get(:noreply),
-                          :subject => subject,
-                          :body => body
-              end
+            if not recipients.empty?
+              subject = "Xfce Release Manager Request: " + params[:username]
+              body = erb(:'email/login_request')
+
+              Pony.mail :to => recipients.join(', '),
+                        :from => Moka::Models::Configuration.get(:noreply),
+                        :subject => subject,
+                        :reply_to => params[:email],
+                        :body => body
             end
 
             view :login_request_finished
