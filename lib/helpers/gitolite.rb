@@ -56,7 +56,7 @@ module Moka
           conf << "\n\tRW = " + maintainers.sort.join(" ") if maintainers
 
           # let gitolite create git-daemon-export-ok
-          conf << "\n\tR = daemon" if project.groups.include?(public)
+          conf << "\n\tR = daemon @all" if project.groups.include?(public)
 
           # force fast-forward on all repositories
           conf << "\n\tconfig receive.denyNonFastforwards = true"
