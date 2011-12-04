@@ -18,7 +18,10 @@
       - if env['mailinglists']
         - for list in env['mailinglists'].lists
           %p.quote
-            %input{:type => "checkbox", :name => "mailinglists[#{list}]", :value => "announce"} Announce on #{list}
+            %input{:type => "checkbox",
+                   :name => "mailinglists[#{list}]",
+                   :value => "announce",
+                   :checked => (list.start_with? "xfce")} Announce on #{list}
         %p.quote
           Make sure to be subscribed to these mailinglists with #{authentication_user.email}.
           You can change your email address in your profile.
