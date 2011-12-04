@@ -19,7 +19,5 @@ Website:
 
 Release notes for <%= release.version %>
 ==================<%= Array.new(release.version.size, '=').join %>
-<% if (release.version.split('.')[1].to_i % 2) > 0 %>[Please note that this is a development release.]
-<% end %>
 <%= wrap_text(message).strip %>
 

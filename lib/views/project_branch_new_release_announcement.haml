@@ -7,6 +7,8 @@
     %p
       %label{:for => "message"} Release notes:
       %textarea{:name => "message", :class => "message"}
+        - if (@release.version.split('.')[1].to_i % 2) > 0
+          [Please note that this is a development release.]
       - if env['feeds']
         %p.quote
           %input{:type => "checkbox", :name => "feeds", :value => "announce", :checked => true}  Update news feed
