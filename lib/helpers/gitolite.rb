@@ -49,11 +49,11 @@ module Moka
 
           # basic permissions
           conf << "repo " + classification.name + "/" + name + "\n"
-          conf << "\tRW = @repo-admin"
+          conf << "\tRW+ = @repo-admin"
 
           # add maintainers
           maintainers = projects[name]
-          conf << "\n\tRW = " + maintainers.sort.join(" ") if maintainers
+          conf << "\n\tRW+ = " + maintainers.sort.join(" ") if maintainers
 
           # let gitolite create git-daemon-export-ok
           conf << "\n\tR = daemon @all" if project.groups.include?(public)
