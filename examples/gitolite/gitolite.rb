@@ -16,4 +16,4 @@ Moka::Models::Configuration.load do |conf|
 end
 
 generator = Moka::Gitolite.new
-generator.run('/tmp/gitolitetest')
+generator.run('/tmp/gitolitetest', [ '/file/for/prefix1' , '/file/for/prefix2' ])

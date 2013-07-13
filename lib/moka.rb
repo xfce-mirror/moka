@@ -4,7 +4,7 @@ require 'sass'
 
 directory = File.expand_path(File.dirname(__FILE__))
 
-for n in ['archive', 'classification', 'collection', 'configuration', 'group', 'maintainer', 'project', 'role']
+for n in ['archive', 'autoindex', 'classification', 'collection', 'configuration', 'group', 'maintainer', 'project', 'role']
   require File.join(directory, 'models', n)
 end
 
