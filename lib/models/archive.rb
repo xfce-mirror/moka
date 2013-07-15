@@ -78,15 +78,6 @@ module Moka
 
         File.delete(link_filename) if File.file?(link_filename)
         File.link(link_target, link_filename)
-
-        checksum_files = project_release_checksum_filenames(project_release)
-        for filename in checksum_files
-          link_target = filename
-          link_filename = File.join(source_dir, File.basename(link_target))
-
-          File.delete(link_filename) if File.file?(link_filename)
-          File.link(link_target, link_filename)
-        end
       end
 
       def collection_release_remove_project_release(release, project_release)
@@ -132,15 +123,8 @@ module Moka
           File.makedirs(target_dir) unless File.directory?(target_dir)
           File.delete(fat_tarball) if File.file?(fat_tarball)
 
-          if system("cd #{release_dir} && flock --timeout=5 #{fat_tarball} tar cjf #{fat_tarball} #{source_dir}")
-            update_tarball_checksums(fat_tarball)
-          end
+          system("cd #{release_dir} && flock --timeout=5 #{fat_tarball} tar cjf #{fat_tarball} #{source_dir}")
         end
-      end
-
-      def collection_release_update_checksums(release)
-        fat_tarball = collection_fat_tarball_filename(release)
-        update_tarball_checksums(fat_tarball)
       end
 
       def classification_dir(classification)
@@ -233,31 +217,7 @@ module Moka
           File.chmod(0664, target_file)
         end
 
-        update_tarball_checksums(target_file)
-
         project_branch_update(branch)
-      end
-
-      def update_tarball_checksums(tarball)
-        basename = File.basename(tarball)
-
-        open("#{tarball}.md5", File::CREAT|File::TRUNC|File::RDWR) do |file|
-          begin
-            file.flock(File::LOCK_EX)
-            file.puts "#{Digest::MD5.file(tarball)}  #{basename}"
-          ensure
-            file.flock(File::LOCK_UN)
-          end
-        end
-
-        open("#{tarball}.sha1", File::CREAT|File::TRUNC|File::RDWR) do |file|
-          begin
-            file.flock(File::LOCK_EX)
-            file.puts "#{Digest::SHA1.file(tarball)}  #{basename}"
-          ensure
-            file.flock(File::LOCK_UN)
-          end
-        end
       end
 
       def project_release_from_tarball(project, tarball)
@@ -314,56 +274,12 @@ module Moka
                   project_release_tarball_basename(release))
       end
 
-      def project_release_checksum_filenames(release)
-        tarball_basename = project_release_tarball_basename(release)
-        dirname = project_branch_dir(release.project, release.branch)
-
-        filenames = [
-          File.join(dirname, "#{tarball_basename}.md5"),
-          File.join(dirname, "#{tarball_basename}.sha1")
-        ]
-      end
-
       def project_release_delete(release)
         filename = project_release_tarball_filename(release)
 
         File.delete(filename) if File.file?(filename)
 
-        checksum_filenames = project_release_checksum_filenames(release)
-        for file in checksum_filenames
-          File.delete(file) if File.file?(file)
-        end
-
         project_branch_update(release.branch)
-      end
-
-      def project_release_checksum(release, type)
-        result = nil
-
-        tarball_basename = project_release_tarball_basename(release)
-        branch_dir = project_branch_dir(release.project, release.branch)
-        basename = if type == Digest::MD5 then
-          "#{tarball_basename}.md5"
-        else
-          "#{tarball_basename}.sha1"
-        end
-
-        open(File.join(branch_dir, basename)) do |checksum_file|
-          begin
-            checksum_file.flock(File::LOCK_SH)
-            for line in checksum_file.readlines
-              checksum, tarball = line.split(' ')
-              if tarball == tarball_basename
-                result = checksum
-                break
-              end
-            end
-          ensure
-            checksum_file.flock(File::LOCK_UN)
-          end
-        end
-
-        result
       end
 
       def project_releases(project)

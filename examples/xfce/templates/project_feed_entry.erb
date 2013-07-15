@@ -3,9 +3,7 @@
   <a href="<%= release.download_url %>/<%= release.tarball_basename %>"><%= release.download_url %>/<%= release.tarball_basename %></a>
   <a href="<%= release.download_url %>/<%= release.tarball_basename %>.md5"><%= release.download_url %>/<%= release.tarball_basename %>.md5</a>
   <a href="<%= release.download_url %>/<%= release.tarball_basename %>.sha1"><%= release.download_url %>/<%= release.tarball_basename %>.sha1</a>
-
-  SHA1 checksum: <%= release.checksum(Digest::SHA1) %>
-   MD5 checksum: <%= release.checksum(Digest::MD5) %>
+  <a href="<%= release.download_url %>/<%= release.tarball_basename %>.sha256"><%= release.download_url %>/<%= release.tarball_basename %>.sha256</a>
 
 
 What is <%= release.project.name %>?

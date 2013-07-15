@@ -66,10 +66,6 @@ module Moka
           return version <=> other.version
         end
 
-        def checksum(type)
-          Archive.instance.project_release_checksum(self, type)
-        end
-
         def tarball_basename
           Archive.instance.project_release_tarball_basename(self)
         end

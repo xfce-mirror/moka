@@ -56,10 +56,6 @@ module Moka
         def update
           Archive.instance.collection_release_update(self)
         end
-
-        def update_checksums
-          Archive.instance.collection_release_update_checksums(self)
-        end
         
         def release_url
           dir = Archive.instance.collection_release_dir(self)
