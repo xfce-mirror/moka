@@ -208,13 +208,13 @@ module Moka
             lockfile = File.new(target_file)
             file.flock(File::LOCK_EX)
 
-            File.move(source_file, target_file)
+            FileUtils.mv(source_file, target_file)
             FileUtils.chmod(0664, target_file)
           ensure
             lockfile.flock(File::LOCK_UN)
           end
         else
-          File.move(source_file, target_file)
+          FileUtils.mv(source_file, target_file)
           FileUtils.chmod(0664, target_file)
         end
 
@@ -315,7 +315,7 @@ module Moka
           parent = path.parent
           FileUtils.mkdir_p(parent) unless File.directory?(parent)
 
-          project.classification = old_classifcation unless File.move(old_dir, new_dir)
+          project.classification = old_classifcation unless FileUtils.mv(old_dir, new_dir)
           begin
             Dir.delete(old_dir)
           rescue SystemCallError
