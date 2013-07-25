@@ -8,7 +8,7 @@ module Moka
   module Controllers
     module Authentication
       def authentication_initialize
-        use Rack::Session::Cookie
+        use Rack::Session::Cookie, :secret => 'txZEOtHsaoBxnwXkXpqBeLxljj3d3jFpkBEtYbghiyNwsL2v9oQGsmsXC88OiJ15'
 
         Warden::Manager.serialize_into_session do |maintainer|
           maintainer.username
