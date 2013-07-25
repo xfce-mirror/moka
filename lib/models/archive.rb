@@ -1,5 +1,6 @@
 require 'ftools'
 require 'singleton'
+require 'fileutils'
 
 module Moka
   module Models
@@ -71,13 +72,13 @@ module Moka
       def collection_release_add_project_release(release, project_release)
         source_dir = collection_source_dir(release)
 
-        File.makedirs(source_dir) unless File.directory?(source_dir)
+        FileUtils.mkdir_p(source_dir) unless File.directory?(source_dir)
 
         link_target = project_release_tarball_filename(project_release)
         link_filename = File.join(source_dir, File.basename(link_target))
 
-        File.delete(link_filename) if File.file?(link_filename)
-        File.link(link_target, link_filename)
+        FileUtils.rm(link_filename) if File.file?(link_filename)
+        FileUtils.ln(link_target, link_filename)
       end
 
       def collection_release_remove_project_release(release, project_release)
@@ -85,7 +86,7 @@ module Moka
         tarball_basename = project_release_tarball_basename(project_release)
 
         filename = File.join(source_dir, tarball_basename)
-        File.delete(filename) if File.file?(filename)
+        FileUtils.rm(filename) if File.file?(filename)
       end
 
       def collection_release_project_release_included?(release, project_release)
@@ -120,8 +121,8 @@ module Moka
           fat_tarball = collection_fat_tarball_filename(release)
           target_dir = File.dirname(fat_tarball)
 
-          File.makedirs(target_dir) unless File.directory?(target_dir)
-          File.delete(fat_tarball) if File.file?(fat_tarball)
+          FileUtils.mkdir_p(target_dir) unless File.directory?(target_dir)
+          FileUtils.rm(fat_tarball) if File.file?(fat_tarball)
 
           system("cd #{release_dir} && flock --timeout=5 #{fat_tarball} tar cjf #{fat_tarball} #{source_dir}")
         end
@@ -197,7 +198,7 @@ module Moka
       def project_branch_add_tarball(branch, file, basename)
         dir = project_branch_dir(branch.project, branch)
 
-        File.makedirs(dir) unless File.directory?(dir)
+        FileUtils.mkdir_p(dir) unless File.directory?(dir)
 
         source_file = file.path
         target_file = File.join(dir, basename)
@@ -208,13 +209,13 @@ module Moka
             file.flock(File::LOCK_EX)
 
             File.move(source_file, target_file)
-            File.chmod(0664, target_file)
+            FileUtils.chmod(0664, target_file)
           ensure
             lockfile.flock(File::LOCK_UN)
           end
         else
           File.move(source_file, target_file)
-          File.chmod(0664, target_file)
+          FileUtils.chmod(0664, target_file)
         end
 
         project_branch_update(branch)
@@ -277,7 +278,7 @@ module Moka
       def project_release_delete(release)
         filename = project_release_tarball_filename(release)
 
-        File.delete(filename) if File.file?(filename)
+        FileUtils.rm(filename) if File.file?(filename)
 
         project_branch_update(release.branch)
       end
@@ -312,7 +313,7 @@ module Moka
 
           path = Pathname.new(new_dir)
           parent = path.parent
-          File.makedirs(parent) unless File.directory?(parent)
+          FileUtils.mkdir_p(parent) unless File.directory?(parent)
 
           project.classification = old_classifcation unless File.move(old_dir, new_dir)
           begin
@@ -320,7 +321,7 @@ module Moka
           rescue SystemCallError
           end
         else
-          File.makedirs(new_dir) unless File.directory?(new_dir)
+          FileUtils.mkdir_p(new_dir) unless File.directory?(new_dir)
         end
 
         # destroy and reload the classification
