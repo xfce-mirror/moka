@@ -47,21 +47,16 @@ module Moka
           # skip non-git projects
           next unless project.groups.include?(repo)
 
-          # basic permissions
-          conf << "repo " + classification.name + "/" + name + "\n"
-          conf << "\tRW+ = @repo-admin"
-
-          # add maintainers
           maintainers = projects[name]
-          conf << "\n\tRW+ = " + maintainers.sort.join(" ") if maintainers
 
-          # let gitolite create git-daemon-export-ok
-          conf << "\n\tR = daemon @all" if project.groups.include?(public)
-
-          # force fast-forward on all repositories
-          conf << "\n\tconfig receive.denyNonFastforwards = true"
-
-          conf << "\n\n"
+          if maintainers
+            conf << "repo " + classification.name + "/" + name + "\n"
+            conf << "\n\tRW           = " + maintainers.sort.join(" ")
+            conf << "\n\tRWCD USER/   = " + maintainers.sort.join(" ")
+            conf << "\n\tC refs/tags/ = " + maintainers.sort.join(" ")
+          
+            conf << "\n\n"
+          end
         end
       end
 

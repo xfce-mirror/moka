@@ -30,7 +30,6 @@ module Moka
 
             sect << "repo.url=#{classification.name}/#{project.name}\n"
             sect << "repo.name=#{project.name}\n"
-            sect << "repo.clone-url=git://git.xfce.org/#{classification.name}/#{project.name} ssh://git@git.xfce.org/#{classification.name}/#{project.name}\n"
             sect << "repo.path=#{path}\n"
             sect << "repo.desc=#{project.shortdesc}\n"
             sect << "repo.owner=#{project.owner}\n" unless
