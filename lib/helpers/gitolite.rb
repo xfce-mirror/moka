@@ -50,7 +50,7 @@ module Moka
           maintainers = projects[name]
 
           if maintainers
-            conf << "repo " + classification.name + "/" + name + "\n"
+            conf << "repo " + classification.name + "/" + name
             conf << "\n\tRW           = " + maintainers.sort.join(" ")
             conf << "\n\tRWCD USER/   = " + maintainers.sort.join(" ")
             conf << "\n\tC refs/tags/ = " + maintainers.sort.join(" ")
