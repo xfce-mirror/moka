@@ -48,13 +48,13 @@ module Moka
           next unless project.groups.include?(repo)
 
           maintainers = projects[name]
-
+          group_name = "@" + name.capitalize + "-DEVS"
           if maintainers
+            conf << group_name + " = " + maintainers.sort.join(" ")
             conf << "repo " + classification.name + "/" + name
-            conf << "\n\tRW           = " + maintainers.sort.join(" ")
-            conf << "\n\tRWCD USER/   = " + maintainers.sort.join(" ")
-            conf << "\n\tC refs/tags/ = " + maintainers.sort.join(" ")
-          
+            conf << "\n\tRW           = " + group_name
+            conf << "\n\tRWCD USER/   = " + group_name
+            conf << "\n\tC refs/tags/ = " + group_name
             conf << "\n\n"
           end
         end
