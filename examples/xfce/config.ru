@@ -4,12 +4,13 @@ require 'rubygems'
 require 'dm-core'
 require 'dm-migrations'
 require 'digest/sha1'
-require '../../lib/moka'
+require './moka/lib/moka'
 
 # Connect to the database
 directory = File.expand_path(File.dirname(__FILE__))
 db = File.join(directory, 'example.db')
 
+# Uncomment for debugging on stdout
 #DataMapper::Logger.new($stdout, :debug)
 DataMapper.setup(:default, 'sqlite://' + db)
 
@@ -18,12 +19,12 @@ def wrap_text(txt, col = 72)
   txt.gsub(/(.{1,#{col}})( +|$)\n?|(.{#{col}})/, "\\1\\3\n")
 end
 
-# Identica configuration
-use Moka::Middleware::Identica do |identica|
-  identica.username = 'username'
-  identica.password = 'password'
-  identica.group    = 'group'
-end
+# Identica configuration / Deprecated
+#use Moka::Middleware::Identica do |identica|
+#  identica.username = 'username'
+#  identica.password = 'password'
+#  identica.group    = 'group'
+#end
 
 # Feed configuration and template handling
 use Moka::Middleware::Feeds do |feeds|
@@ -34,7 +35,7 @@ use Moka::Middleware::Feeds do |feeds|
   end
 
   feeds.project_feed_filename do |project|
-    "/home/nick/websites/archive.xfce.org/feeds/project/#{project.name}"
+    "/home/wwwroot/websites/archive.xfce.org/feeds/project/#{project.name}"
   end
 
   feeds.collection_feed_url do |collection|
@@ -42,7 +43,7 @@ use Moka::Middleware::Feeds do |feeds|
   end
 
   feeds.collection_feed_filename do |collection|
-    "/home/nick/websites/archive.xfce.org/feeds/collection/#{collection.name}"
+    "/home/wwwroot/websites/archive.xfce.org/feeds/collection/#{collection.name}"
   end
 
   feeds.project_body do |release, message, sender|
@@ -56,7 +57,7 @@ end
 
 # Mailinglist configuration and template handling
 use Moka::Middleware::Mailinglists do |mailer|
-  mailer.lists = ['xfce-announce@xfce.org', 'xfce@xfce.org', 'thunar-dev@xfce.org', 'nick@schermer']
+  mailer.lists = ['youremail@example.com']
 
   mailer.project_subject do |release, message, sender|
     "ANNOUNCE: #{release.project.name} #{release.version} released"
@@ -78,15 +79,15 @@ end
 # global configuration
 Moka::Models::Configuration.load do |conf|
   conf.set :moka_url, 'http://localhost:9292'
-  conf.set :archive_dir, '/home/nick/websites/archive.xfce.org/'
+  conf.set :archive_dir, '/home/wwwroot/websites/archive.xfce.org/'
   conf.set :mirror, 'http://archive.xfce.org/'
   conf.set :collection_release_pattern, /^([0-9]).([0-9]+)(pre[0-9])?$/
   conf.set :noreply, 'noreply@xfce.org'
 end
 
+# Uncomment to initialize the database. Don't forget to recomment.
 #DataMapper.auto_migrate!
 DataMapper.finalize
-#require 'migrate'
 
 if false
   admin = Moka::Models::Role.first_or_create(
@@ -102,78 +103,61 @@ if false
   public.save
 
   # create dummy user
-  nick = Moka::Models::Maintainer.first_or_create(
-    { :username => 'nick' },
-    { :realname => 'Nick Schermer',
-      :password => Digest::SHA1.hexdigest('test'),
-      :email => 'nick@xfce.org',
+  administrator = Moka::Models::Maintainer.first_or_create(
+    { :username => 'administrator' },
+    { :realname => 'Administrator',
+      :password => Digest::SHA1.hexdigest('admin'),
+      :email => 'administrator@xfce.org',
       :active => true }
   )
-  nick.roles << admin
-  nick.save
-
-  jannis = Moka::Models::Maintainer.first_or_create(
-    { :username => 'jannis' },
-    { :realname => 'Jannis Pohlmann',
-      :password => Digest::SHA1.hexdigest('test'),
-      :email => 'jannis@xfce.org',
-      :active => true }
-  )
-  jannis.save
-
-  jeromeg = Moka::Models::Maintainer.first_or_create(
-    { :username => 'jeromeg' },
-    { :realname => 'Jérôme Guelfucci',
-      :password => Digest::SHA1.hexdigest('test'),
-      :email => 'jeromeg@xfce.org',
-      :active => false }
-  )
-  jeromeg.save
+  administrator.roles << admin
+  administrator.save
 
   panel = Moka::Models::Project.first_or_create(
     { :name =>           'xfce4-panel' },
     { :website =>        'http://www.xfce.org',
-      :description =>    'Xfce\'s Panel' }
+      :shortdesc =>    'Panel',
+      :longdesc => 'Xfce Panel',
+      :owner => 'administrator'}
   )
-  panel.maintainers << nick
+  panel.maintainers << administrator
+  panel.groups << public
   panel.save
 
   thunar = Moka::Models::Project.first_or_create(
     { :name =>           'thunar' },
     { :website =>        'http://thunar.xfce.org',
-      :description =>    'Xfce\'s File Manager' }
+      :shortdesc =>    'Xfce\'s File Manager',
+      :owner => 'administrator'}
   )
-  thunar.maintainers << nick
-  thunar.maintainers << jannis
+  thunar.maintainers << administrator
   thunar.groups << public
   thunar.save
 
   terminal = Moka::Models::Project.first_or_create(
     { :name =>           'terminal' },
     { :website =>        'http://www.xfce.org',
-      :description =>    'Xfce\'s Terminal Emulator' }
+      :shortdesc =>    'Xfce\'s Terminal Emulator' }
   )
-  terminal.maintainers << nick
+  terminal.maintainers << administrator
   terminal.groups << public
   terminal.save
 
   tumbler = Moka::Models::Project.first_or_create(
     { :name =>           'tumbler' },
     { :website =>        'http://www.xfce.org',
-      :description =>    'Thumbnail generator' }
+      :shortdesc =>    'Thumbnail generator' }
   )
-  tumbler.maintainers << jannis
+  tumbler.maintainers << administrator
   tumbler.groups << public
   tumbler.save
 
   libxfce4ui = Moka::Models::Project.first_or_create(
     { :name =>           'libxfce4ui' },
     { :website =>        'http://www.xfce.org',
-      :description =>    'Xfce Widgets Library' }
+      :shortdesc =>    'Xfce Widgets Library' }
   )
-  libxfce4ui.maintainers << jannis
-  libxfce4ui.maintainers << nick
-  libxfce4ui.maintainers << jeromeg
+  libxfce4ui.maintainers << administrator
   libxfce4ui.groups << public
   libxfce4ui.save
 
@@ -183,9 +167,7 @@ if false
     { :display_name => 'Xfce',
       :website => 'http://www.xfce.org' }
   )
-  collection.maintainers << nick
-  collection.maintainers << jannis
-  collection.maintainers << jeromeg
+  collection.maintainers << administrator
   collection.save
 end
 
