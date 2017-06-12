@@ -1,0 +1,43 @@
+What is this ?
+==============
+
+Moka is the release manager web application used for Xfce
+
+Required packages
+=================
+
+Ruby > 2.1
+bundler
+Some development packages for compilation (libxml2-dev etc)
+
+Installation
+============
+
+We assume that your docroot is /home/wwwroot/websites
+
+* rootdir="/home/wwwroot/websites"
+* cd ${rootdir}
+* mkdir -p ${rootdir}/archive.xfce.org/src/{panel-plugins,xfce,apps}/
+* mkdir ${rootdir}archive.xfce.org/src/xfce/{thunar,xfce4-panel,libxfce4ui}
+* mkdir ${rootdir}/archive.xfce.org/src/panel-plugins/xfce4-sample-plugin
+* git clone git://git.xfce.org/www/moka
+* cd moka
+* bundle install 
+* cp examples/xfce/config.ru ${rootdir}/
+
+Edit config.ru
+- adjust the require ../lib/moka path in needed
+- uncomment "DataMapper.auto_migrate!" ONLY on first run (otherwise it will override your db on every start). 
+- Also, set "if false" to "if true" to create all sample data
+- Change filesystem paths in the config if you are not in /home/wwwroot/websites
+
+After the first run , don't forget to comment DataMapper.auto_migrate / and
+set if false !
+
+Run it
+======
+
+* cd ${rootdir} && thin -R config.ru start
+
+Go to http://127.0.0.1:3000 and log with administrator / admin
+
