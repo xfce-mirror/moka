@@ -1,0 +1,17 @@
+source 'https://rubygems.org'
+
+gem 'pony'
+gem 'rake'
+gem 'sinatra', '~>1.4'
+gem 'warden'
+gem 'haml'
+gem 'ratom'
+gem 'jeweler'
+gem 'thin'
+gem 'dm-core'
+gem 'dm-types'
+gem 'ftools'
+gem 'sass'
+gem 'dm-migrations'
+gem 'dm-sqlite-adapter'
+
