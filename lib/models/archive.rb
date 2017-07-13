@@ -1,4 +1,3 @@
-require 'ftools'
 require 'singleton'
 require 'fileutils'
 
