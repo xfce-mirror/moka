@@ -8,10 +8,10 @@ module Moka
 
     def run(gitolitedir, prepend_files = nil)
       keydir = File.join(gitolitedir, "keydir")
-      File.makedirs(keydir) unless File.directory?(keydir)
+      FileUtils.mkdir(keydir) unless File.directory?(keydir)
 
       confdir = File.join(gitolitedir, "conf")
-      File.makedirs(confdir) unless File.directory?(confdir)
+      FileUtils.mkdir(confdir) unless File.directory?(confdir)
 
       # project array
       projects = Hash.new

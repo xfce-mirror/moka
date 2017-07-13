@@ -84,7 +84,7 @@ module Moka
           end
         else
           dirname = File.dirname(filename)
-          File.makedirs(dirname) unless File.directory?(dirname)
+          FileUtils.mkdir(dirname) unless File.directory?(dirname)
 
           feed = Atom::Feed.new do |feed|
             feed.title = "#{release.collection.display_name} Release Feed"
@@ -132,7 +132,7 @@ module Moka
           end
         else
           dirname = File.dirname(filename)
-          File.makedirs(dirname) unless File.directory?(dirname)
+          FileUtils.mkdir(dirname) unless File.directory?(dirname)
 
           feed = Atom::Feed.new do |feed|
             feed.title = "#{release.project.name} Release Feed"
