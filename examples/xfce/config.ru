@@ -6,6 +6,8 @@ require 'dm-migrations'
 require 'digest/sha1'
 require './moka/lib/moka'
 
+Encoding.default_external = 'UTF-8'
+
 # Connect to the database
 directory = File.expand_path(File.dirname(__FILE__))
 db = File.join(directory, 'example.db')
