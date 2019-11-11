@@ -13,4 +13,4 @@ gem 'dm-types'
 gem 'sass'
 gem 'dm-migrations'
 gem 'dm-sqlite-adapter'
-
+gem 'dm-mysql-adapter'
