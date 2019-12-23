@@ -1,9 +1,8 @@
 <pre><a href="<%= release.project.website %>"><%= release.project.name %></a> <%= release.version %> is now available for download from
 
   <a href="<%= release.download_url %>/<%= release.tarball_basename %>"><%= release.download_url %>/<%= release.tarball_basename %></a>
-  <a href="<%= release.download_url %>/<%= release.tarball_basename %>.md5"><%= release.download_url %>/<%= release.tarball_basename %>.md5</a>
-  <a href="<%= release.download_url %>/<%= release.tarball_basename %>.sha1"><%= release.download_url %>/<%= release.tarball_basename %>.sha1</a>
-  <a href="<%= release.download_url %>/<%= release.tarball_basename %>.sha256"><%= release.download_url %>/<%= release.tarball_basename %>.sha256</a>
+  <a href="<%= release.download_url %>/<%= release.tarball_basename %>?sha1"><%= release.download_url %>/<%= release.tarball_basename %>?sha1</a>
+  <a href="<%= release.download_url %>/<%= release.tarball_basename %>?sha256"><%= release.download_url %>/<%= release.tarball_basename %>?sha256</a>
 
 
 What is <%= release.project.name %>?

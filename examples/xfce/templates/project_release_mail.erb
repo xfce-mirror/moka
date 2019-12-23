@@ -1,9 +1,8 @@
 <%= release.project.name %> <%= release.version %> is now available for download from
   
   <%= release.download_url %>/<%= release.tarball_basename %>
-  <%= release.download_url %>/<%= release.tarball_basename %>.md5
-  <%= release.download_url %>/<%= release.tarball_basename %>.sha1
-  <%= release.download_url %>/<%= release.tarball_basename %>.sha256
+  <%= release.download_url %>/<%= release.tarball_basename %>?sha1
+  <%= release.download_url %>/<%= release.tarball_basename %>?sha256
 
 
 What is <%= release.project.name %>?
