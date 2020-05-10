@@ -1,6 +1,6 @@
 require 'rubygems'
 require 'sinatra'
-require 'sass'
+
 
 directory = File.expand_path(File.dirname(__FILE__))
 
@@ -23,6 +23,8 @@ end
 module Moka
   class Application < Sinatra::Base
 
+    set :public_folder, File.dirname(__FILE__) + '/../static'
+
     include Moka::Models
 
     register Moka::Helpers::General
@@ -34,16 +36,6 @@ module Moka
     register Moka::Controllers::Maintainers
 
     authentication_initialize
-  
-    get '/stylesheet.css' do
-      content_type 'text/css', :charset => 'utf-8'
-
-      directory = File.join(File.expand_path(File.dirname(__FILE__)), 'views')
-  
-      template = File.read(File.join(directory, 'stylesheet.sass'))
-      engine = Sass::Engine.new(template)
-      engine.render
-    end
   
     get '/' do
       if authentication_finished?
