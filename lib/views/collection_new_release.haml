@@ -43,4 +43,4 @@
                 - for release in project.releases.sort.reverse
                   %option{:value => "#{release.version}", :selected => (release.version == included_release)} #{release.version}
   %p
-    %input{:type => "submit", :value => "Release and celebrate!"}
+    %input{:class => "button", :type => "submit", :value => "Release and celebrate!"}

@@ -1,6 +1,6 @@
 %h2 Are you sure you want to delete this version?
 %form{:method => "post"}
   %p
-    %input{:type => "button", :value => "No, please take me back", :onclick => "history.back()"}
-    %input{:type => "submit", :value => "Yes, who cares about #{@project.name} #{@release.version} anyway?"}
+    %input{:class => "button", :type => "button", :value => "No, please take me back", :onclick => "history.back()"}
+    %input{:class => "button", :type => "submit", :value => "Yes, who cares about #{@project.name} #{@release.version} anyway?"}
 

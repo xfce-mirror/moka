@@ -3,10 +3,10 @@
   The following form allows you to submit your user info to request an
   Xfce developers account. This account needs to be approved by one of
   the Xfce developers, so it is wise to introduce yourself on the
-  %a{:href => "http://www.xfce.org/community"} Xfce4-dev
+  %a{:href => "https://www.xfce.org/community"} Xfce4-dev
   mailing list first, else the request will be rejected. Translators
   don't need a developer account, they can sign up at the
-  %a{:href => "https://translations.xfce.org/"} translation
+  %a{:href => "https://docs.xfce.org/contribute/translate/start"} translation
   page and request to join a translation team after registration.
 
 %h2 Account Information
@@ -48,5 +48,5 @@
       %label{:for => "msg"} Additional Info:
       %textarea{:name => "msg", :rows => "5", :id => "msg"} #{params[:msg]}
     %p
-      %input{:type => "submit", :value => "Submit"}
+      %input{:class => "button", :type => "submit", :value => "Submit"}
   

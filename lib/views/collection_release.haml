@@ -16,5 +16,5 @@
             - for release in project.releases
               %option{:value => "#{release.branch.name}:#{release.version}", :selected => (release == included_release)} #{release.version}
   %p
-    %input{:type => "submit", :value => "Save"}
+    %input{:class => "button", :type => "submit", :value => "Save"}
 

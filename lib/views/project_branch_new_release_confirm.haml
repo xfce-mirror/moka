@@ -26,5 +26,5 @@
         %input{:type => "hidden", :name => "mailinglists[#{list}]", :value => "announce"}
   %input{:type => "hidden", :name => "message", :value => "#{params[:message]}"}
   %p.center
-    %input{:type => "button", :onclick => "history.back()", :value => "No, let me edit the announcement again"}
-    %input{:type => "submit", :value => "Yes, release the damn thing already!"}
+    %input{:class => "button", :type => "button", :onclick => "history.back()", :value => "No, let me edit the announcement again"}
+    %input{:class => "button", :type => "submit", :value => "Yes, release the damn thing already!"}

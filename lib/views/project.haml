@@ -35,7 +35,7 @@
              :readonly => true,
              :value => "#{maintainer_names(@project)}"}
     %p.quote
-      %input{:type => "submit", :value => "Save"}
+      %input{:class => "button", :type => "submit", :value => "Save"}
       
 
 - if authentication_user.is_admin
@@ -52,7 +52,7 @@
           %label{:for => "g_#{group.name}"} #{group.desc}
       %div{:class => "clearboth"}
     %p
-      %input{:type => "submit", :value => "Save"}
+      %input{:class => "button", :type => "submit", :value => "Save"}
 
 %h2 Classification
 %form{:method => "post", :action => "/project/#{@project.name}/classify"}
@@ -61,7 +61,7 @@
       - for classification in Classification.find_all
         %option{:name => classification.name,
                 :selected => (@project.classification.eql? classification)} #{classification.name}
-    %input{:type => "submit", :value => "Change"}
+    %input{:class => "button", :type => "submit", :value => "Change"}
 
 %h2 Releases
 %p

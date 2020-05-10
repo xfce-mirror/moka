@@ -15,4 +15,4 @@
       - if env[:error][:checksum]
         %p.error.quote #{env[:error][:checksum]}
     %p.quote
-      %input{:type => "submit", :value => "Replace current tarball"}
+      %input{:class => "button", :type => "submit", :value => "Replace current tarball"}

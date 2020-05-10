@@ -13,10 +13,10 @@
 - if authentication_user.is_admin
   %h2 Administrator
   %form{:method => "post", :class => "admintasks", :action => "/maintainer/#{@maintainer.username}/activate" }
-    %input{:type => "submit",
+    %input{:class => "button", :type => "submit",
            :value => @maintainer.active ? "Deactivate" : "Activate" }
   %form{:method => "post", :class => "admintasks", :action => "/maintainer/#{@maintainer.username}/delete" }
-    %input{:type => "submit", :value => "Delete",
+    %input{:class => "button", :type => "submit", :value => "Delete",
            :disabled => @maintainer.active,
            :onclick => "return admin_delete()" }
 
@@ -68,7 +68,7 @@
       %label{:for => "password"} Password:
       %input{:type => "password", :name => "password", :id => "password", :onkeyup => "info_submit()" }
     %p.quote
-      %input{:type => "submit", :value => "Save", :id => "infosubmit", :disabled => true }
+      %input{:class => "button", :type => "submit", :value => "Save", :id => "infosubmit", :disabled => true }
 
 %h2 Permissions
 %form{:method => "post", :action => "/maintainer/#{@maintainer.username}/permissions" }
@@ -132,4 +132,4 @@
 
   - if authentication_user.is_admin
     %p
-      %input{:type => "submit", :value => "Save"}
+      %input{:class => "button", :type => "submit", :value => "Save"}
