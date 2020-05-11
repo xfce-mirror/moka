@@ -18,7 +18,9 @@ DataMapper.setup(:default, 'sqlite://' + db)
 
 # From http://blog.macromates.com/2006/wrapping-text-with-regular-expressions/
 def wrap_text(txt, col = 72)
-  txt.gsub(/(.{1,#{col}})( +|$)\n?|(.{#{col}})/, "\\1\\3\n")
+  if !txt.nil?
+    txt.gsub(/(.{1,#{col}})( +|$)\n?|(.{#{col}})/, "\\1\\3\n")
+  end
 end
 
 # Identica configuration / Deprecated

@@ -6,7 +6,7 @@ Moka is the release manager web application used for Xfce
 Required packages
 =================
 
-Ruby > 2.1
+Ruby > 2.3
 bundler
 Some development packages for compilation (libxml2-dev etc)
 
@@ -20,7 +20,7 @@ We assume that your docroot is /home/wwwroot/websites
 * mkdir -p ${rootdir}/archive.xfce.org/src/{panel-plugins,xfce,apps}/
 * mkdir ${rootdir}archive.xfce.org/src/xfce/{thunar,xfce4-panel,libxfce4ui}
 * mkdir ${rootdir}/archive.xfce.org/src/panel-plugins/xfce4-sample-plugin
-* git clone git://git.xfce.org/www/moka
+* git clone https://gitlab.xfce.org/www/moka
 * cd moka
 * bundle install 
 * cp examples/xfce/config.ru ${rootdir}/
