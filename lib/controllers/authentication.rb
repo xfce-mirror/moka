@@ -220,10 +220,6 @@ module Moka
           view :login_request
         end
 
-        app.get '/login/request/sshinfo' do
-          view :login_request_sshinfo
-        end
-
         app.post '/login/request' do
           if params[:username].empty? or params[:realname].empty? or params[:email].empty?
             error_set(:message, 'All fields below are required')
