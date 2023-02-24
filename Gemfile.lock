@@ -1,14 +1,15 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    addressable (2.8.0)
-      public_suffix (>= 2.0.2, < 5.0)
-    bcrypt (3.1.17)
+    addressable (2.8.1)
+      public_suffix (>= 2.0.2, < 6.0)
+    bcrypt (3.1.18)
     bcrypt-ruby (3.1.5)
       bcrypt (>= 3.1.3)
     daemons (1.4.1)
     data_objects (0.10.17)
       addressable (~> 2.1)
+    digest (3.1.1)
     dm-core (1.2.1)
       addressable (~> 2.3)
     dm-do-adapter (1.2.0)
@@ -39,36 +40,55 @@ GEM
     haml (5.2.2)
       temple (>= 0.8.0)
       tilt
+    io-wait (0.3.0)
     json (1.8.6)
     libxml-ruby (2.9.0)
-    mail (2.7.1)
+    mail (2.8.1)
       mini_mime (>= 0.1.1)
+      net-imap
+      net-pop
+      net-smtp
     mini_mime (1.1.2)
     multi_json (1.15.0)
-    mustermann (1.1.1)
+    mustermann (2.0.2)
       ruby2_keywords (~> 0.0.1)
+    net-imap (0.2.2)
+      digest
+      net-protocol
+      strscan
+    net-pop (0.1.2)
+      net-protocol
+    net-protocol (0.1.2)
+      io-wait
+      timeout
+    net-smtp (0.3.0)
+      digest
+      net-protocol
+      timeout
     pony (1.13.1)
       mail (>= 2.0)
-    public_suffix (4.0.6)
-    rack (2.2.3)
-    rack-protection (2.2.0)
+    public_suffix (4.0.7)
+    rack (2.2.6.2)
+    rack-protection (2.2.4)
       rack
     rake (13.0.6)
     ratom (0.9.0)
       libxml-ruby (~> 2.6)
     ruby2_keywords (0.0.5)
-    sinatra (2.2.0)
-      mustermann (~> 1.0)
+    sinatra (2.2.4)
+      mustermann (~> 2.0)
       rack (~> 2.2)
-      rack-protection (= 2.2.0)
+      rack-protection (= 2.2.4)
       tilt (~> 2.0)
     stringex (1.5.1)
-    temple (0.8.2)
+    strscan (3.0.6)
+    temple (0.10.0)
     thin (1.8.1)
       daemons (~> 1.0, >= 1.0.9)
       eventmachine (~> 1.0, >= 1.0.4)
       rack (>= 1, < 3)
-    tilt (2.0.10)
+    tilt (2.1.0)
+    timeout (0.3.2)
     uuidtools (2.2.0)
     warden (1.2.9)
       rack (>= 2.0.9)
@@ -82,7 +102,7 @@ DEPENDENCIES
   dm-mysql-adapter
   dm-sqlite-adapter
   dm-types
-  haml
+  haml (~> 5)
   pony
   rake
   ratom
@@ -91,4 +111,4 @@ DEPENDENCIES
   warden
 
 BUNDLED WITH
-   2.2.26
+   2.1.4
