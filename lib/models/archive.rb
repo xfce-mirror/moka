@@ -232,16 +232,16 @@ module Moka
       end
 
       def project_tarball_pattern(project)
-        /^(#{project.name})-([0-9\.]+[a-zA-Z0-9\-_]+)\.tar\.(bz2|gz)$/i
+        /^(#{project.name})-([0-9\.]+[a-zA-Z0-9\-_]+)\.tar\.(bz2|gz|xz)$/i
       end
 
       def project_tarball_upload_pattern(project)
         # /^(#{project.name})-([0-9]\.[0-9])\.([0-9]\.){1,2}tar\.bz2$/i
-        /^(#{project.name})-([0-9]\.[0-9]+)\.([0-9]+\.){1,2}tar\.bz2$/i
+        /^(#{project.name})-([0-9]\.[0-9]+)\.([0-9]+\.){1,2}tar\.(bz2|gz|xz)$/i
       end
 
       def project_release_tarball_pattern(release)
-        /^(#{release.project.name})-(#{release.version})\.tar\.(bz2|gz)$/i
+        /^(#{release.project.name})-(#{release.version})\.tar\.(bz2|gz|xz)$/i
       end
 
       def project_tarball_branch(project, tarball)
