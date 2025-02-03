@@ -1,15 +1,16 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    addressable (2.8.1)
-      public_suffix (>= 2.0.2, < 6.0)
-    bcrypt (3.1.18)
+    addressable (2.8.7)
+      public_suffix (>= 2.0.2, < 7.0)
+    base64 (0.2.0)
+    bcrypt (3.1.20)
     bcrypt-ruby (3.1.5)
       bcrypt (>= 3.1.3)
     daemons (1.4.1)
     data_objects (0.10.17)
       addressable (~> 2.1)
-    digest (3.1.1)
+    date (3.4.1)
     dm-core (1.2.1)
       addressable (~> 2.3)
     dm-do-adapter (1.2.0)
@@ -40,7 +41,6 @@ GEM
     haml (5.2.2)
       temple (>= 0.8.0)
       tilt
-    io-wait (0.3.0)
     json (1.8.6)
     libxml-ruby (2.9.0)
     mail (2.8.1)
@@ -48,47 +48,43 @@ GEM
       net-imap
       net-pop
       net-smtp
-    mini_mime (1.1.2)
+    mini_mime (1.1.5)
     multi_json (1.15.0)
-    mustermann (2.0.2)
+    mustermann (3.0.3)
       ruby2_keywords (~> 0.0.1)
-    net-imap (0.2.2)
-      digest
+    net-imap (0.4.18)
+      date
       net-protocol
-      strscan
     net-pop (0.1.2)
       net-protocol
-    net-protocol (0.1.2)
-      io-wait
+    net-protocol (0.2.2)
       timeout
-    net-smtp (0.3.0)
-      digest
+    net-smtp (0.5.0)
       net-protocol
-      timeout
     pony (1.13.1)
       mail (>= 2.0)
-    public_suffix (4.0.7)
-    rack (2.2.6.2)
-    rack-protection (2.2.4)
-      rack
-    rake (13.0.6)
+    public_suffix (5.1.1)
+    rack (2.2.10)
+    rack-protection (3.2.0)
+      base64 (>= 0.1.0)
+      rack (~> 2.2, >= 2.2.4)
+    rake (13.2.1)
     ratom (0.9.0)
       libxml-ruby (~> 2.6)
     ruby2_keywords (0.0.5)
-    sinatra (2.2.4)
-      mustermann (~> 2.0)
-      rack (~> 2.2)
-      rack-protection (= 2.2.4)
+    sinatra (3.2.0)
+      mustermann (~> 3.0)
+      rack (~> 2.2, >= 2.2.4)
+      rack-protection (= 3.2.0)
       tilt (~> 2.0)
     stringex (1.5.1)
-    strscan (3.0.6)
-    temple (0.10.0)
-    thin (1.8.1)
+    temple (0.10.3)
+    thin (1.8.2)
       daemons (~> 1.0, >= 1.0.9)
       eventmachine (~> 1.0, >= 1.0.4)
       rack (>= 1, < 3)
-    tilt (2.1.0)
-    timeout (0.3.2)
+    tilt (2.6.0)
+    timeout (0.4.3)
     uuidtools (2.2.0)
     warden (1.2.9)
       rack (>= 2.0.9)
@@ -104,9 +100,10 @@ DEPENDENCIES
   dm-types
   haml (~> 5)
   pony
+  rack-protection (~> 3.2)
   rake
   ratom
-  sinatra
+  sinatra (~> 3.2)
   thin
   warden
 
