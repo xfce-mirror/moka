@@ -1,16 +1,16 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    addressable (2.8.7)
-      public_suffix (>= 2.0.2, < 7.0)
+    addressable (2.8.8)
+      public_suffix (>= 2.0.2, < 8.0)
     base64 (0.3.0)
-    bcrypt (3.1.20)
+    bcrypt (3.1.21)
     bcrypt-ruby (3.1.5)
       bcrypt (>= 3.1.3)
     daemons (1.4.1)
     data_objects (0.10.17)
       addressable (~> 2.1)
-    date (3.4.1)
+    date (3.5.1)
     dm-core (1.2.1)
       addressable (~> 2.3)
     dm-do-adapter (1.2.0)
@@ -44,16 +44,17 @@ GEM
     json (1.8.6)
     libxml-ruby (2.9.0)
     logger (1.7.0)
-    mail (2.8.1)
+    mail (2.9.0)
+      logger
       mini_mime (>= 0.1.1)
       net-imap
       net-pop
       net-smtp
     mini_mime (1.1.5)
-    multi_json (1.15.0)
+    multi_json (1.19.1)
     mustermann (3.0.4)
       ruby2_keywords (~> 0.0.1)
-    net-imap (0.4.22)
+    net-imap (0.5.13)
       date
       net-protocol
     net-pop (0.1.2)
@@ -64,12 +65,12 @@ GEM
       net-protocol
     pony (1.13.1)
       mail (>= 2.0)
-    public_suffix (5.1.1)
-    rack (2.2.20)
+    public_suffix (6.0.2)
+    rack (2.2.21)
     rack-protection (3.2.0)
       base64 (>= 0.1.0)
       rack (~> 2.2, >= 2.2.4)
-    rake (13.3.0)
+    rake (13.3.1)
     ratom (0.9.0)
       libxml-ruby (~> 2.6)
     ruby2_keywords (0.0.5)
@@ -85,14 +86,14 @@ GEM
       eventmachine (~> 1.0, >= 1.0.4)
       logger
       rack (>= 1, < 4)
-    tilt (2.6.1)
-    timeout (0.4.3)
+    tilt (2.7.0)
+    timeout (0.6.0)
     uuidtools (2.2.0)
     warden (1.2.9)
       rack (>= 2.0.9)
 
 PLATFORMS
-  ruby
+  x86_64-linux
 
 DEPENDENCIES
   dm-core
@@ -110,4 +111,4 @@ DEPENDENCIES
   warden
 
 BUNDLED WITH
-   2.1.4
+   2.3.15
